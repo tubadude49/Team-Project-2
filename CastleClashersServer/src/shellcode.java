@@ -18,6 +18,22 @@ class Castle {
 	int upgrade;
 }
 
+class Battle
+{
+	long uuid;
+	XY pos;
+	Unit[] p1_units;
+	Unit[] p2_units;
+	public Battle(Unit[] p1_us, Unit[] p2_us, XY pos);
+	bool p1_isViewing;
+	bool p2_isViewing;
+	void attack(Unit attacker, Unit target);
+	void defend(Unit defender);
+	void automate(Player target);
+	void flee(Player fleer);
+	
+}
+
 class UnitFactory {
 	public Unit cavalry() {
 		return new Unit();
@@ -59,7 +75,7 @@ protected class Unit {
 	XY pos;
 	
 	Object dest;
-	
+	Player owner;
 	string type;
 	
 	public addXp(int xp) {
