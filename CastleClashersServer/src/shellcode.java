@@ -18,20 +18,25 @@ class Castle {
 	int upgrade;
 }
 
-class Battle
-{
+class Battle {
+	public Battle(XY pos);
 	long uuid;
 	XY pos;
-	Unit[] p1_units;
-	Unit[] p2_units;
-	public Battle(Unit[] p1_us, Unit[] p2_us, XY pos);
-	bool p1_isViewing;
-	bool p2_isViewing;
-	void attack(Unit attacker, Unit target);
-	void defend(Unit defender);
-	void automate(Player target);
-	void flee(Player fleer);
-	
+	List<Unit> units;
+	public void attack(Unit attacker, Unit target);
+	public void defend(Unit defender);
+	public void flee(Player fleer);
+}
+
+class Siege {
+	public Siege(XY pos);
+	long uuid;
+	XY pos;
+	List<Unit> units;
+	Castle castle;
+	Player defender;
+	public void breakSiege();
+	public void flee(Player fleer);
 }
 
 class UnitFactory {
