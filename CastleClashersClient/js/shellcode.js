@@ -99,6 +99,28 @@ var Battle = function() {
 	scene.addEventListener("RIGHT_BUTTON_DOWN", battleRClick};
 }
 
+var siegeLClick(event) {
+	
+}
+
+var siegeRClick(event) {
+	
+}
+
+var Siege = function() {
+	this.type = "siege";
+	this.uuid = 0;
+	this.x = 0;
+	this.y = 0;
+	this.viewing = false;
+	this.castle = -1; 	//uuid
+	this.units = [];
+	
+	scene.addChild(this);
+	scene.addEventListener("LEFT_BUTTON_DOWN", siegeLClick};
+	scene.addEventListener("RIGHT_BUTTON_DOWN", siegeRClick};
+}
+
 var Instance = function() {
 	this.type = "instance";
 	this.uuid = 0;
