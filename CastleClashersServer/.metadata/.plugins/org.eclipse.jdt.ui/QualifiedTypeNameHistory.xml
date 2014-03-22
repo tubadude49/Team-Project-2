@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="org.jwebsocket.api.WebSocketConnector"/>
+<fullyQualifiedTypeName name="org.jwebsocket.api.WebSocketEngine"/>
+<fullyQualifiedTypeName name="org.jwebsocket.token.JSONToken"/>
+<fullyQualifiedTypeName name="org.jwebsocket.token.Token"/>
+<fullyQualifiedTypeName name="org.json.JSONObject"/>
+<fullyQualifiedTypeName name="org.jwebsocket.listener.WebSocketServerTokenEvent"/>
+<fullyQualifiedTypeName name="org.jwebsocket.listener.WebSocketServerTokenListener"/>
+<fullyQualifiedTypeName name="org.json.JSONString"/>
+</qualifiedTypeNameHistroy>
