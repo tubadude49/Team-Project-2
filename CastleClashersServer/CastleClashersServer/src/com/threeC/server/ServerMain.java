@@ -1,5 +1,7 @@
 package com.threeC.server;
 
+import java.util.LinkedList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jwebsocket.factory.JWebSocketFactory;
@@ -15,31 +17,52 @@ import org.jwebsocket.config.JWebSocketConfig;
 import org.jwebsocket.instance.JWebSocketInstance;
 import org.jwebsocket.packetProcessors.JSONProcessor;
 
-class JWebSocketListener implements WebSocketServerTokenListener {	
+import com.threeC.beans.Player;
+import com.threeC.beans.UUIDDistributor;
+
+class JWebSocketListener implements WebSocketServerTokenListener {
+	LinkedList<Player> players = new LinkedList<Player>();
+	UUIDDistributor uuidDistributor = new UUIDDistributor();
 	
 	@Override
 	public void processOpened(WebSocketServerEvent event) {		
-		System.out.println("Connection Opened");
+		System.out.println("Connection Opened " + event.getSessionId());
+		players.add(new Player("", event.getSessionId(), uuidDistributor.next()));
 	}
 	
 	@Override
 	public void processPacket(WebSocketServerEvent event, WebSocketPacket packet) {
+		/*if(mostrecent.equals(event.getSessionId())) {
+			System.out.println(mostrecent);
+		}
 		try {
 			JSONObject o = JSONProcessor.tokenToJSON(JSONProcessor.packetToToken(packet));
 			System.out.println("Packet: " + o.toString());			
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}			
+		}*/
 	}
 	
 	@Override
 	public void processClosed(WebSocketServerEvent event) {
 		System.out.println("Connection Closed");
+		for(int i=0;i<players.size();i++) {
+			if(players.get(i).sessionId().equals(event.getSessionId())) {
+				players.remove(i);
+				break;
+			}
+		}
 	}
 	
 	@Override
 	public void processToken(WebSocketServerTokenEvent event, Token token){  
-		System.out.println("Token: " + token.toString());
+		//System.out.println("Token: " + token.toString());
+		try {
+			JSONObject json = JSONProcessor.tokenToJSON(token);
+			System.out.println("JSON: " + json.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	} 
 }
 
@@ -52,9 +75,11 @@ public class ServerMain {
 		
 		assert server != null;
 
-		server.addListener(new JWebSocketListener());		
+		JWebSocketListener jwsl = new JWebSocketListener();
+		server.addListener(jwsl);		
 		while (JWebSocketInstance.getStatus() != JWebSocketInstance.SHUTTING_DOWN){
 			try {
+				System.out.println(server.getEngines().size());
 				for(WebSocketEngine wse : server.getEngines().values()) {
 					for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
 						JSONObject o = new JSONObject();
