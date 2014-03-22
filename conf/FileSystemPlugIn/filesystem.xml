@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" " http://www.springframework.org/dtd/spring-beans.dtd"> 
+<beans>
+	
+	<bean id="org.jwebsocket.plugins.filesystem.settings" class="org.jwebsocket.plugins.filesystem.Settings">
+		<property name="aliases">
+			<map>
+				<!-- Alias for the ReportingPlugIn report's directory (.jrxml) -->
+				<entry>
+					<key><value>reportRoot</value></key>
+					<value>${JWEBSOCKET_HOME}conf/ReportingPlugIn/reports</value>
+				</entry>                
+			</map>
+		</property>
+	</bean>
+</beans>

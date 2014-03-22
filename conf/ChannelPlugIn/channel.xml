@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" " http://www.springframework.org/dtd/spring-beans.dtd"> 
+<beans>
+	
+	<!-- ####### EhCache settings for channel plug-in ####### -->
+	   
+	<!-- ORMLite (JDBC) Storage -->
+	<bean id="databaseUrl" class="org.jwebsocket.util.Tools"
+		  factory-method="expandEnvVarsAndProps">
+		<constructor-arg index="0" value="jdbc:sqlite:${JWEBSOCKET_HOME}database/channels.db" />
+	</bean>
+
+	<bean id="connectionSource"
+		  class="com.j256.ormlite.jdbc.JdbcConnectionSource" init-method="initialize">
+		<property name="url" ref="databaseUrl" />
+		<property name="username" value="" />
+		<property name="password" value="" />
+	</bean>
+
+	<bean id="entriesDao" class="com.j256.ormlite.spring.DaoFactory"
+		  factory-method="createDao">
+		<constructor-arg index="0" ref="connectionSource" />
+		<constructor-arg index="1" value="org.jwebsocket.storage.ormlite.EntryEntity" />
+	</bean>
+
+	<bean id="storageProvider" class="org.jwebsocket.storage.ormlite.OrmLiteStorageProvider" init-method="initialize">
+		<constructor-arg index="0" ref="entriesDao" />
+	</bean>
+
+	<bean id="channelManager" class="org.jwebsocket.plugins.channels.ChannelManager" init-method="initialize">
+		<constructor-arg>
+			<map>
+				<!-- set this to true if you want to allow to create new system channels 
+				from the client side, default is false, not recommended! -->
+				<!--
+				<entry key="allowCreateSystemChannels">
+					<value>false</value>
+				</entry>
+				-->
+				<entry key="channel:privateA">
+					<value>{state:"STARTED",owner:"root",name:"Private A",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:privateB">
+					<value>{state:"STARTED",owner:"root",name:"Private B",isPrivate:true ,isSystem:false,access_key:"access",secret_key:"secret",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:publicA">
+					<value>{state:"STARTED",owner:"root",name:"Public A" ,isPrivate:false,isSystem:false,access_key:"access",secret_key:"secret",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:publicB">
+					<value>{state:"STARTED",owner:"root",name:"Public B" ,isPrivate:false,isSystem:false,access_key:"access",secret_key:"secret",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:systemA">
+					<value>{state:"STARTED",owner:"root",name:"System A" ,isPrivate:false,isSystem:true ,access_key:"access",secret_key:"secret",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:systemB">
+					<value>{state:"STARTED",owner:"root",name:"System B" ,isPrivate:false,isSystem:true ,access_key:"access",secret_key:"secret",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:jWebSocketSlideShowDemo">
+					<value>{state:"STARTED",owner:"root",name:"SlideShow Demo" ,isPrivate:false,isSystem:true, access_key:"5l1d35h0w",secret_key:"5l1d35h0w53cr3t!",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:jWebSocketGamingDemo">
+					<value>{state:"STARTED",owner:"root",name:"Gaming Demo" ,isPrivate:false,isSystem:true, access_key:"gaming",secret_key:"64m1n6D3m0!",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:jWebSocketVideoStreamingDemo">
+					<value>{state:"STARTED",owner:"root",name:"Video Streaming Demo" ,isPrivate:false,isSystem:true, access_key:"stream",secret_key:"5tr34m53cr3t!",token_server:"ts0"}</value>
+				</entry>
+				<entry key="channel:jWebSocketSharedCanvasDemo">
+					<value>{state:"STARTED",owner:"root",name:"Shared Canvas Demo" ,isPrivate:false,isSystem:true, access_key:"access",secret_key:"secret",token_server:"ts0"}</value>
+				</entry>
+			</map>
+		</constructor-arg>	
+		<constructor-arg ref="storageProvider"/>
+	</bean>
+
+</beans>
