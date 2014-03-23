@@ -1,29 +1,36 @@
 package com.threeC.beans;
 
-import java.util.List;
-import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Player implements JSONStringifiable {
-	private long uuid;
+	public long uuid;
 	
-	private String name;
-	private int gold;
-	private int income;
+	public String name;
+	public int gold = 25;
+	public int income;
 	
-	private Player alliance;
-	private Player war;
+	public long alliance = -1l;
+	public long war = -1l;
 	
-	private List<Castle> castles;
-	private List<Unit> units;
+	public LinkedList<Castle> castles = new LinkedList<Castle>();
+	public LinkedList<Unit> units = new LinkedList<Unit>();
 	
-	private Set<Player> wars;
+	public LinkedHashSet<Player> wars = new LinkedHashSet<Player>();
 	
-	private String sessionId;
+	public String sessionId;
 	
 	public Player(String name, String sessionId, long uuid) {
 		this.name = name;
 		this.sessionId = sessionId;
 		this.uuid = uuid;
+		
+		castles.add(new Castle(-1,-1));
+		castles.add(new Castle(-1,-1));
+		castles.add(new Castle(-1,-1));
 	}
 	
 	public String sessionId() {
@@ -31,9 +38,46 @@ public class Player implements JSONStringifiable {
 	}
 	
 	@Override
+	public String toString() {
+		return toJSON();
+	}
+	
+	@Override
 	public String toJSON() {
-		//TODO
-		return "";
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "name", "gold", "income", "units", "wars", "sessionId" } );
+		LinkedList<Long> castlesUUIDs = new LinkedList<Long>();
+		LinkedList<Long> unitsUUIDs = new LinkedList<Long>();
+		LinkedList<Long> warsUUIDs = new LinkedList<Long>();
+		
+		for(Castle castle : castles) {
+			castlesUUIDs.add(castle.uuid());
+		}
+		
+		for(Unit unit : units) {
+			unitsUUIDs.add(unit.uuid());
+		}
+		
+		for(Player war : wars) {
+			warsUUIDs.add(war.uuid);
+		}
+		
+		try {
+			json.put("type", "instance");
+			json.put("castles", castlesUUIDs);
+			json.put("units", unitsUUIDs);
+			json.put("wars", warsUUIDs);
+			json.put("alliance", alliance);
+			json.put("war", war);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return json.toString();
+	}
+
+	@Override
+	public void fromJSON(String json) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void setName(String name) {
@@ -64,11 +108,11 @@ public class Player implements JSONStringifiable {
 		//check gold
 	}
 	
-	public List<Castle> castles() {
+	public LinkedList<Castle> castles() {
 		return castles;
 	}
 	
-	public List<Unit> units() {
+	public LinkedList<Unit> units() {
 		return units;
 	}
 	
@@ -83,14 +127,15 @@ public class Player implements JSONStringifiable {
 	}
 	
 	public void war(Player target) {
-		war = target;
-		wars.add(war);
+		//war = target;
+		//wars.add(war);
 	}
 	
 	public void peace() {		
 		
 		//remove alliance member from wars from this war
 		
-		war = null;
+		//war = null;
 	}
+
 }

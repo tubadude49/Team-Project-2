@@ -18,16 +18,20 @@ import org.jwebsocket.instance.JWebSocketInstance;
 import org.jwebsocket.packetProcessors.JSONProcessor;
 
 import com.threeC.beans.Player;
+import com.threeC.beans.Castle;
 import com.threeC.beans.UUIDDistributor;
 
 class JWebSocketListener implements WebSocketServerTokenListener {
 	LinkedList<Player> players = new LinkedList<Player>();
+	LinkedList<Castle> castles = new LinkedList<Castle>();
 	UUIDDistributor uuidDistributor = new UUIDDistributor();
 	
 	@Override
 	public void processOpened(WebSocketServerEvent event) {		
 		System.out.println("Connection Opened " + event.getSessionId());
 		players.add(new Player("", event.getSessionId(), uuidDistributor.next()));
+		System.out.println(players.get(0).toJSON());
+		event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(players.get(0).toJSON())));
 	}
 	
 	@Override
@@ -79,16 +83,16 @@ public class ServerMain {
 		server.addListener(jwsl);		
 		while (JWebSocketInstance.getStatus() != JWebSocketInstance.SHUTTING_DOWN){
 			try {
-				System.out.println(server.getEngines().size());
+				//System.out.println(server.getEngines().size());
 				for(WebSocketEngine wse : server.getEngines().values()) {
 					for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
-						JSONObject o = new JSONObject();
+						/*JSONObject o = new JSONObject();
 						try {
 							o.put("the", 1000);
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}						
-						server.sendToken(wsc, JSONProcessor.JSONStringToToken(o.toString()));
+						server.sendToken(wsc, JSONProcessor.JSONStringToToken(o.toString()));*/
 					}
 				}
 				Thread.sleep(1000);

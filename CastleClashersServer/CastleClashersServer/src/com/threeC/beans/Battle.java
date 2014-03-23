@@ -29,4 +29,10 @@ public class Battle implements JSONStringifiable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void fromJSON(String json) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -1,21 +1,38 @@
 package com.threeC.beans;
 
-class Castle implements JSONStringifiable {
-	private long uuid;
+import org.json.JSONObject;
+
+public class Castle implements JSONStringifiable {
+	public long uuid;
 	
-	private final XY pos;
+	public int x;
+	public int y;
 	
-	private int health;
-	private int upgrade;
+	public int health;
+	public int upgrade;
+	
+	public Player owner = null;
 	
 	public Castle(int x, int y) {
-		pos = new XY(x,y);
+		this.x = x;
+		this.y = y;
+	}
+	
+	@Override
+	public String toString() {
+		return toJSON();
 	}
 	
 	@Override
 	public String toJSON() {
-		//TODO
-		return "";
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "health", "upgrade", "owner" } );
+		return json.toString();
+	}
+
+	@Override
+	public void fromJSON(String json) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public long uuid() {

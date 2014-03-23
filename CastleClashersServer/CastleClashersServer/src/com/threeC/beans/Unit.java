@@ -1,23 +1,26 @@
 package com.threeC.beans;
 
+import org.json.JSONObject;
+
 public class Unit implements JSONStringifiable {
-	private long uuid;
+	public long uuid;
 	
-	private int xp;
-	private int veterancy;
+	public int xp;
+	public int veterancy;
 	
-	private int health;
-	private int upgrade;
+	public int health;
+	public int upgrade;
 	
-	private int attack;
-	private int defense;
-	private int speed;
+	public int attack;
+	public int defense;
+	public int speed;
 	
-	private XY pos;
+	public int x;
+	public int y;
 	
-	private Object dest;
-	private Player owner;
-	private String type;
+	public Object dest;
+	public Player owner;
+	public String type;
 	
 	protected Unit(int attack, int defense, int speed, String type, long uuid) {
 		this.attack = attack;
@@ -27,30 +30,51 @@ public class Unit implements JSONStringifiable {
 		this.uuid = uuid;
 	}
 	
-	public void addXp(int xp) {
-		this.xp += xp;
-		// veterancy go here
-	}
-	public void takeDamage(int damage) {
-		health -= damage;
-	}
-	public int attack() {
-		return attack;
-	}
-	public int defense() {
-		return defense;
-	}
-	public int speed() {
-		return speed;
-	}
-	public void setDest(Object target) {
-	
+	@Override
+	public String toString() {
+		return toJSON();
 	}
 
 	@Override
 	public String toJSON() {
-		// TODO Auto-generated method stub
-		return null;
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "health", "upgrade", "veterancy", "owner", "attack", "defense", "speed", "dest", "type" } );
+		return json.toString();
 	}
+
+	@Override
+	public void fromJSON(String json) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void addXp(int xp) {
+		this.xp += xp;
+		// veterancy go here
+	}
+	
+	public void takeDamage(int damage) {
+		health -= damage;
+	}
+	
+	public int attack() {
+		return attack;
+	}
+	
+	public int defense() {
+		return defense;
+	}
+	
+	public int speed() {
+		return speed;
+	}
+	
+	public long uuid() {
+		return uuid;
+	}
+	
+	public void setDest(Object target) {
+	
+	}
+
 		
 }

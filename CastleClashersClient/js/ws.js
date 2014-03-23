@@ -1,6 +1,6 @@
 var host = "ws://localhost:10088";
 var host2 = "ws://compute.cse.tamu.edu:10088";
-var ws = new WebSocket(host2, 'json');
+var ws = new WebSocket(host, 'json');
 
 ws.onopen = function() {
 	console.log("connection established");
