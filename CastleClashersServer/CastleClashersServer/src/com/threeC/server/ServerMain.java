@@ -22,9 +22,18 @@ import com.threeC.beans.Castle;
 import com.threeC.beans.UUIDDistributor;
 
 class JWebSocketListener implements WebSocketServerTokenListener {
-	LinkedList<Player> players = new LinkedList<Player>();
+	public LinkedList<Player> players = new LinkedList<Player>();
 	LinkedList<Castle> castles = new LinkedList<Castle>();
 	UUIDDistributor uuidDistributor = new UUIDDistributor();
+	
+	public Player getPlayerBySessionId(String sessionId) {
+		for(Player player : players) {
+			if(player.sessionId().equals(sessionId)) {
+				return player;
+			}
+		}
+		return null;
+	}
 	
 	@Override
 	public void processOpened(WebSocketServerEvent event) {		
@@ -86,6 +95,10 @@ public class ServerMain {
 				//System.out.println(server.getEngines().size());
 				for(WebSocketEngine wse : server.getEngines().values()) {
 					for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
+						Player player = jwsl.getPlayerBySessionId(wsc.getSession().getSessionId());
+						player.updateIncome();
+						player.incrGold();
+						server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));
 						/*JSONObject o = new JSONObject();
 						try {
 							o.put("the", 1000);

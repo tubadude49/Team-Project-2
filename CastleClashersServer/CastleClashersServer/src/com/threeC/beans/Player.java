@@ -11,7 +11,7 @@ public class Player implements JSONStringifiable {
 	
 	public String name;
 	public int gold = 25;
-	public int income;
+	public int income = 0;
 	
 	public long alliance = -1l;
 	public long war = -1l;
@@ -105,6 +105,10 @@ public class Player implements JSONStringifiable {
 	
 	public String name() {
 		return name;
+	}
+	
+	public void updateIncome() {
+		income = castles.size();
 	}
 	
 	public void incrGold() {
