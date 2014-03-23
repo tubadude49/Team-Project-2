@@ -7,8 +7,7 @@ public class UUIDDistributor {
 		
 	}
 	
-	public synchronized long next() {
-		nextUUID++;
-		return (nextUUID - 1l);
+	public synchronized long next() {		
+		return nextUUID++;
 	}
 }

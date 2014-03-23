@@ -67,7 +67,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-	} 
+	}
 }
 
 public class ServerMain {
