@@ -1,5 +1,6 @@
 package com.threeC.beans;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Unit implements JSONStringifiable {
@@ -43,7 +44,20 @@ public class Unit implements JSONStringifiable {
 
 	@Override
 	public void fromJSON(String json) {
-		// TODO Auto-generated method stub
+		try {
+			JSONObject jsonO = new JSONObject(json);
+			this.uuid = jsonO.getLong("uuid");
+			this.x = jsonO.getInt("x");
+			this.y = jsonO.getInt("y");
+			this.health = jsonO.getInt("health");
+			this.veterancy = jsonO.getInt("veterancy");
+			this.attack = jsonO.getInt("attack");
+			this.defense = jsonO.getInt("defense");
+			this.speed = jsonO.getInt("speed");
+			this.dest = jsonO.get("dest");
+			this.type = jsonO.getString("type");
+			this.owner.fromJSON(jsonO.getString("owner"));
+		} catch (JSONException e) {	e.printStackTrace(); }
 		
 	}
 	

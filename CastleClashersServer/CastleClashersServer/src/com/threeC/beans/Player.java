@@ -44,7 +44,7 @@ public class Player implements JSONStringifiable {
 	
 	@Override
 	public String toJSON() {
-		JSONObject json = new JSONObject(this, new String[] { "uuid", "name", "gold", "income", "units", "wars", "sessionId" } );
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "name", "gold", "income", "units", "wars" } );
 		LinkedList<Long> castlesUUIDs = new LinkedList<Long>();
 		LinkedList<Long> unitsUUIDs = new LinkedList<Long>();
 		LinkedList<Long> warsUUIDs = new LinkedList<Long>();
@@ -76,7 +76,26 @@ public class Player implements JSONStringifiable {
 
 	@Override
 	public void fromJSON(String json) {
-		// TODO Auto-generated method stub
+		try {
+			JSONObject jsonO = new JSONObject(json);
+			this.uuid = jsonO.getLong("uuid");
+			this.name = jsonO.getString("name");
+			this.gold = jsonO.getInt("gold");
+			this.income = jsonO.getInt("income");
+			this.units.clear();
+			for(int i=0;i<jsonO.getJSONArray("units").length();i++) {
+				Unit u = new Unit(1,1,1,"",1);
+				u.fromJSON(jsonO.getJSONArray("units").getString(i));
+				this.units.add(u);
+			}
+			this.wars.clear();			
+			for(int i=0;i<jsonO.getJSONArray("wars").length();i++) {
+				Player p = new Player("","",1);
+				p.fromJSON(jsonO.getJSONArray("wars").getString(i));
+				this.wars.add(p);
+			}
+			
+		} catch (JSONException e) {	e.printStackTrace(); }
 		
 	}
 	
