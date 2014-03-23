@@ -28,7 +28,8 @@ var Castle = function() {
 	this.upgrade = 0;
 	this.sprite = new Sprite(100,100);
 	this.sprite.image = core.assets[""];
-	
+	this.action = "";
+	this.selected;
 	scene.addChild(this);
 	this.addEventListener("LEFT_BUTTON_DOWN", castleLClick);
 	this.addEventListener("RIGHT_BUTTON_DOWN", castleRClick);
@@ -63,7 +64,8 @@ var Unit = function() {
 	this.subtype = "null";
 	this.sprite = new Sprite(100,100);
 	this.sprite.image = core.assets[""];
-	
+	this.action = "";
+	this.selected;
 	scene.addChild(this);
 	this.addEventListener("LEFT_BUTTON_DOWN", unitLClick);
 	this.addEventListener("RIGHT_BUTTON_DOWN", unitRClick);
@@ -89,6 +91,8 @@ var Battle = function() {
 	this.viewing = false;
 	this.players = [];
 	this.units = [];
+	this.action = "";
+	this.selected;
 	
 	scene.addChild(this);
 	this.addEventListener("LEFT_BUTTON_DOWN", battleLClick);
@@ -113,6 +117,8 @@ var Siege = function() {
 	this.viewing = false;
 	this.castle = -1; 	//uuid
 	this.units = [];
+	this.action = "";
+	this.selected;
 	
 	scene.addChild(this);
 	this.addEventListener("LEFT_BUTTON_DOWN", siegeLClick);
