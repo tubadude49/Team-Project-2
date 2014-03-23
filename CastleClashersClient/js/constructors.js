@@ -10,10 +10,13 @@ window.onload = function(){
 var castleLClick = function(event) {	
 	console.log(this);
 	ws.send(this);
+	//Highlight this
 }
 
 var castleRClick = function(event) {
-	
+	console.log(this);
+	ws.send(this);
+	//If unit selected MoveTo here
 }
 
 var Castle = function() {
@@ -27,16 +30,20 @@ var Castle = function() {
 	this.sprite.image = core.assets[""];
 	
 	scene.addChild(this);
-	scene.addEventListener("LEFT_BUTTON_DOWN", castleLClick);
-	scene.addEventListener("RIGHT_BUTTON_DOWN", castleRClick);
+	this.addEventListener("LEFT_BUTTON_DOWN", castleLClick);
+	this.addEventListener("RIGHT_BUTTON_DOWN", castleRClick);
 }
 
 var unitLClick = function(event) {
-	
+	console.log(this);
+	ws.send(this);
+	//Highlight this
 }
 
 var unitRClick = function(event) {
-	
+	console.log(this);
+	ws.send(this);
+	//If unit selected, move to here
 }
 
 var Unit = function() {
@@ -58,16 +65,20 @@ var Unit = function() {
 	this.sprite.image = core.assets[""];
 	
 	scene.addChild(this);
-	scene.addEventListener("LEFT_BUTTON_DOWN", unitLClick);
-	scene.addEventListener("RIGHT_BUTTON_DOWN", unitRClick);
+	this.addEventListener("LEFT_BUTTON_DOWN", unitLClick);
+	this.addEventListener("RIGHT_BUTTON_DOWN", unitRClick);
 }
 
 var battleLClick = function(event) {
-	
+	console.log(this);
+	ws.send(this);
+	this.viewing = !this.viewing;
 }
 
 var battleRClick = function(event) {
-	
+	console.log(this);
+	ws.send(this);
+	//If unit selected, move to here
 }
 
 var Battle = function() {
@@ -80,16 +91,18 @@ var Battle = function() {
 	this.units = [];
 	
 	scene.addChild(this);
-	scene.addEventListener("LEFT_BUTTON_DOWN", battleLClick);
-	scene.addEventListener("RIGHT_BUTTON_DOWN", battleRClick);
+	this.addEventListener("LEFT_BUTTON_DOWN", battleLClick);
+	this.addEventListener("RIGHT_BUTTON_DOWN", battleRClick);
 }
 
 var siegeLClick = function(event) {
-	
+	console.log(this);
+	ws.send(this);
 }
 
 var siegeRClick = function(event) {
-	
+	console.log(this);
+	ws.send(this);
 }
 
 var Siege = function() {
@@ -102,8 +115,8 @@ var Siege = function() {
 	this.units = [];
 	
 	scene.addChild(this);
-	scene.addEventListener("LEFT_BUTTON_DOWN", siegeLClick);
-	scene.addEventListener("RIGHT_BUTTON_DOWN", siegeRClick);
+	this.addEventListener("LEFT_BUTTON_DOWN", siegeLClick);
+	this.addEventListener("RIGHT_BUTTON_DOWN", siegeRClick);
 }
 
 var Instance = function() {
@@ -113,4 +126,5 @@ var Instance = function() {
 	this.gold = 0;
 	this.alliance = -1;	//uuid
 	this.war = -1;		//uuid
+	this.selected = 0;
 }
