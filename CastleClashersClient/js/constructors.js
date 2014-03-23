@@ -17,16 +17,10 @@ window.onload = function(){
 	core.start();
 }
 
-var castleLClick = function(event) {	
+var castleClick = function(event) {	
 	console.log(this);
 	ws.send(this);
 	//Highlight this
-}
-
-var castleRClick = function(event) {
-	console.log(this);
-	ws.send(this);
-	//If unit selected MoveTo here
 }
 
 var Castle = function() {
@@ -41,20 +35,13 @@ var Castle = function() {
 	this.action = "";
 	this.selected;
 	//scene.addChild(this.sprite);
-	this.sprite.addEventListener("LEFT_BUTTON_DOWN", castleLClick);
-	this.sprite.addEventListener("RIGHT_BUTTON_DOWN", castleRClick);
+	this.sprite.addEventListener(enchant.Event.TOUCH_START, castleLClick);
 }
 
-var unitLClick = function(event) {
-	console.log(this);
+var unitClick = function(event) {
+	console.log('left: ' + this);
 	ws.send(this);
 	//Highlight this
-}
-
-var unitRClick = function(event) {
-	console.log(this);
-	ws.send(this);
-	//If unit selected, move to here
 }
 
 var Unit = function(subtype) {
@@ -78,20 +65,13 @@ var Unit = function(subtype) {
 	this.selected;
 	core.rootScene.addChild(this.sprite);
 	//scene.addChild(this.sprite);
-	this.sprite.addEventListener("touchstart", unitLClick);
-	this.sprite.addEventListener("RIGHT_BUTTON_DOWN", unitRClick);
+	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
 }
 
-var battleLClick = function(event) {
+var battleClick = function(event) {
 	console.log(this);
 	ws.send(this);
 	this.viewing = !this.viewing;
-}
-
-var battleRClick = function(event) {
-	console.log(this);
-	ws.send(this);
-	//If unit selected, move to here
 }
 
 var Battle = function() {
@@ -106,16 +86,10 @@ var Battle = function() {
 	this.selected;
 	
 	//scene.addChild(this);
-	this.addEventListener("LEFT_BUTTON_DOWN", battleLClick);
-	this.addEventListener("RIGHT_BUTTON_DOWN", battleRClick);
+	this.addEventListener(enchant.Event.TOUCH_START, battleClick);
 }
 
-var siegeLClick = function(event) {
-	console.log(this);
-	ws.send(this);
-}
-
-var siegeRClick = function(event) {
+var siegeClick = function(event) {
 	console.log(this);
 	ws.send(this);
 }
@@ -132,8 +106,7 @@ var Siege = function() {
 	this.selected;
 	
 	//scene.addChild(this);
-	this.addEventListener("LEFT_BUTTON_DOWN", siegeLClick);
-	this.addEventListener("RIGHT_BUTTON_DOWN", siegeRClick);
+	this.addEventListener(enchant.Event.TOUCH_START, siegeLClick);
 }
 
 var Instance = function() {
