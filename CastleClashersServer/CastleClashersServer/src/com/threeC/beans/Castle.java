@@ -14,9 +14,10 @@ public class Castle implements JSONStringifiable {
 	
 	public Player owner = null;
 	
-	public Castle(int x, int y) {
+	public Castle(int x, int y, long uuid) {
 		this.x = x;
 		this.y = y;
+		this.uuid = uuid;
 	}
 	
 	@Override

@@ -19,7 +19,7 @@ public class Unit implements JSONStringifiable {
 	public int x;
 	public int y;
 	
-	public Object dest;
+	public long dest = -1l;
 	public Player owner;
 	public String type;
 	
@@ -54,7 +54,7 @@ public class Unit implements JSONStringifiable {
 			this.attack = jsonO.getInt("attack");
 			this.defense = jsonO.getInt("defense");
 			this.speed = jsonO.getInt("speed");
-			this.dest = jsonO.get("dest");
+			this.dest = jsonO.getLong("dest");
 			this.type = jsonO.getString("type");
 			this.owner.fromJSON(jsonO.getString("owner"));
 		} catch (JSONException e) {	e.printStackTrace(); }

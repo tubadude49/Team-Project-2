@@ -7,6 +7,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Player implements JSONStringifiable {
+	public boolean active = true;
+	
 	public long uuid;
 	
 	public String name;
@@ -26,11 +28,7 @@ public class Player implements JSONStringifiable {
 	public Player(String name, String sessionId, long uuid) {
 		this.name = name;
 		this.sessionId = sessionId;
-		this.uuid = uuid;
-		
-		castles.add(new Castle(-1,-1));
-		castles.add(new Castle(-1,-1));
-		castles.add(new Castle(-1,-1));
+		this.uuid = uuid;		
 	}
 	
 	public String sessionId() {
@@ -111,7 +109,7 @@ public class Player implements JSONStringifiable {
 		income = castles.size();
 	}
 	
-	public void incrGold() {
+	public synchronized void incrGold() {
 		gold += income;
 	}
 	
@@ -119,8 +117,17 @@ public class Player implements JSONStringifiable {
 		return gold;
 	}
 	
-	public void purchase(String unitType) {
-		//check gold
+	public synchronized void purchase(String type, UUIDDistributor uuidDistributor) {
+		/* purchase types:
+		 * Unit = 25g
+		 * Unit Upgrade = 15g
+		 * Castle Upgrade = 100g
+		 */
+		
+		if( (type.equals("cavalry") || type.equals("infantry") || type.equals("cannon")) && gold >= 25 ) {
+			units.add(UnitFactory.fromString(type, uuidDistributor.next()));
+			gold -= 25;
+		}
 	}
 	
 	public void moveUnit(String x, String y) {
