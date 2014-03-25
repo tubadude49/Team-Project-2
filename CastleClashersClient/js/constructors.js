@@ -52,8 +52,8 @@ var castleLClick = function(event) {
 	var label = Label('');
 
 	label.text += 'Castle Clicked';
-	label.x = _x + width;
-	label.y = _y + height;
+	label.x = this._x;
+	label.y = this._y;
 	core.rootScene.addChild(label);
 }
 
