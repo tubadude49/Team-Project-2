@@ -39,8 +39,24 @@ var Castle = function() {
 }
 
 var unitClick = function(event) {
-	console.log('left: ' + this);
-	ws.send(this);
+	console.log('left: ' + type + ' #' + uuid);
+	var response = '{ "type" : "' + type + '" , '
+					+ '"uuid" : "' + uuid + '" , '
+					+ '"x" : "' + x + '" , '
+					+ '"y" : "' + y + '" , '
+					+ '"xp" : "' + xp + '" , '
+					+ '"veterancy" : "' + veterancy + '" , '
+					+ '"health" : "' + health + '" , '
+					+ '"upgrade" : "' + upgrade + '" , '
+					+ '"attack" : "' + attack + '" , '
+					+ '"defense" : "' + defense + '" , '
+					+ '"speed" : "' + speed + '" , '
+					+ '"destX" : "' + destX + '" , '
+					+ '"destY" : "' + destY + '" , '
+					+ '"subtype" : "' + subtype + '" , '
+					+ '"action" : "' + action + '"}';
+	console.log(response);
+	ws.send(response);
 	//Highlight this
 }
 
