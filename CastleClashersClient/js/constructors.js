@@ -38,19 +38,16 @@ window.onload = function(){
 		var castle_mid = new Castle();
 		castle_mid.sprite.x = (background.width - castle_mid.sprite.width) / 2;
 		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
-<<<<<<< HEAD
 		core.rootScene.addChild(castle_mid.sprite);
 		
 		var cav = new Unit("cavalry");
 		cav.sprite.x = castle1.width;
 		cav.sprite.y = castle1.height;
 		core.rootScene.addChild(cav.sprite);
-=======
 		
 		var tmp_cavalry = new Unit('cavalry');
 		tmp_cavalry.sprite._x = 100;
 		tmp_cavalry.sprite._y = 100;
->>>>>>> 44e71ec908abc9ec4c54916d700199291f4ed14a
 		
 	}
 	
