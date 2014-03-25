@@ -8,6 +8,7 @@ window.onload = function(){
 	//scene = new Scene();
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png');
+	core.preload('assets/attack.png', 'assets/defend.png', 'assets/siege.png');
 	
 	core.onload = function() {
 		
@@ -40,6 +41,8 @@ window.onload = function(){
 		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
 		core.rootScene.addChild(castle_mid.sprite);
 		
+		
+		
 	}
 	
 	core.start();
@@ -49,12 +52,41 @@ var castleLClick = function(event) {
 	console.log(this);
 	//console.log(uuid);
 	ws.send(this);
-	var label = Label('');
-
-	label.text += 'Castle Clicked';
+	var attackOption = new Sprite(136,47);
+		attackOption.image = core.assets['assets/attack.png'];
+	
+	/*label.text += core.width;
 	label.x = this._x;
 	label.y = this._y;
-	core.rootScene.addChild(label);
+	core.rootScene.addChild(label);*/
+	
+	if(this._x == 0 && this._y==0){ 
+		attackOption.x = this._x;
+		attackOption.y = this._y + this.height;
+		core.rootScene.addChild(attackOption);
+	}
+	else if(this._x == core.width-this.width && this._y == 0){
+		attackOption.x = core.width - attackOption.width;
+		attackOption.y = this._y + this.height;
+		core.rootScene.addChild(attackOption);
+	}
+	else if(this._x == 0 && this._y==core.height-this.height) {
+		attackOption.x = 0;
+		attackOption.y = this._y - 2 * attackOption.height;
+		core.rootScene.addChild(attackOption);
+	}
+	else if(this._x == core.width-this.width && this._y==core.height-this.height) {
+		attackOption.x = core.width-attackOption.width;
+		attackOption.y = this._y - 2 * this.height;
+		core.rootScene.addChild(attackOption);
+	}
+	else if(this._x == ((core.width - this.width) / 2) && this._y == ((core.width - this.width) / 2)) {
+		attackOption.x = this._x;
+		attackOption.y = this._y + this.height;
+		core.rootScene.addChild(attackOption);
+	}
+	
+	
 }
 
 var Castle = function() {
