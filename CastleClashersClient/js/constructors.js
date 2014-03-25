@@ -47,8 +47,14 @@ window.onload = function(){
 
 var castleLClick = function(event) {	
 	console.log(this);
+	//console.log(uuid);
 	ws.send(this);
-	//Highlight this
+	var label = Label('');
+
+	label.text += 'Castle Clicked';
+	label.x = _x + width;
+	label.y = _y + height;
+	core.rootScene.addChild(label);
 }
 
 var Castle = function() {
