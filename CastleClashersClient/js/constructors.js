@@ -5,6 +5,7 @@ var castles = [];
 
 var core;
 var instance;
+var coreUISize = 200;
 var selected_uuid = -1;
 
 window.onload = function(){
@@ -15,9 +16,14 @@ window.onload = function(){
 	
 	core.onload = function() {
 		
-		var background = new Sprite(core.width, core.height);
+		var background = new Sprite(core.width-coreUISize, core.height);
 		background.backgroundColor = "#008000";
 		core.rootScene.addChild(background);
+		
+		var backgroundUI = new Sprite(coreUISize, core.height);
+		backgroundUI.x = core.width - coreUISize;
+		backgroundUI.backgroundColor = "#81DAF5";
+		core.rootScene.addChild(backgroundUI);
 		
 		var castle1 = new Castle();
 		castle1.sprite.x = 0;
