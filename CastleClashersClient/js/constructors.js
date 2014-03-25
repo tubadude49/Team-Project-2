@@ -1,6 +1,7 @@
 enchant();
 
 var core;
+var selected_uuid = -1;
 //var scene;
 
 window.onload = function(){
@@ -40,23 +41,26 @@ var Castle = function() {
 
 var unitClick = function(event) {
 	console.log('left: ' + type + ' #' + uuid);
-	var response = '{ "type" : "' + type + '" , '
-					+ '"uuid" : "' + uuid + '" , '
-					+ '"x" : "' + x + '" , '
-					+ '"y" : "' + y + '" , '
-					+ '"xp" : "' + xp + '" , '
-					+ '"veterancy" : "' + veterancy + '" , '
-					+ '"health" : "' + health + '" , '
-					+ '"upgrade" : "' + upgrade + '" , '
-					+ '"attack" : "' + attack + '" , '
-					+ '"defense" : "' + defense + '" , '
-					+ '"speed" : "' + speed + '" , '
-					+ '"destX" : "' + destX + '" , '
-					+ '"destY" : "' + destY + '" , '
-					+ '"subtype" : "' + subtype + '" , '
-					+ '"action" : "' + action + '"}';
+	if(selected_uuid == -1)
+	{
+		selected = true;
+		selected_uuid = uuid;
+	}
+	else if(selected)
+	{
+		selected = false;
+		selected_uuid = uuid;
+	}
+	//else
+	//{
+		var fields = new Object();
+		fields.selected = selected_uuid;
+		fields.target = uuid;
+		fields.action = 'moveto';
+		var response = JSON.stringify(fields);
+	//}
 	console.log(response);
-	ws.send(response);
+	//ws.send(response);
 	//Highlight this
 }
 
@@ -78,7 +82,7 @@ var Unit = function(subtype) {
 	this.sprite = new Sprite(50,37);
 	this.sprite.image = core.assets['assets/' + subtype + '.png'];
 	this.action = "";
-	this.selected;
+	this.selected = false;
 	core.rootScene.addChild(this.sprite);
 	//scene.addChild(this.sprite);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
