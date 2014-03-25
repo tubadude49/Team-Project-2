@@ -2,23 +2,50 @@ enchant();
 
 var core;
 var selected_uuid = -1;
-//var scene;
 
 window.onload = function(){
 	core = new Core(1280,720);
 	//scene = new Scene();
 
-	core.preload('assets/cavalry.png','assets/infantry.png');
+	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png');
 	
 	core.onload = function() {
-		var test_cav = Unit('cavalry');
+		
+		var background = new Sprite(core.width, core.height);
+		background.backgroundColor = "#008000";
+		core.rootScene.addChild(background);
+		
+		var castle1 = new Castle();
+		castle1.sprite.x = 0;
+		castle1.sprite.y = 0;
+		core.rootScene.addChild(castle1.sprite);
+		
+		var castle2 = new Castle();
+		castle2.sprite.x = background.width - castle2.sprite.width;
+		castle2.sprite.y = 0;
+		core.rootScene.addChild(castle2.sprite);
+		
+		var castle3 = new Castle();
+		castle3.sprite.x = 0;
+		castle3.sprite.y = background.height - castle3.sprite.height;
+		core.rootScene.addChild(castle3.sprite);
+		
+		var castle4 = new Castle();
+		castle4.sprite.x = background.width - castle4.sprite.width;
+		castle4.sprite.y = background.height - castle4.sprite.height;
+		core.rootScene.addChild(castle4.sprite);
+		
+		var castle_mid = new Castle();
+		castle_mid.sprite.x = (background.width - castle_mid.sprite.width) / 2;
+		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
+		core.rootScene.addChild(castle_mid.sprite);
 		
 	}
 	
 	core.start();
 }
 
-var castleClick = function(event) {	
+var castleLClick = function(event) {	
 	console.log(this);
 	ws.send(this);
 	//Highlight this
@@ -31,8 +58,8 @@ var Castle = function() {
 	this.y = 0;
 	this.health = 0;
 	this.upgrade = 0;
-	this.sprite = new Sprite(100,100);
-	this.sprite.image = core.assets['assets/castle_gold.png'];
+	this.sprite = new Sprite(86, 41);
+	this.sprite.image = core.assets['assets/castle.png'];
 	this.action = "";
 	this.selected;
 	//scene.addChild(this.sprite);
