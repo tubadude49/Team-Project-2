@@ -41,7 +41,10 @@ window.onload = function(){
 		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
 		core.rootScene.addChild(castle_mid.sprite);
 		
-		
+		var cav = new Unit("cavalry");
+		cav.sprite.x = castle1.width;
+		cav.sprite.y = castle1.height;
+		core.rootScene.addChild(cav.sprite);
 		
 	}
 	
@@ -105,27 +108,30 @@ var Castle = function() {
 }
 
 var unitClick = function(event) {
-	console.log('left: ' + type + ' #' + uuid);
+	console.log('left: ' + this.obj.type + ' #' + this.obj.uuid);
+	var fields = new Object();
+	
 	if(selected_uuid == -1)
 	{
-		selected = true;
-		selected_uuid = uuid;
+		this.obj.selected = true;
+		selected_uuid = this.obj.uuid;
+		
 	}
-	else if(selected)
+	else if(this.obj.selected)
 	{
-		selected = false;
-		selected_uuid = uuid;
+		this.obj.selected = false;
+		selected_uuid = this.obj.uuid;
+		
 	}
 	//else
-	//{
-		var fields = new Object();
+	{
 		fields.selected = selected_uuid;
-		fields.target = uuid;
+		fields.target = this.obj.uuid;
 		fields.action = 'moveto';
-		var response = JSON.stringify(fields);
-	//}
+	}
+	var response = JSON.stringify(fields);
 	console.log(response);
-	//ws.send(response);
+	ws.send(response);
 	//Highlight this
 }
 
@@ -150,6 +156,7 @@ var Unit = function(subtype) {
 	this.selected = false;
 	core.rootScene.addChild(this.sprite);
 	//scene.addChild(this.sprite);
+	this.sprite.obj = this;
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
 }
 
