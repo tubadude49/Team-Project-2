@@ -1,6 +1,10 @@
 enchant();
 
+var units = [];
+var castles = [];
+
 var core;
+var instance;
 var selected_uuid = -1;
 
 window.onload = function(){
@@ -8,7 +12,6 @@ window.onload = function(){
 	//scene = new Scene();
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png');
-	core.preload('assets/attack.png', 'assets/defend.png', 'assets/siege.png');
 	
 	core.onload = function() {
 		
@@ -19,74 +22,46 @@ window.onload = function(){
 		var castle1 = new Castle();
 		castle1.sprite.x = 0;
 		castle1.sprite.y = 0;
-		core.rootScene.addChild(castle1.sprite);
 		
 		var castle2 = new Castle();
 		castle2.sprite.x = background.width - castle2.sprite.width;
 		castle2.sprite.y = 0;
-		core.rootScene.addChild(castle2.sprite);
 		
 		var castle3 = new Castle();
 		castle3.sprite.x = 0;
 		castle3.sprite.y = background.height - castle3.sprite.height;
-		core.rootScene.addChild(castle3.sprite);
 		
 		var castle4 = new Castle();
 		castle4.sprite.x = background.width - castle4.sprite.width;
 		castle4.sprite.y = background.height - castle4.sprite.height;
-		core.rootScene.addChild(castle4.sprite);
 		
 		var castle_mid = new Castle();
 		castle_mid.sprite.x = (background.width - castle_mid.sprite.width) / 2;
 		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
-		core.rootScene.addChild(castle_mid.sprite);
 		
-		
+		var tmp_cavalry = new Unit('cavalry');
+		tmp_cavalry.sprite._x = 100;
+		tmp_cavalry.sprite._y = 100;
 		
 	}
 	
+	instance = new Instance();
 	core.start();
 }
 
-var castleLClick = function(event) {	
+var castleClick = function(event) {	
 	console.log(this);
-	//console.log(uuid);
 	ws.send(this);
-	var attackOption = new Sprite(136,47);
-		attackOption.image = core.assets['assets/attack.png'];
-	
-	/*label.text += core.width;
+	var label = Label('');
+
+	label.text += 'Castle Clicked';
 	label.x = this._x;
 	label.y = this._y;
-	core.rootScene.addChild(label);*/
-	
-	if(this._x == 0 && this._y==0){ 
-		attackOption.x = this._x;
-		attackOption.y = this._y + this.height;
-		core.rootScene.addChild(attackOption);
-	}
-	else if(this._x == core.width-this.width && this._y == 0){
-		attackOption.x = core.width - attackOption.width;
-		attackOption.y = this._y + this.height;
-		core.rootScene.addChild(attackOption);
-	}
-	else if(this._x == 0 && this._y==core.height-this.height) {
-		attackOption.x = 0;
-		attackOption.y = this._y - 2 * attackOption.height;
-		core.rootScene.addChild(attackOption);
-	}
-	else if(this._x == core.width-this.width && this._y==core.height-this.height) {
-		attackOption.x = core.width-attackOption.width;
-		attackOption.y = this._y - 2 * this.height;
-		core.rootScene.addChild(attackOption);
-	}
-	else if(this._x == ((core.width - this.width) / 2) && this._y == ((core.width - this.width) / 2)) {
-		attackOption.x = this._x;
-		attackOption.y = this._y + this.height;
-		core.rootScene.addChild(attackOption);
-	}
-	
-	
+	core.rootScene.addChild(label);
+	var request = {};
+	request.action = 'purchase';
+	request.type = 'cavalry';
+	ws.send(JSON.stringify(request));
 }
 
 var Castle = function() {
@@ -100,8 +75,8 @@ var Castle = function() {
 	this.sprite.image = core.assets['assets/castle.png'];
 	this.action = "";
 	this.selected;
-	//scene.addChild(this.sprite);
-	this.sprite.addEventListener(enchant.Event.TOUCH_START, castleLClick);
+	core.rootScene.addChild(this.sprite);
+	this.sprite.addEventListener(enchant.Event.TOUCH_START, castleClick);
 }
 
 var unitClick = function(event) {
