@@ -60,7 +60,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					player.active = false;
 				}
 			}
-		}
+		}		
 	}
 		
 	public Player getPlayerBySessionId(String sessionId) {
@@ -166,13 +166,13 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						if(json.getString("type").equals("castle")) {
 							if(json.getString("purchase").equals("upgrade")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
-								if(castle.upgrade(player)) {
+								if(castle.owner == player.uuid && castle.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									event.sendToken(JSONProcessor.JSONStringToToken(castle.toJSON()));
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
-								if(castle.reinforce(player)) {
+								if(castle.owner == player.uuid && castle.reinforce(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									event.sendToken(JSONProcessor.JSONStringToToken(castle.toJSON()));	
 								}
@@ -188,13 +188,13 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								}						
 							} else if(json.getString("purchase").equals("upgrade")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
-								if(unit.upgrade(player)) {
+								if(unit.owner == player.uuid && unit.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									event.sendToken(JSONProcessor.JSONStringToToken(unit.toJSON()));
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
-								if(unit.reinforce(player)) {
+								if(unit.owner == player.uuid && unit.reinforce(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									event.sendToken(JSONProcessor.JSONStringToToken(unit.toJSON()));
 								}
@@ -253,6 +253,13 @@ public class ServerMain {
 	
 	public static void firstFire(JWebSocketListener jwsl, TokenServer server) {
 		jwsl.distributeCastles();
+		for(WebSocketEngine wse : server.getEngines().values()) {
+			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
+				for(Castle castle : jwsl.castles) {
+					server.sendToken(wsc, JSONProcessor.JSONStringToToken(castle.toJSON()));
+				}
+			}
+		}
 		gameFire(jwsl, server);
 	}
 	

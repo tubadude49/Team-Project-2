@@ -52,7 +52,7 @@ window.onload = function(){
 		attackButton.addEventListener(enchant.Event.TOUCH_START, attackButtonClick);
 		core.rootScene.addChild(attackButton);
 		
-		var castle1 = new Castle();
+		/*var castle1 = new Castle();
 		castle1.sprite.x = 0;
 		castle1.sprite.y = 0;
 		
@@ -71,15 +71,15 @@ window.onload = function(){
 		var castle_mid = new Castle();
 		castle_mid.sprite.x = (background.width - castle_mid.sprite.width) / 2;
 		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
-		core.rootScene.addChild(castle_mid.sprite);
+		core.rootScene.addChild(castle_mid.sprite);*/
 		
 		/*var cav = new Unit("cavalry");
 		cav.sprite.x = castle1.width;
 		cav.sprite.y = castle1.height;
 		core.rootScene.addChild(cav.sprite);*/
 		
-		var tmp_cavalry = new Unit('cavalry');
-		tmp_cavalry.sprite.moveTo(100,100);
+		/*var tmp_cavalry = new Unit('cavalry');
+		tmp_cavalry.sprite.moveTo(100,100);*/
 		
 	}
 	
@@ -99,20 +99,45 @@ var attackButtonClick = function(event) {
 	buttonSelected = 1;
 }
 
-var castleClick = function(event) {	
-	//console.log(this);
-	var label = Label('');
-
+var castleClick = function(event) {
+	/*var label = Label('');
 	label.text += 'Castle Clicked';
 	label.x = this._x;
 	label.y = this._y;
-	core.rootScene.addChild(label);
-	var request = {};
+	core.rootScene.addChild(label);*/
+	
+	/*var request = {};
 	request.action = 'purchase';
 	request.purchase = 'new';
 	request.type = 'cavalry';
 	request.uuid = instance.uuid;
-	ws.send(JSON.stringify(request));
+	ws.send(JSON.stringify(request));*/
+	
+	if(buttonSelected == 0) {
+		if(!this.selected)
+		{
+			this.selected = true;
+			selected_obj = this;
+			/*selected_uuid = this.uuid;
+			selected_type = 'unit';*/
+		}
+		else if(this.selected)
+		{
+			this.selected = false;
+			selected_obj = {};
+			/*selected_uuid = -1;
+			selected_type = '';	*/
+		}
+		console.log("new uuid: " + selected_obj.uuid);
+	}
+	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
+		console.log("clicked uuid: " + selected_obj.uuid);
+		var fields = {};
+		fields.selected = selected_uuid;
+		fields.target = this.uuid;
+		fields.action = 'moveto';
+		ws.send(JSON.stringify(fields));
+	}
 }
 
 var Castle = function() {
@@ -228,6 +253,15 @@ var Instance = function() {
 	this.selected = 0;
 }
 
+var castleFromData = function(castle, data) {
+	castle.sprite.uuid = data.uuid;
+	castle.sprite.health = data.health;
+	castle.sprite.upgrade = data.upgrade;
+	castle.sprite.owner = data.owner;
+	castle.sprite.moveTo(data.x,data.y);
+	return castle;
+}
+
 var unitFromData = function(unit, data) {	
 	unit.sprite.uuid = data.uuid;
 	unit.sprite.health = data.health;
@@ -239,6 +273,24 @@ var unitFromData = function(unit, data) {
 	unit.sprite.speed = data.speed;
 	unit.sprite.dest = data.dest;
 	return unit;
+}
+
+var upgradeClick = function(event) {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = 'upgrade';
+	request.type = selected_obj.type;
+	request.uuid = selected_obj.uuid;
+	ws.send(JSON.stringify(request));
+}
+
+var reinforceClick = function(event) {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = 'reinforce';
+	request.type = selected_obj.type;
+	request.uuid = selected_obj.uuid;
+	ws.send(JSON.stringify(request));
 }
 
 var uiClick = function(event) {
@@ -254,6 +306,7 @@ var uiClick = function(event) {
  	upOption.image = core.assets['assets/upgradeUI.png'];
  	upOption.x = core.width-coreUISize;
  	upOption.y = attackOption.height;
+	upOption.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
  	core.rootScene.addChild(upOption);;
  	/*************************************/
  	

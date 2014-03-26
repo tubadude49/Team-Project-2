@@ -7,6 +7,7 @@ ws.onopen = function() {
 }
 ws.onmessage = function(event) {
 	var data = JSON.parse(event.data);
+	console.log(data);
 	if(data.type) {
 		if(data.type == 'instance') {
 			instance = data;
@@ -28,6 +29,20 @@ ws.onmessage = function(event) {
 			}
 		} else if(data.type == 'castle') {			
 			console.log(data);
+			var found = false;
+			for(i=0;i<castles.length;i++) {
+				if(castles[i].uuid == data.uuid) {
+					castles[i] = castleFromData(castles[i],data);
+					found = true;
+					console.log("castle updated");
+					break;
+				}
+			}
+			if(!found) {
+				var castle = new Castle();
+				castles.push(castleFromData(castle,data));
+				console.log("castle added");
+			}
 		}
 	}
 }

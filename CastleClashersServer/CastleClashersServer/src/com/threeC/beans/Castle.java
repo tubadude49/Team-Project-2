@@ -14,6 +14,8 @@ public class Castle implements JSONStringifiable {
 	public int health = 1000;
 	public int upgrade;
 	
+	public final String type = "castle";
+	
 	public Castle(int x, int y, long uuid, long owner) {
 		this.x = x;
 		this.y = y;
@@ -28,7 +30,7 @@ public class Castle implements JSONStringifiable {
 	
 	@Override
 	public String toJSON() {
-		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "health", "upgrade", "owner" } );
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "health", "upgrade", "owner", "type" } );
 		return json.toString();
 	}
 
@@ -57,6 +59,7 @@ public class Castle implements JSONStringifiable {
 	public synchronized boolean upgrade(Player owner) {
 		if(owner.charge(100)) {
 			upgrade++;
+			health += 500;
 			return true;
 		}
 		return false;		
