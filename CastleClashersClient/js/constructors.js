@@ -6,17 +6,22 @@ var castles = [];
 var core;
 var instance;
 var coreUISize = 200;
+var bottomUISize = 50;
 var selected_uuid = -1;
+var selectButton;
+var attackButton;
+
 
 window.onload = function(){
 	core = new Core(1280,720);
 	//scene = new Scene();
 
-	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png');
+	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png', 'assets/button_select.png', 
+				'assets/button_select_selected.png', 'assets/button_attack.png', 'assets/button_attack_selected.png');
 	
 	core.onload = function() {
 		
-		var background = new Sprite(core.width-coreUISize, core.height);
+		var background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
 		background.backgroundColor = "#008000";
 		core.rootScene.addChild(background);
 		
@@ -24,6 +29,26 @@ window.onload = function(){
 		backgroundUI.x = core.width - coreUISize;
 		backgroundUI.backgroundColor = "#81DAF5";
 		core.rootScene.addChild(backgroundUI);
+		
+		var bottomUI = new Sprite(core.width, bottomUISize);
+		bottomUI.x = 0;
+		bottomUI.y = background.height;
+		bottomUI.backgroundColor = "#81DAF5";
+		core.rootScene.addChild(bottomUI);
+		
+		selectButton = new Sprite(106, 43);
+		selectButton.image = core.assets['assets/button_select.png'];
+		selectButton.x = background.width/2 - selectButton.width;
+		selectButton.y = bottomUI.y;
+		selectButton.addEventListener(enchant.Event.TOUCH_START, selectButtonClick);
+		core.rootScene.addChild(selectButton);
+		
+		attackButton = new Sprite(106, 43);
+		attackButton.image = core.assets['assets/button_attack.png'];
+		attackButton.x = background.width/2 + attackButton.width;
+		attackButton.y = bottomUI.y;
+		attackButton.addEventListener(enchant.Event.TOUCH_START, attackButtonClick);
+		core.rootScene.addChild(attackButton);
 		
 		var castle1 = new Castle();
 		castle1.sprite.x = 0;
@@ -59,6 +84,18 @@ window.onload = function(){
 	
 	instance = new Instance();
 	core.start();
+}
+
+var selectButtonClick = function(event) {
+	console.log(this);
+	this.image = core.assets['assets/button_select_selected.png'];
+	attackButton.image = core.assets['assets/button_attack.png'];
+}
+
+var attackButtonClick = function(event) {
+	console.log(this);
+	this.image = core.assets['assets/button_attack_selected.png'];
+	selectButton.image = core.assets['assets/button_select.png'];
 }
 
 var castleClick = function(event) {	
