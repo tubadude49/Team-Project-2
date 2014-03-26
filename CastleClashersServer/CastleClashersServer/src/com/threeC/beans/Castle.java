@@ -9,8 +9,9 @@ public class Castle implements JSONStringifiable {
 	
 	public int x;
 	public int y;
-	
-	public int health;
+
+	public static final int maxHealth = 1000;
+	public int health = 1000;
 	public int upgrade;
 	
 	public Castle(int x, int y, long uuid, long owner) {
@@ -40,9 +41,25 @@ public class Castle implements JSONStringifiable {
 			this.y = jsonO.getInt("y");
 			this.health = jsonO.getInt("health");
 			this.upgrade = jsonO.getInt("upgrade");
-			this.owner.fromJSON(jsonO.getString("owner"));
+			this.owner = jsonO.getLong("owner");
 		} catch (JSONException e) {	e.printStackTrace(); }		
 		
+	}
+	
+	public synchronized boolean reinforce(Player owner) {
+		if(owner.charge(50)) {
+			health = maxHealth;
+			return true;
+		}
+		return false;
+	}
+	
+	public synchronized boolean upgrade(Player owner) {
+		if(owner.charge(100)) {
+			upgrade++;
+			return true;
+		}
+		return false;		
 	}
 	
 	public long uuid() {

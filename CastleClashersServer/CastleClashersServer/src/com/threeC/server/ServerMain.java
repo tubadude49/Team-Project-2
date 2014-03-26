@@ -23,6 +23,7 @@ import com.threeC.beans.Castle;
 import com.threeC.beans.Siege;
 import com.threeC.beans.UUIDDistributor;
 import com.threeC.beans.Unit;
+import com.threeC.beans.UnitFactory;
 
 class JWebSocketListener implements WebSocketServerTokenListener {
 	public int frame = 0;
@@ -165,38 +166,51 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						if(json.getString("type").equals("castle")) {
 							if(json.getString("purchase").equals("upgrade")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
-								/*do castle updates here*/
+								if(castle.upgrade(player)) {
+									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+									event.sendToken(JSONProcessor.JSONStringToToken(castle.toJSON()));
+								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
+								if(castle.reinforce(player)) {
+									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+									event.sendToken(JSONProcessor.JSONStringToToken(castle.toJSON()));	
+								}
 							}
 						} else {
-							if(json.getString("purchase").equals("new") {
-								Unit newUnit = player.purchaseUnit(json.getString("type"), uuidDistributor);
-								units.add(newUnit);
-								event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
-								event.sendToken(JSONProcessor.JSONStringToToken(newUnit.toJSON()));							
+							if(json.getString("purchase").equals("new")) {								
+								if(player.charge(25)) {
+									Unit newUnit = UnitFactory.fromString(json.getString("type"), uuidDistributor.next(), player.uuid);
+									units.add(newUnit);
+									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+									event.sendToken(JSONProcessor.JSONStringToToken(newUnit.toJSON()));	
+									System.out.println("sent response" + newUnit.toJSON());
+								}						
 							} else if(json.getString("purchase").equals("upgrade")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
-								/*do unit updates here*/
+								if(unit.upgrade(player)) {
+									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+									event.sendToken(JSONProcessor.JSONStringToToken(unit.toJSON()));
+								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
+								if(unit.reinforce(player)) {
+									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+									event.sendToken(JSONProcessor.JSONStringToToken(unit.toJSON()));
+								}
 							}
 						}						
-					} else if(false) {
-					
-					}
-					
-				}
-				 {
-				} else if( json.has("action") && json.getString("action").equals("moveto") 
-						&& json.has("selected") && json.has("target") ) {
-					long uuidSrc = json.getLong("selected");
-					long uuidDest = json.getLong("target");
-					Object src = getByUUID(uuidSrc);
-					if(src instanceof Unit) {
-						Unit unit = (Unit)src;
-						unit.dest = uuidDest;
-					}
+					} /*else if( json.has("action") && json.getString("action").equals("moveto") 
+							&& json.has("selected") 
+							&& json.has("target") ) {
+						long uuidSrc = json.getLong("selected");
+						long uuidDest = json.getLong("target");
+						Object src = getByUUID(uuidSrc);
+						if(src instanceof Unit) {
+							Unit unit = (Unit)src;
+							unit.dest = uuidDest;
+						}
+					}	*/				
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -233,23 +247,23 @@ public class ServerMain {
 		System.out.println("Server shutting down...");
 	}
 	
-	public void pregameFire(JWebSocketListener jwsl, TokenServer server) {
+	public static void pregameFire(JWebSocketListener jwsl, TokenServer server) {
 		System.out.println(server.getEngines().size() + ":" + jwsl.frame);	
 	}
 	
-	public void firstFire(JWebSocketListener jwsl, TokenServer server) {
+	public static void firstFire(JWebSocketListener jwsl, TokenServer server) {
 		jwsl.distributeCastles();
-		gameFire(jwsl);
+		gameFire(jwsl, server);
 	}
 	
-	public void gameFire(JWebSocketListener jwsl, TokenServer server) {
+	public static void gameFire(JWebSocketListener jwsl, TokenServer server) {
 		System.out.println("frame:" + jwsl.frame);
 		jwsl.updateUnits();
 		for(WebSocketEngine wse : server.getEngines().values()) {
 			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
 				Player player = jwsl.getPlayerBySessionId(wsc.getSession().getSessionId());
 				if(player.active) {
-					player.updateIncome();
+					player.income = 5;
 					player.incrGold();
 				}
 				server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));

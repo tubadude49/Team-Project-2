@@ -1,8 +1,5 @@
 package com.threeC.beans;
 
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,7 +67,7 @@ public class Player implements JSONStringifiable {
 	}
 	
 	public void updateIncome() {
-		income = castles.size();
+		//income = castles.size();
 	}
 	
 	public synchronized void incrGold() {
@@ -81,17 +78,18 @@ public class Player implements JSONStringifiable {
 		return gold;
 	}
 	
-	public synchronized Unit purchaseUnit(String type, UUIDDistributor uuidDistributor) {
+	/*public synchronized Unit purchaseUnit(String type, UUIDDistributor uuidDistributor) {
 		/* purchase types:
 		 * Unit = 25g
 		 * Unit Upgrade = 15g
 		 * Castle Upgrade = 100g
 		 */
 		
-		if( (type.equals("cavalry") || type.equals("infantry") || type.equals("cannon")) && charge(25) ) {
+		/*if( (type.equals("cavalry") || type.equals("infantry") || type.equals("cannon")) && charge(25) ) {
 			return UnitFactory.fromString(type, uuidDistributor.next(), uuid);
 		}
-	}
+		return null;
+	}*/
 	
 	public synchronized boolean charge(int amount) {
 		if(gold < amount) {
