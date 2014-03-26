@@ -19,7 +19,8 @@ window.onload = function(){
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png', 'assets/button_select.png', 
 				'assets/button_select_selected.png', 'assets/button_attack.png', 'assets/button_attack_selected.png',
- 				'assets/attackUI.png', 'assets/upgradeUI.png');
+ 				'assets/attackUI.png', 'assets/upgradeUI.png', 'assets/buyInfantry.png', 'assets/buyCavalry.png',
+				'assets/buyArmor.png','assets/reinforceCastle.png','assets/reinforceRegiment.png','assets/upgradeRegiment.png');
 	
 	core.onload = function() {
 		
@@ -277,16 +278,50 @@ var unitFromData = function(unit, data) {
 }
 
 var upgradeClick = function(event) {
-	console.log(selected_obj);
 	var request = {};
 	request.action = 'purchase';
 	request.purchase = 'upgrade';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
-	request.x = selected_obj._x;
-	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
+
+var buyInfantryClick = function(event) {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = 'infantry';
+	request.type = selected_obj.type;
+	request.uuid = selected_obj.uuid;
+	ws.send(JSON.stringify(request));
+}
+
+var buyCavalryClick = function(event) {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = 'cavalry';
+	request.type = selected_obj.type;
+	request.uuid = selected_obj.uuid;
+	ws.send(JSON.stringify(request));
+}
+
+var buyArmorClick = function(event) {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = 'armor';
+	request.type = selected_obj.type;
+	request.uuid = selected_obj.uuid;
+	ws.send(JSON.stringify(request));
+}
+
+// Possible general type
+/*var buyRegimentClick = function(event) {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = selected_obj.subtype;
+	request.type = selected_obj.type;
+	request.uuid = selected_obj.uuid;
+	ws.send(JSON.stringify(request));
+}*/
 
 var reinforceClick = function(event) {
 	var request = {};
@@ -294,41 +329,53 @@ var reinforceClick = function(event) {
 	request.purchase = 'reinforce';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
-	request.x = selected_obj._x;
-	request.y = selected_obj._y;
-	ws.send(JSON.stringify(request));
-}
-
-var buyClick = function() {
-	var request = {};
-	request.action = 'purchase';
-	request.purchase = 'new';
-	request.type = 'cavalry';
-	request.uuid = instance.uuid;
-	request.x = selected_obj._x;
-	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
 var uiClick = function(event) {
-	//console.log(this);
+	console.log('whichClick ' + this.type);
 	
 	/*** USED FOR CASTLE IF STATEMENT ***/
-	var attackOption = new Sprite(200, 69);
- 	attackOption.image = core.assets['assets/attackUI.png'];
- 	attackOption.x = core.width-coreUISize;
-	attackOption.addEventListener(enchant.Event.TOUCH_START, buyClick);
- 	core.rootScene.addChild(attackOption);
- 	
- 	var upOption = new Sprite(200, 69);
- 	upOption.image = core.assets['assets/upgradeUI.png'];
- 	upOption.x = core.width-coreUISize;
- 	upOption.y = attackOption.height;
-	upOption.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
- 	core.rootScene.addChild(upOption);;
+	var reinforceCastle = new Sprite(200, 69);
+ 	reinforceCastle.image = core.assets['assets/reinforceCastle.png'];
+ 	reinforceCastle.x = core.width-coreUISize;
+	reinforceCastle.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
+	
+	var buyInfantry = new Sprite(200, 69);
+ 	buyInfantry.image = core.assets['assets/buyInfantry.png'];
+ 	buyInfantry.x = core.width-coreUISize;
+	buyInfantry.y = reinforceCastle.height;
+	buyInfantry.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick)
+	
+	var buyCavalry = new Sprite(200, 69);
+ 	buyCavalry.image = core.assets['assets/buyCavalry.png'];
+ 	buyCavalry.x = core.width-coreUISize;
+	buyCavalry.y = buyInfantry.y + buyCavalry.height;
+	buyCavalry.addEventListener(enchant.Event.TOUCH_START, buyCavalryClick);
+	
+	var buyArmor = new Sprite(200, 69);
+ 	buyArmor.image = core.assets['assets/buyArmor.png'];
+ 	buyArmor.x = core.width-coreUISize;
+	buyArmor.y = buyCavalry.y + buyArmor.height;
+	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
  	/*************************************/
+	
+ 	/*** UNIT IF STATEMENT ***/
+	var reinforceRegiment = new Sprite(200, 69);
+ 	reinforceRegiment.image = core.assets['assets/reinforceRegiment.png'];
+ 	reinforceRegiment.x = core.width-coreUISize;
+	reinforceRegiment.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
+	
+	var upgradeRegiment = new Sprite(200, 69);
+ 	upgradeRegiment.image = core.assets['assets/upgradeRegiment.png'];
+ 	upgradeRegiment.x = core.width-coreUISize;
+	upgradeRegiment.y = reinforceRegiment.height;
+	upgradeRegiment.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
  	
- 	/*** FOR CASTLES AND UNITS ***/
+	
+	
+	/*** FOR CASTLES AND UNITS ***/
+		
  	var typeLabel = Label('');
  	var health = Label('');
  	var upgrade = Label('');
@@ -337,36 +384,105 @@ var uiClick = function(event) {
  	var castleUpgrade = Label('');
  	
  	/** UNITS **/
- 	var unitXp = Label('');
+ 	var unitXP = Label('');
  	var veterancy = Label('');
  	var unitUpgrade = Label('');
- 	var unitattack = Label('');
+ 	var unitAttack = Label('');
  	var unitDefense = Label('');
  	var unitSpeed = Label('');
  	var unitSubtype = Label('');
  	
- 	/***** STATS SETUP *****/
- 	typeLabel.text += 'TYPE NAME';
+ 	/***** CASTLE STATS SETUP *****/
+ 	typeLabel.text += this.type;
  	typeLabel.x = core.width-150;
  	typeLabel.y = core.height / 2;
  	
- 	health.text += 'Health:' + ' HEALTH HERE';
+ 	health.text += 'Health: ' + this.health;
  	health.x = typeLabel.x-49;
  	health.y = typeLabel.y+50;
  	
- 	upgrade.text += 'Upgrade lvl:' + ' lvl HERE';
+ 	upgrade.text += 'Upgrade lvl: ' + this.upgrade;
  	upgrade.x = typeLabel.x-49;
  	upgrade.y = typeLabel.y+75;
  	
- 	/*** ADDING CHILDREN ***/
- 	core.rootScene.addChild(typeLabel);
- 	core.rootScene.addChild(health);
- 	core.rootScene.addChild(upgrade);
- 	
- 	/*if(this.type == "castle") {
- 		typeLabel.text += 'Castle';	
- 		typeLabel.x = core.background.width;
- 		core.rootScene.addChild(typeLabel);
- 	}*/
- 
+	/***** UNIT STATS SETUP *****/
+	unitSubtype.text = this.type + ':' + this.subtype;
+	unitSubtype.x = core.width-150;
+	unitSubtype.y = typeLabel.y;
+	typeLabel.y = core.height / 2;
+	
+	unitAttack.text = 'Attack: ' + this.attack;
+	unitAttack.x = health.x;
+	unitAttack.y = upgrade.y + 25;
+	
+	unitDefense.text = 'Defence: ' + this.defense;
+	unitDefense.x = health.x + 75;
+	unitDefense.y = upgrade.y + 25;
+	
+	unitSpeed.text = 'Speed: ' + this.speed;
+	unitSpeed.x = health.x;
+	unitSpeed.y = unitDefense.y + 25;
+	
+	veterancy.text = 'Veterancy: ' + this.veterancy;
+	veterancy.x = health.x;
+	veterancy.y = unitSpeed.y + 25;
+	
+	unitXP.text = 'XP: ' + this.xp;
+	unitXP.x = health.x;
+	unitXP.y = veterancy.y + 25;
+	
+	
+ 	if(this.type == 'castle'){
+		core.rootScene.removeChild(reinforceRegiment);
+		core.rootScene.removeChild(upgradeRegiment);
+		core.rootScene.removeChild(typeLabel);
+		core.rootScene.removeChild(unitSubtype);
+		core.rootScene.removeChild(health);
+		core.rootScene.removeChild(upgrade);
+		core.rootScene.removeChild(unitAttack);
+		core.rootScene.removeChild(unitDefense);
+		core.rootScene.removeChild(unitSpeed);
+		core.rootScene.removeChild(veterancy);
+		core.rootScene.removeChild(unitXP);
+	}
+	else if(this.type == 'unit') {
+		core.rootScene.removeChild(reinforceCastle);
+		core.rootScene.removeChild(buyInfantry);
+		core.rootScene.removeChild(buyCavalry);
+		core.rootScene.removeChild(buyArmor);
+		core.rootScene.removeChild(typeLabel);
+		core.rootScene.removeChild(health);
+		core.rootScene.removeChild(upgrade);
+	}
+		
+ 	if(this.type == "castle") {
+		/*** BUTTONS ***/
+ 		core.rootScene.addChild(reinforceCastle);
+		core.rootScene.addChild(buyInfantry);
+		core.rootScene.addChild(buyCavalry);
+		core.rootScene.addChild(buyArmor);
+		
+		/*** LABELS ***/
+		core.rootScene.addChild(typeLabel);
+		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgrade);
+ 	}
+	else if (this.type == "unit") {		
+		/*** BUTTONS ***/
+		core.rootScene.addChild(reinforceRegiment);
+		core.rootScene.addChild(upgradeRegiment);
+		
+		/*** LABELS ***/
+		core.rootScene.addChild(typeLabel);
+		core.rootScene.addChild(unitSubtype);
+		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgrade);
+		core.rootScene.addChild(unitAttack);
+		core.rootScene.addChild(unitDefense);
+		core.rootScene.addChild(unitSpeed);
+		core.rootScene.addChild(veterancy);
+		core.rootScene.addChild(unitXP);
+		
+		
+	}
  }
