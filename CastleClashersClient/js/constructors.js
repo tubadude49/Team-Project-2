@@ -17,7 +17,8 @@ window.onload = function(){
 	//scene = new Scene();
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png', 'assets/button_select.png', 
-				'assets/button_select_selected.png', 'assets/button_attack.png', 'assets/button_attack_selected.png');
+				'assets/button_select_selected.png', 'assets/button_attack.png', 'assets/button_attack_selected.png',
+				'assets/attackUI.png', 'assets/upgradeUI.png');
 	
 	core.onload = function() {
 		
@@ -86,6 +87,65 @@ window.onload = function(){
 	core.start();
 }
 
+var uiClick = function(event) {
+	console.log(this);
+	
+	/*** USED FOR CASTLE IF STATEMENT ***/
+	var attackOption = new Sprite(200, 69);
+	attackOption.image = core.assets['assets/attackUI.png'];
+	attackOption.x = core.width-coreUISize;
+	core.rootScene.addChild(attackOption);
+	
+	var upOption = new Sprite(200, 69);
+	upOption.image = core.assets['assets/upgradeUI.png'];
+	upOption.x = core.width-coreUISize;
+	upOption.y = attackOption.height;
+	core.rootScene.addChild(upOption);;
+	/*************************************/
+	
+	/*** FOR CASTLES AND UNITS ***/
+	var typeLabel = Label('');
+	var health = Label('');
+	var upgrade = Label('');
+	
+	/** CASTLE **/
+	var castleUpgrade = Label('');
+	
+	/** UNITS **/
+	var unitXp = Label('');
+	var veterancy = Label('');
+	var unitUpgrade = Label('');
+	var unitattack = Label('');
+	var unitDefense = Label('');
+	var unitSpeed = Label('');
+	var unitSubtype = Label('');
+	
+	/***** STATS SETUP *****/
+	typeLabel.text += 'TYPE NAME';
+	typeLabel.x = core.width-150;
+	typeLabel.y = core.height / 2;
+	
+	health.text += 'Health:' + ' HEALTH HERE';
+	health.x = typeLabel.x-49;
+	health.y = typeLabel.y+50;
+	
+	upgrade.text += 'Upgrade lvl:' + ' lvl HERE';
+	upgrade.x = typeLabel.x-49;
+	upgrade.y = typeLabel.y+75;
+	
+	/*** ADDING CHILDREN ***/
+	core.rootScene.addChild(typeLabel);
+	core.rootScene.addChild(health);
+	core.rootScene.addChild(upgrade);
+	
+	if(this.type == "Castle") {
+		typeLabel.text += 'Castle';	
+		typeLabel.x = core.background.width;
+		core.rootScene.addChild(typeLabel);
+	}
+
+}
+
 var selectButtonClick = function(event) {
 	console.log(this);
 	this.image = core.assets['assets/button_select_selected.png'];
@@ -114,7 +174,7 @@ var castleClick = function(event) {
 }
 
 var Castle = function() {
-	this.type = "castle";
+	this.type = 'castle';
 	this.uuid = 0;
 	this.x = 0;
 	this.y = 0;
@@ -126,6 +186,7 @@ var Castle = function() {
 	this.selected;
 	core.rootScene.addChild(this.sprite);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, castleClick);
+	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
 }
 
 var unitClick = function(event) {
@@ -179,6 +240,7 @@ var Unit = function(subtype) {
 	//scene.addChild(this.sprite);
 	this.sprite.obj = this;
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
+	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
 }
 
 var battleClick = function(event) {
