@@ -133,7 +133,7 @@ var castleClick = function(event) {
 	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
 		console.log("clicked uuid: " + selected_obj.uuid);
 		var fields = {};
-		fields.selected = selected_uuid;
+		fields.selected = selected_obj.uuid;
 		fields.target = this.uuid;
 		fields.action = 'moveto';
 		ws.send(JSON.stringify(fields));
@@ -174,7 +174,7 @@ var unitClick = function(event) {
 	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
 		console.log("clicked uuid: " + selected_obj.uuid);
 		var fields = {};
-		fields.selected = selected_uuid;
+		fields.selected = selected_obj.uuid;
 		fields.target = this.uuid;
 		fields.action = 'moveto';
 		ws.send(JSON.stringify(fields));
@@ -272,15 +272,19 @@ var unitFromData = function(unit, data) {
 	unit.sprite.defense = data.defense;
 	unit.sprite.speed = data.speed;
 	unit.sprite.dest = data.dest;
+	unit.sprite.moveTo(data.x,data.y);
 	return unit;
 }
 
 var upgradeClick = function(event) {
+	console.log(selected_obj);
 	var request = {};
 	request.action = 'purchase';
 	request.purchase = 'upgrade';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
@@ -290,6 +294,19 @@ var reinforceClick = function(event) {
 	request.purchase = 'reinforce';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
+	ws.send(JSON.stringify(request));
+}
+
+var buyClick = function() {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = 'new';
+	request.type = 'cavalry';
+	request.uuid = instance.uuid;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
@@ -300,6 +317,7 @@ var uiClick = function(event) {
 	var attackOption = new Sprite(200, 69);
  	attackOption.image = core.assets['assets/attackUI.png'];
  	attackOption.x = core.width-coreUISize;
+	attackOption.addEventListener(enchant.Event.TOUCH_START, buyClick);
  	core.rootScene.addChild(attackOption);
  	
  	var upOption = new Sprite(200, 69);
@@ -345,10 +363,10 @@ var uiClick = function(event) {
  	core.rootScene.addChild(health);
  	core.rootScene.addChild(upgrade);
  	
- 	if(this.type == "castle") {
+ 	/*if(this.type == "castle") {
  		typeLabel.text += 'Castle';	
  		typeLabel.x = core.background.width;
  		core.rootScene.addChild(typeLabel);
- 	}
+ 	}*/
  
  }

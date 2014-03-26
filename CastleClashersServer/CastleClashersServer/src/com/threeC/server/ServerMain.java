@@ -89,32 +89,37 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		return null;
 	}
 	
-	public void updateUnits() {
+	public void updateUnits(TokenServer server) {
 		for(Unit unit : units) {
 			if(unit.dest > 0) {
-				Object dest = getByUUID(unit.uuid);
+				Object dest = getByUUID(unit.dest);
 				if(dest != null && dest instanceof Unit) {
 					Unit unitDest = (Unit)dest;
 					int dx = unitDest.x - unit.x;
-						if(dx < 0) { dx = -1; }
-						else if(dx > 0) { dx = 1; }
+						if(dx < 10) { dx = -10; }
+						else if(dx > 10) { dx = 10; }
 					int dy = unitDest.y - unit.y;
-						if(dy < 0) { dy = -1; }
-						else if(dy > 0) { dy = 1; }
+						if(dy < 10) { dy = -10; }
+						else if(dy > 10) { dy = 10; }
 					unit.x += dx;
 					unit.y += dy;
 					if(dx == 0 && dy == 0) { unit.dest = -1l; } 
 				} else if(dest != null && dest instanceof Castle) {
 					Castle castleDest = (Castle)dest;
 					int dx = castleDest.x - unit.x; 
-						if(dx < 0) { dx = -1; }
-						else if(dx > 0) { dx = 1; }
+						if(dx < 10) { dx = -10; }
+						else if(dx > 10) { dx = 10; }
 					int dy = castleDest.y - unit.y;
-						if(dy < 0) { dy = -1; }
-						else if(dy > 0) { dy = 1; }
+						if(dy < 10) { dy = -10; }
+						else if(dy > 10) { dy = 10; }
 					unit.x += dx;
 					unit.y += dy;
 					if(dx == 0 && dy == 0) { unit.dest = -1l; } 
+				}
+				for(WebSocketEngine wse : server.getEngines().values()) {
+					for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
+						server.sendToken(wsc, JSONProcessor.JSONStringToToken(unit.toJSON()));
+					}
 				}
 				
 			}		
@@ -165,7 +170,9 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					if( json.getString("action").equals("purchase") 
 						&& json.has("purchase") 
 						&& json.has("type") 
-						&& json.has("uuid") ) {
+						&& json.has("uuid") 
+						&& json.has("x")
+						&& json.has("y") ) {
 						if(json.getString("type").equals("castle")) {
 							if(json.getString("purchase").equals("upgrade")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
@@ -184,6 +191,8 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 							if(json.getString("purchase").equals("new")) {								
 								if(player.charge(25)) {
 									Unit newUnit = UnitFactory.fromString(json.getString("type"), uuidDistributor.next(), player.uuid);
+									newUnit.x = json.getInt("x");
+									newUnit.y = json.getInt("y");
 									units.add(newUnit);
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									event.sendToken(JSONProcessor.JSONStringToToken(newUnit.toJSON()));	
@@ -203,17 +212,13 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								}
 							}
 						}						
-					} /*else if( json.has("action") && json.getString("action").equals("moveto") 
+					} else if( json.has("action") && json.getString("action").equals("moveto") 
 							&& json.has("selected") 
 							&& json.has("target") ) {
-						long uuidSrc = json.getLong("selected");
-						long uuidDest = json.getLong("target");
-						Object src = getByUUID(uuidSrc);
-						if(src instanceof Unit) {
-							Unit unit = (Unit)src;
-							unit.dest = uuidDest;
-						}
-					}	*/				
+						Unit unit = (Unit)getByUUID(json.getLong("selected"));
+						unit.dest = json.getLong("target");
+						
+					}					
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -268,7 +273,7 @@ public class ServerMain {
 	
 	public static void gameFire(JWebSocketListener jwsl, TokenServer server) {
 		System.out.println("frame:" + jwsl.frame);
-		jwsl.updateUnits();
+		jwsl.updateUnits(server);
 		for(WebSocketEngine wse : server.getEngines().values()) {
 			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
 				Player player = jwsl.getPlayerBySessionId(wsc.getSession().getSessionId());
