@@ -27,7 +27,7 @@ import com.threeC.beans.UnitFactory;
 
 class JWebSocketListener implements WebSocketServerTokenListener {
 	public int frame = 0;
-	public final int startAt = 30;
+	public final int startAt = 15;
 	public LinkedList<Player> players = new LinkedList<Player>();
 	LinkedList<Castle> castles = new LinkedList<Castle>();
 	LinkedList<Unit> units = new LinkedList<Unit>();
@@ -47,15 +47,18 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				if(validPlayers == 1) { 
 					/*Player1*/
 					castles.add(new Castle(0, 0, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(0, gameboardY-41, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(gameboardX-86, 0, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(gameboardX-86, gameboardY-41, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 2) {
 					/*Player2*/
-					castles.add(new Castle(0, gameboardX, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(0, gameboardY, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 3) {
 					/*Player3*/
-					castles.add(new Castle(gameboardY, 0, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(gameboardX, 0, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 4) {
 					/*Player4*/
-					castles.add(new Castle(gameboardY, gameboardX, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(gameboardX, gameboardY, uuidDistributor.next(), player.uuid));
 				} else {
 					player.active = false;
 				}

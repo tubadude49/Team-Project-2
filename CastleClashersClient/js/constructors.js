@@ -14,7 +14,7 @@ var buttonSelected = 0;
 
 
 window.onload = function(){
-	core = new Core(1280,720);
+	core = new Core(1280+coreUISize,720+bottomUISize);
 	//scene = new Scene();
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png', 'assets/button_select.png', 
@@ -345,7 +345,7 @@ var uiClick = function(event) {
  	core.rootScene.addChild(health);
  	core.rootScene.addChild(upgrade);
  	
- 	if(this.type == "Castle") {
+ 	if(this.type == "castle") {
  		typeLabel.text += 'Castle';	
  		typeLabel.x = core.background.width;
  		core.rootScene.addChild(typeLabel);

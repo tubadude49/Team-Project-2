@@ -1,6 +1,5 @@
 package com.threeC.beans;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Unit implements JSONStringifiable {
