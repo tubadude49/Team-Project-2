@@ -45,16 +45,16 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				validPlayers++; 
 				if(validPlayers == 1) { 
 					/*Player1*/
-					player.castles.add(new Castle(0, 0, uuidDistributor.next()));
+					castles.add(new Castle(0, 0, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 2) {
 					/*Player2*/
-					player.castles.add(new Castle(0, gameboardX, uuidDistributor.next()));
+					castles.add(new Castle(0, gameboardX, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 3) {
 					/*Player3*/
-					player.castles.add(new Castle(gameboardY, 0, uuidDistributor.next()));
+					castles.add(new Castle(gameboardY, 0, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 4) {
 					/*Player4*/
-					player.castles.add(new Castle(gameboardY, gameboardX, uuidDistributor.next()));
+					castles.add(new Castle(gameboardY, gameboardX, uuidDistributor.next(), player.uuid));
 				} else {
 					player.active = false;
 				}
@@ -157,9 +157,37 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			try {
 				JSONObject json = JSONProcessor.tokenToJSON(token);
 				System.out.println("JSON: " + json.toString());
-				if( json.has("action") && json.getString("action").equals("purchase") && json.has("type") ) {
-					player.purchase(json.getString("type"), uuidDistributor);
-					event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+				if( json.has("action") ) {
+					if( json.getString("action").equals("purchase") 
+						&& json.has("purchase") 
+						&& json.has("type") 
+						&& json.has("uuid") ) {
+						if(json.getString("type").equals("castle")) {
+							if(json.getString("purchase").equals("upgrade")) {
+								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
+								/*do castle updates here*/
+							} else if(json.getString("purchase").equals("reinforce")) {
+								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
+							}
+						} else {
+							if(json.getString("purchase").equals("new") {
+								Unit newUnit = player.purchaseUnit(json.getString("type"), uuidDistributor);
+								units.add(newUnit);
+								event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+								event.sendToken(JSONProcessor.JSONStringToToken(newUnit.toJSON()));							
+							} else if(json.getString("purchase").equals("upgrade")) {
+								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
+								/*do unit updates here*/
+							} else if(json.getString("purchase").equals("reinforce")) {
+								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
+							}
+						}						
+					} else if(false) {
+					
+					}
+					
+				}
+				 {
 				} else if( json.has("action") && json.getString("action").equals("moveto") 
 						&& json.has("selected") && json.has("target") ) {
 					long uuidSrc = json.getLong("selected");
@@ -192,28 +220,40 @@ public class ServerMain {
 		while (JWebSocketInstance.getStatus() != JWebSocketInstance.SHUTTING_DOWN){
 			try {
 				if(jwsl.frame < jwsl.startAt) {
-					System.out.println(server.getEngines().size() + ":" + jwsl.frame);
+					pregameFire(jwsl, server);
+				} else if(jwsl.frame == jwsl.startAt) {
+					firstFire(jwsl, server);
 				} else {
-					if(jwsl.frame == jwsl.startAt) {
-						jwsl.distributeCastles();
-					}
-					System.out.println("frame:" + jwsl.frame);
-					jwsl.updateUnits();
-					for(WebSocketEngine wse : server.getEngines().values()) {
-						for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
-							Player player = jwsl.getPlayerBySessionId(wsc.getSession().getSessionId());
-							if(player.active) {
-								player.updateIncome();
-								player.incrGold();
-							}
-							server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));
-						}
-					}				
+					gameFire(jwsl, server);
 				}
 				jwsl.frame++;
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {}
 		}
 		System.out.println("Server shutting down...");
+	}
+	
+	public void pregameFire(JWebSocketListener jwsl, TokenServer server) {
+		System.out.println(server.getEngines().size() + ":" + jwsl.frame);	
+	}
+	
+	public void firstFire(JWebSocketListener jwsl, TokenServer server) {
+		jwsl.distributeCastles();
+		gameFire(jwsl);
+	}
+	
+	public void gameFire(JWebSocketListener jwsl, TokenServer server) {
+		System.out.println("frame:" + jwsl.frame);
+		jwsl.updateUnits();
+		for(WebSocketEngine wse : server.getEngines().values()) {
+			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
+				Player player = jwsl.getPlayerBySessionId(wsc.getSession().getSessionId());
+				if(player.active) {
+					player.updateIncome();
+					player.incrGold();
+				}
+				server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));
+			}
+		}
 	}
 }

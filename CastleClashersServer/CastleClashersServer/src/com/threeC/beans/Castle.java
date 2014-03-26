@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class Castle implements JSONStringifiable {
 	public long uuid;
+	public long owner;
 	
 	public int x;
 	public int y;
@@ -12,12 +13,11 @@ public class Castle implements JSONStringifiable {
 	public int health;
 	public int upgrade;
 	
-	public Player owner = null;
-	
-	public Castle(int x, int y, long uuid) {
+	public Castle(int x, int y, long uuid, long owner) {
 		this.x = x;
 		this.y = y;
 		this.uuid = uuid;
+		this.owner = owner;
 	}
 	
 	@Override

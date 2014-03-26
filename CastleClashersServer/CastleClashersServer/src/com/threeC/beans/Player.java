@@ -18,11 +18,6 @@ public class Player implements JSONStringifiable {
 	public long alliance = -1l;
 	public long war = -1l;
 	
-	public LinkedList<Castle> castles = new LinkedList<Castle>();
-	public LinkedList<Unit> units = new LinkedList<Unit>();
-	
-	public LinkedHashSet<Player> wars = new LinkedHashSet<Player>();
-	
 	public String sessionId;
 	
 	public Player(String name, String sessionId, long uuid) {
@@ -42,28 +37,9 @@ public class Player implements JSONStringifiable {
 	
 	@Override
 	public String toJSON() {
-		JSONObject json = new JSONObject(this, new String[] { "uuid", "name", "gold", "income", "units", "wars" } );
-		LinkedList<Long> castlesUUIDs = new LinkedList<Long>();
-		LinkedList<Long> unitsUUIDs = new LinkedList<Long>();
-		LinkedList<Long> warsUUIDs = new LinkedList<Long>();
-		
-		for(Castle castle : castles) {
-			castlesUUIDs.add(castle.uuid());
-		}
-		
-		for(Unit unit : units) {
-			unitsUUIDs.add(unit.uuid());
-		}
-		
-		for(Player war : wars) {
-			warsUUIDs.add(war.uuid);
-		}
-		
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "name", "gold", "income" } );
 		try {
 			json.put("type", "instance");
-			json.put("castles", castlesUUIDs);
-			json.put("units", unitsUUIDs);
-			json.put("wars", warsUUIDs);
 			json.put("alliance", alliance);
 			json.put("war", war);
 		} catch (JSONException e) {
@@ -80,18 +56,6 @@ public class Player implements JSONStringifiable {
 			this.name = jsonO.getString("name");
 			this.gold = jsonO.getInt("gold");
 			this.income = jsonO.getInt("income");
-			this.units.clear();
-			for(int i=0;i<jsonO.getJSONArray("units").length();i++) {
-				Unit u = new Unit(1,1,1,"",1);
-				u.fromJSON(jsonO.getJSONArray("units").getString(i));
-				this.units.add(u);
-			}
-			this.wars.clear();			
-			for(int i=0;i<jsonO.getJSONArray("wars").length();i++) {
-				Player p = new Player("","",1);
-				p.fromJSON(jsonO.getJSONArray("wars").getString(i));
-				this.wars.add(p);
-			}
 			
 		} catch (JSONException e) {	e.printStackTrace(); }
 		
@@ -117,16 +81,24 @@ public class Player implements JSONStringifiable {
 		return gold;
 	}
 	
-	public synchronized void purchase(String type, UUIDDistributor uuidDistributor) {
+	public synchronized Unit purchaseUnit(String type, UUIDDistributor uuidDistributor) {
 		/* purchase types:
 		 * Unit = 25g
 		 * Unit Upgrade = 15g
 		 * Castle Upgrade = 100g
 		 */
 		
-		if( (type.equals("cavalry") || type.equals("infantry") || type.equals("cannon")) && gold >= 25 ) {
-			units.add(UnitFactory.fromString(type, uuidDistributor.next()));
-			gold -= 25;
+		if( (type.equals("cavalry") || type.equals("infantry") || type.equals("cannon")) && charge(25) ) {
+			return UnitFactory.fromString(type, uuidDistributor.next(), uuid);
+		}
+	}
+	
+	public synchronized boolean charge(int amount) {
+		if(gold < amount) {
+			return false;
+		} else {
+			gold -= amount;
+			return true;
 		}
 	}
 	
@@ -136,14 +108,6 @@ public class Player implements JSONStringifiable {
 	
 	public void upgrade(String target) {
 		//check gold
-	}
-	
-	public LinkedList<Castle> castles() {
-		return castles;
-	}
-	
-	public LinkedList<Unit> units() {
-		return units;
 	}
 	
 	public void ally(Player target) {

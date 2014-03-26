@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class Unit implements JSONStringifiable {
 	public long uuid;
+	public long owner;
 	
 	public int xp;
 	public int veterancy;
@@ -20,15 +21,15 @@ public class Unit implements JSONStringifiable {
 	public int y;
 	
 	public long dest = -1l;
-	public Player owner;
 	public String type;
 	
-	protected Unit(int attack, int defense, int speed, String type, long uuid) {
+	protected Unit(int attack, int defense, int speed, String type, long uuid, long owner) {
 		this.attack = attack;
 		this.defense = defense;
 		this.speed = speed;
 		this.type = type;
 		this.uuid = uuid;
+		this.owner = owner;
 	}
 	
 	@Override
