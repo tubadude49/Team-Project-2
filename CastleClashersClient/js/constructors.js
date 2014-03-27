@@ -14,16 +14,41 @@ var goldImage;
 var goldAmount;
 var buttonSelected = 0;
 
+// FOR CASTLES AND UNITS 
+ 
+var reinforceCastle = new Sprite(200, 69);
+var buyInfantry = new Sprite(200, 69);
+var buyCavalry = new Sprite(200, 69);
+var buyArmor = new Sprite(200, 69);
+var reinforceRegiment = new Sprite(200, 69);
+var upgradeRegiment = new Sprite(200, 69);
+
+var typeLabel = Label('');
+var health = Label('');
+var upgrade = Label('');
+ 	
+//  CASTLE 
+var castleUpgrade = Label('');
+ 	
+//  UNITS 
+var unitXP = Label('');
+var veterancy = Label('');
+var unitUpgrade = Label('');
+var unitAttack = Label('');
+var unitDefense = Label('');
+var unitSpeed = Label('');
+var unitSubtype = Label('');
+
 
 window.onload = function(){
 	core = new Core(1280+coreUISize,720+bottomUISize);
 	//scene = new Scene();
 
-	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png', 'assets/button_select.png', 
-				'assets/button_select_selected.png', 'assets/button_attack.png', 'assets/button_attack_selected.png',
- 				'assets/attackUI.png', 'assets/upgradeUI.png', 'assets/buyInfantry.png', 'assets/buyCavalry.png',
-				'assets/buyArmor.png','assets/reinforceCastle.png','assets/reinforceRegiment.png','assets/upgradeRegiment.png',
-				'assets/gold.png', 'assets/cannon.png');
+	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/button_select.png', 'assets/button_select_selected.png', 
+				'assets/button_attack.png', 'assets/button_attack_selected.png', 'assets/attackUI.png', 'assets/upgradeUI.png', 
+				'assets/buyInfantry.png', 'assets/buyCavalry.png', 'assets/buyArmor.png','assets/reinforceCastle.png', 
+				'assets/reinforceRegiment.png','assets/upgradeRegiment.png', 'assets/gold.png', 'assets/cannon.png', 
+				'assets/castle.png', 'assets/castle_bronze.png', 'assets/castle_silver.png', 'assets/castle_gold.png');
 	
 	core.onload = function() {
 		
@@ -68,8 +93,8 @@ window.onload = function(){
 		goldAmount.x = goldImage.x + goldImage.width;
 		goldAmount.y = goldImage.y;
 		core.rootScene.addChild(goldAmount);
-		
-		/*var castle1 = new Castle();
+		/*
+		var castle1 = new Castle();
 		castle1.sprite.x = 0;
 		castle1.sprite.y = 0;
 		castle1.sprite.owner = 0;
@@ -78,14 +103,17 @@ window.onload = function(){
 		castle2.sprite.x = background.width - castle2.sprite.width;
 		castle2.sprite.y = 500;
 		castle2.sprite.owner = 1;
-		/*
+		
 		var castle3 = new Castle();
 		castle3.sprite.x = 0;
 		castle3.sprite.y = background.height - castle3.sprite.height;
 		
 		var castle4 = new Castle();
+		castle4.sprite.image = core.assets['assets/castle.png'];
 		castle4.sprite.x = background.width - castle4.sprite.width;
 		castle4.sprite.y = background.height - castle4.sprite.height;
+		castle4.sprite.owner = 1;
+		core.rootScene.addChild(castle4.sprite);
 		
 		var castle_mid = new Castle();
 		castle_mid.sprite.x = (background.width - castle_mid.sprite.width) / 2;
@@ -121,6 +149,26 @@ var backgroundClick = function(event) {
 			selected_obj.backgroundColor = null;
 			selected_obj.selected = false;
 			selected_obj = null;
+			
+			core.rootScene.removeChild(reinforceRegiment);
+			core.rootScene.removeChild(upgradeRegiment);
+			core.rootScene.removeChild(typeLabel);
+			core.rootScene.removeChild(unitSubtype);
+			core.rootScene.removeChild(health);
+			core.rootScene.removeChild(upgrade);
+			core.rootScene.removeChild(unitAttack);
+			core.rootScene.removeChild(unitDefense);
+			core.rootScene.removeChild(unitSpeed);
+			core.rootScene.removeChild(veterancy);
+			core.rootScene.removeChild(unitXP);
+			
+			core.rootScene.removeChild(reinforceCastle);
+			core.rootScene.removeChild(buyInfantry);
+			core.rootScene.removeChild(buyCavalry);
+			core.rootScene.removeChild(buyArmor);
+			core.rootScene.removeChild(typeLabel);
+			core.rootScene.removeChild(health);
+			core.rootScene.removeChild(upgrade);
 		}
 	}	
 }
@@ -385,30 +433,19 @@ var reinforceClick = function(event) {
 	ws.send(JSON.stringify(request));
 }
 
-var reinforceCastle = new Sprite(200, 69);
-var buyInfantry = new Sprite(200, 69);
-var buyCavalry = new Sprite(200, 69);
-var buyArmor = new Sprite(200, 69);
-var reinforceRegiment = new Sprite(200, 69);
-var upgradeRegiment = new Sprite(200, 69);
+var updateCastle = function(c_sprite) {
+	
+	if (c_sprite.upgrade == 0) {
+		c_sprite.image = core.assets['assets/castle.png'];
+	} else if (c_sprite.upgrade == 1) {
+		c_sprite.image = core.assets['assets/castle_bronze.png'];
+	} else if (c_sprite.upgrade == 2) {
+		c_sprite.image = core.assets['assets/castle_silver.png'];
+	} else {
+		c_sprite.image = core.assets['assets/castle_gold.png'];
+	}	
 
-/*** FOR CASTLES AND UNITS ***/
-		
- 	var typeLabel = Label('');
- 	var health = Label('');
- 	var upgrade = Label('');
- 	
- 	/** CASTLE **/
- 	var castleUpgrade = Label('');
- 	
- 	/** UNITS **/
- 	var unitXP = Label('');
- 	var veterancy = Label('');
- 	var unitUpgrade = Label('');
- 	var unitAttack = Label('');
- 	var unitDefense = Label('');
- 	var unitSpeed = Label('');
- 	var unitSubtype = Label('');
+}
 
 var uiClick = function(event) {
 		
@@ -432,7 +469,7 @@ var uiClick = function(event) {
 	core.rootScene.removeChild(health);
 	core.rootScene.removeChild(upgrade);
 	
-	/*** USED FOR CASTLE IF STATEMENT ***/
+	//  USED FOR CASTLE IF STATEMENT 
 	
  	reinforceCastle.image = core.assets['assets/reinforceCastle.png'];
  	reinforceCastle.x = core.width-coreUISize;
@@ -454,9 +491,9 @@ var uiClick = function(event) {
  	buyArmor.x = core.width-coreUISize;
 	buyArmor.y = buyCavalry.y + buyArmor.height;
 	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
- 	/*************************************/
-	
- 	/*** UNIT IF STATEMENT ***/
+ 	//--------------------------------------
+ 	
+	//    UNIT IF STATEMENT 
 	
  	reinforceRegiment.image = core.assets['assets/reinforceRegiment.png'];
  	reinforceRegiment.x = core.width-coreUISize;
@@ -468,17 +505,12 @@ var uiClick = function(event) {
 	upgradeRegiment.y = reinforceRegiment.height;
 	upgradeRegiment.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
  	
-	
-	
-	
  	
- 	/***** CASTLE STATS SETUP *****/
+ 	//    CASTLE STATS SETUP 
  	typeLabel.text = this.type;
  	typeLabel.x = core.width-150;
  	typeLabel.y = core.height / 2;
-	
-	
- 	
+	 	
  	health.text = 'Health: ' + this.health;
  	health.x = typeLabel.x-49;
  	health.y = typeLabel.y+50;
@@ -487,7 +519,7 @@ var uiClick = function(event) {
  	upgrade.x = typeLabel.x-49;
  	upgrade.y = typeLabel.y+75;
  	
-	/***** UNIT STATS SETUP *****/
+	//     UNIT STATS SETUP
 	unitSubtype.text = this.type + ':' + this.subtype;
 	unitSubtype.x = core.width-150;
 	unitSubtype.y = typeLabel.y;
@@ -513,81 +545,14 @@ var uiClick = function(event) {
 	unitXP.x = health.x;
 	unitXP.y = veterancy.y + 25;
 	
-	
- 	/*if(this.type == 'castle' && this.owner == instance.uuid){
-		core.rootScene.removeChild(reinforceRegiment);
-		core.rootScene.removeChild(upgradeRegiment);
-		core.rootScene.removeChild(typeLabel);
-		core.rootScene.removeChild(unitSubtype);
-		core.rootScene.removeChild(health);
-		core.rootScene.removeChild(upgrade);
-		core.rootScene.removeChild(unitAttack);
-		core.rootScene.removeChild(unitDefense);
-		core.rootScene.removeChild(unitSpeed);
-		core.rootScene.removeChild(veterancy);
-		core.rootScene.removeChild(unitXP);
-	}
-	else if(this.type == 'castle' && this.owner != instance.uuid){
-		core.rootScene.removeChild(reinforceRegiment);
-		core.rootScene.removeChild(upgradeRegiment);
-		core.rootScene.removeChild(typeLabel);
-		core.rootScene.removeChild(unitSubtype);
-		core.rootScene.removeChild(health);
-		core.rootScene.removeChild(upgrade);
-		core.rootScene.removeChild(unitAttack);
-		core.rootScene.removeChild(unitDefense);
-		core.rootScene.removeChild(unitSpeed);
-		core.rootScene.removeChild(veterancy);
-		core.rootScene.removeChild(unitXP);
-	
-		core.rootScene.removeChild(reinforceCastle);
-		core.rootScene.removeChild(buyInfantry);
-		core.rootScene.removeChild(buyCavalry);
-		core.rootScene.removeChild(buyArmor);
-		core.rootScene.removeChild(typeLabel);
-		core.rootScene.removeChild(health);
-		core.rootScene.removeChild(upgrade);
-	}
-	else if(this.type == 'unit' && this.owner == instance.uuid ) {
-		core.rootScene.removeChild(reinforceCastle);
-		core.rootScene.removeChild(buyInfantry);
-		core.rootScene.removeChild(buyCavalry);
-		core.rootScene.removeChild(buyArmor);
-		core.rootScene.removeChild(typeLabel);
-		core.rootScene.removeChild(health);
-		core.rootScene.removeChild(upgrade);
-	}
-	else if(this.type == 'unit' && this.owner != instance.uuid){
-		core.rootScene.removeChild(reinforceRegiment);
-		core.rootScene.removeChild(upgradeRegiment);
-		core.rootScene.removeChild(typeLabel);
-		core.rootScene.removeChild(unitSubtype);
-		core.rootScene.removeChild(health);
-		core.rootScene.removeChild(upgrade);
-		core.rootScene.removeChild(unitAttack);
-		core.rootScene.removeChild(unitDefense);
-		core.rootScene.removeChild(unitSpeed);
-		core.rootScene.removeChild(veterancy);
-		core.rootScene.removeChild(unitXP);
-	
-		core.rootScene.removeChild(reinforceCastle);
-		core.rootScene.removeChild(buyInfantry);
-		core.rootScene.removeChild(buyCavalry);
-		core.rootScene.removeChild(buyArmor);
-		core.rootScene.removeChild(typeLabel);
-		core.rootScene.removeChild(health);
-		core.rootScene.removeChild(upgrade);
-	
-	}*/
-		
- 	if(this.type == "castle" && this.owner == instance.uuid) {
-		/*** BUTTONS ***/
+	if(this.type == "castle" && this.owner == instance.uuid) {
+		//   BUTTONS 
  		core.rootScene.addChild(reinforceCastle);
 		core.rootScene.addChild(buyInfantry);
 		core.rootScene.addChild(buyCavalry);
 		core.rootScene.addChild(buyArmor);
 		
-		/*** LABELS ***/
+		//   LABELS
 		core.rootScene.addChild(typeLabel);
 		core.rootScene.addChild(health);
 		core.rootScene.addChild(upgrade);
@@ -598,11 +563,11 @@ var uiClick = function(event) {
 		core.rootScene.addChild(upgrade);	
 	}
 	else if (this.type == "unit" && this.owner == instance.uuid) {		
-		/*** BUTTONS ***/
+		//   BUTTONS
 		core.rootScene.addChild(reinforceRegiment);
 		core.rootScene.addChild(upgradeRegiment);
 		
-		/*** LABELS ***/
+		// LABELS
 		core.rootScene.addChild(typeLabel);
 		core.rootScene.addChild(unitSubtype);
 		core.rootScene.addChild(health);

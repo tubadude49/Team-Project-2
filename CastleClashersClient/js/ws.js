@@ -1,7 +1,7 @@
 var host = "ws://localhost:10088";
 var host2 = "ws://compute.cse.tamu.edu:10088";
 var host3 = "ws://25.10.234.5:10088";
-var ws = new WebSocket(host3, 'json');
+var ws = new WebSocket(host, 'json');
 
 ws.onopen = function() {
 	console.log("connection established");
@@ -36,6 +36,7 @@ ws.onmessage = function(event) {
 			for(i=0;i<castles.length;i++) {
 				if(castles[i].sprite.uuid == data.uuid) {
 					castles[i] = castleFromData(castles[i],data);
+					updateCastle(castles[i].sprite);
 					found = true;
 					break;
 				}
