@@ -26,6 +26,7 @@ window.onload = function(){
 		
 		var background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
 		background.backgroundColor = "#008000";
+		background.addEventListener(enchant.Event.TOUCH_START, backgroundClick);
 		core.rootScene.addChild(background);
 		
 		var backgroundUI = new Sprite(coreUISize, core.height);
@@ -94,6 +95,18 @@ window.onload = function(){
 	core.start();
 }
 
+var backgroundClick = function(event) {
+	console.log("backgroundClick");
+	if(buttonSelected == 0) {
+		
+		if (selected_obj != null) {
+			selected_obj.backgroundColor = null;
+			selected_obj.selected = false;
+			selected_obj = null;
+		}
+	}	
+}
+
 var selectButtonClick = function(event) {
 	this.image = core.assets['assets/button_select_selected.png'];
 	attackButton.image = core.assets['assets/button_attack.png'];
@@ -119,23 +132,18 @@ var castleClick = function(event) {
 	request.type = 'cavalry';
 	request.uuid = instance.uuid;
 	ws.send(JSON.stringify(request));*/
-	
+	console.log("castleClick");
 	if(buttonSelected == 0) {
-		if(!this.selected)
+		if(selected_obj != null)
 		{
-			this.selected = true;
-			selected_obj = this;
-			console.log(this);
-			/*selected_uuid = this.uuid;
-			selected_type = 'unit';*/
-		}
-		else if(this.selected)
-		{
-			this.selected = false;
-			selected_obj = {};
-			/*selected_uuid = -1;
-			selected_type = '';	*/
-		}
+			selected_obj.backgroundColor = null;
+			selected_obj.selected = false;
+		}	
+		
+		this.selected = true;
+		selected_obj = this;
+		this.backgroundColor = "#CCCC00";
+		
 		console.log("new uuid: " + selected_obj.uuid);
 	}
 	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
@@ -162,27 +170,18 @@ var Castle = function() {
 }
 
 var unitClick = function(event) {
+	console.log("unitClick");
 	if(buttonSelected == 0) {
-		if(!this.selected)
+		if(selected_obj != null)
 		{
 			selected_obj.backgroundColor = null;
 			selected_obj.selected = false;
-			this.selected = true;
-			selected_obj = this;
-			this.backgroundColor = "#CCCC00";
-			/*selected_uuid = this.uuid;
-			selected_type = 'unit';*/
 		}
-		else if(this.selected)
-		{
-			console.log("selected");
-			this.selected = false;
-			this.backgroundColor = null;
-			selected_obj = {};
-			/*selected_uuid = -1;
-			selected_type = '';	*/
-		}
-		//console.log("new uuid: " + selected_obj.uuid);
+		
+		this.selected = true;
+		selected_obj = this;
+		this.backgroundColor = "#CCCC00";
+		
 	}
 	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
 		console.log("clicked uuid: " + selected_obj.uuid);
