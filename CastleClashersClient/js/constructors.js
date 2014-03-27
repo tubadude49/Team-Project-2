@@ -283,41 +283,41 @@ var upgradeClick = function(event) {
 	request.purchase = 'upgrade';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
-	request.x = selected_obj.sprite._x;
-	request.y = selected_obj.sprite._y;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
 var buyInfantryClick = function(event) {
 	var request = {};
 	request.action = 'purchase';
-	request.purchase = 'infantry';
-	request.type = selected_obj.type;
-	request.uuid = selected_obj.uuid;
-	request.x = selected_obj.sprite._x;
-	request.y = selected_obj.sprite._y;
+	request.purchase = 'new';
+	request.type = 'infantry';
+	request.uuid = instance.uuid;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
 var buyCavalryClick = function(event) {
 	var request = {};
 	request.action = 'purchase';
-	request.purchase = 'cavalry';
-	request.type = selected_obj.type;
-	request.uuid = selected_obj.uuid;
-	request.x = selected_obj.sprite._x;
-	request.y = selected_obj.sprite._y;
+	request.purchase = 'new';
+	request.type = 'cavalry';
+	request.uuid = instance.uuid;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
 var buyArmorClick = function(event) {
 	var request = {};
 	request.action = 'purchase';
-	request.purchase = 'armor';
-	request.type = selected_obj.type;
-	request.uuid = selected_obj.uuid;
-	request.x = selected_obj.sprite._x;
-	request.y = selected_obj.sprite._y;
+	request.purchase = 'new';
+	request.type = 'cannon';
+	request.uuid = instance.uuid;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
@@ -337,8 +337,8 @@ var reinforceClick = function(event) {
 	request.purchase = 'reinforce';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
-	request.x = selected_obj.sprite._x;
-	request.y = selected_obj.sprite._y;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
 	ws.send(JSON.stringify(request));
 }
 
