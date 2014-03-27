@@ -283,6 +283,8 @@ var upgradeClick = function(event) {
 	request.purchase = 'upgrade';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
+	request.x = selected_obj.sprite._x;
+	request.y = selected_obj.sprite._y;
 	ws.send(JSON.stringify(request));
 }
 
@@ -292,6 +294,8 @@ var buyInfantryClick = function(event) {
 	request.purchase = 'infantry';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
+	request.x = selected_obj.sprite._x;
+	request.y = selected_obj.sprite._y;
 	ws.send(JSON.stringify(request));
 }
 
@@ -301,6 +305,8 @@ var buyCavalryClick = function(event) {
 	request.purchase = 'cavalry';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
+	request.x = selected_obj.sprite._x;
+	request.y = selected_obj.sprite._y;
 	ws.send(JSON.stringify(request));
 }
 
@@ -310,6 +316,8 @@ var buyArmorClick = function(event) {
 	request.purchase = 'armor';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
+	request.x = selected_obj.sprite._x;
+	request.y = selected_obj.sprite._y;
 	ws.send(JSON.stringify(request));
 }
 
@@ -329,6 +337,8 @@ var reinforceClick = function(event) {
 	request.purchase = 'reinforce';
 	request.type = selected_obj.type;
 	request.uuid = selected_obj.uuid;
+	request.x = selected_obj.sprite._x;
+	request.y = selected_obj.sprite._y;
 	ws.send(JSON.stringify(request));
 }
 
