@@ -255,7 +255,10 @@ var unitClick = function(event) {
 }
 
 var Unit = function(subtype) {
-	this.sprite = new Sprite(50,37);
+	if(subtype == "cannon")
+		this.sprite = new Sprite(72,24);
+	else
+		this.sprite = new Sprite(50,37);
 	this.sprite.image = core.assets['assets/' + subtype + '.png'];
 	this.sprite.uuid = 0;
 	this.sprite.owner = 0;
