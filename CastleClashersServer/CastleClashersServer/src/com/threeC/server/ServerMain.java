@@ -118,15 +118,20 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					unit.x += dx;
 					unit.y += dy;
 					//System.out.println(dx + ", " + dy);
-					if(dx == 0 && dy == 0) {
+					if(Math.abs(unit.x-unitDest.x) < 50 && Math.abs(unit.y-unitDest.y) < 50) {
 						if(rnd.nextInt(2) == 0) {
 							unitDest.health = 0;
+							unitDest.dest = -1l;
 							sendToAll(unitDest.toJSON());
 						} else {
 							unit.health = 0;
 						}
+						/*unitDest.health = 0;
+						unitDest.dest = -1l;
+						sendToAll(unitDest.toJSON());
+						unit.health = 0;*/
 						unit.dest = -1l;
-						System.out.println("siege!");
+						System.out.println("units battle!");
 					}
 					//if(dx == 0 && dy == 0) { unit.dest = -1l; } 
 				} else if(dest != null && dest instanceof Castle) {
@@ -143,7 +148,6 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						castleDest.owner = unit.owner;
 						unit.dest = -1l;
 						sendToAll(castleDest.toJSON());
-						System.out.println("siege!");
 					}
 					//if(dx == 0 && dy == 0) { unit.dest = -1l; } 
 				}
@@ -217,7 +221,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
-								if(castle.owner == player.uuid && castle.reinforce(player)) {
+								if(castle.owner == player.uuid && castle.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									for(WebSocketEngine wse : server.getEngines().values()) {
 										for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
