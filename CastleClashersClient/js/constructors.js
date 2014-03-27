@@ -185,8 +185,9 @@ var Castle = function() {
 }
 
 var unitClick = function(event) {
-	console.log("unitClick");
-	if(buttonSelected == 0) {
+	
+	
+	if(buttonSelected == 0 && this.owner == instance.uuid) {
 		if(selected_obj != null)
 		{
 			selected_obj.backgroundColor = null;
@@ -198,8 +199,8 @@ var unitClick = function(event) {
 		this.backgroundColor = "#CCCC00";
 		
 	}
-	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
-		console.log("clicked uuid: " + selected_obj.uuid);
+	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit' && this.owner != instance.uuid) {
+		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
 		fields.target = this.uuid;
@@ -212,6 +213,7 @@ var Unit = function(subtype) {
 	this.sprite = new Sprite(50,37);
 	this.sprite.image = core.assets['assets/' + subtype + '.png'];
 	this.sprite.uuid = 0;
+	this.sprite.owner = 0;
 	this.sprite.xp = 0;
 	this.sprite.veterancy = 0;
 	this.sprite.health = 0;
