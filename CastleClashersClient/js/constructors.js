@@ -23,7 +23,7 @@ window.onload = function(){
 				'assets/button_select_selected.png', 'assets/button_attack.png', 'assets/button_attack_selected.png',
  				'assets/attackUI.png', 'assets/upgradeUI.png', 'assets/buyInfantry.png', 'assets/buyCavalry.png',
 				'assets/buyArmor.png','assets/reinforceCastle.png','assets/reinforceRegiment.png','assets/upgradeRegiment.png',
-				'assets/gold.png', 'assets/cannon.png','assets/attackUI.jpg');
+				'assets/gold.png', 'assets/cannon.png');
 	
 	core.onload = function() {
 		
