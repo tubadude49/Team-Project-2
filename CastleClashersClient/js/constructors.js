@@ -498,7 +498,7 @@ var uiClick = function(event) {
 	unitXP.y = veterancy.y + 25;
 	
 	
- 	if(this.type == 'castle'){
+ 	if(this.type == 'castle' && this.owner == instance.uuid){
 		core.rootScene.removeChild(reinforceRegiment);
 		core.rootScene.removeChild(upgradeRegiment);
 		core.rootScene.removeChild(typeLabel);
@@ -510,10 +510,20 @@ var uiClick = function(event) {
 		core.rootScene.removeChild(unitSpeed);
 		core.rootScene.removeChild(veterancy);
 		core.rootScene.removeChild(unitXP);
-		
-		
 	}
-	else if(this.type == 'unit') {
+	else if(this.type == 'castle' && this.owner != instance.uuid){
+		core.rootScene.removeChild(reinforceRegiment);
+		core.rootScene.removeChild(upgradeRegiment);
+		core.rootScene.removeChild(typeLabel);
+		core.rootScene.removeChild(unitSubtype);
+		core.rootScene.removeChild(health);
+		core.rootScene.removeChild(upgrade);
+		core.rootScene.removeChild(unitAttack);
+		core.rootScene.removeChild(unitDefense);
+		core.rootScene.removeChild(unitSpeed);
+		core.rootScene.removeChild(veterancy);
+		core.rootScene.removeChild(unitXP);
+	
 		core.rootScene.removeChild(reinforceCastle);
 		core.rootScene.removeChild(buyInfantry);
 		core.rootScene.removeChild(buyCavalry);
@@ -522,8 +532,39 @@ var uiClick = function(event) {
 		core.rootScene.removeChild(health);
 		core.rootScene.removeChild(upgrade);
 	}
+	else if(this.type == 'unit' && this.owner == instance.uuid ) {
+		core.rootScene.removeChild(reinforceCastle);
+		core.rootScene.removeChild(buyInfantry);
+		core.rootScene.removeChild(buyCavalry);
+		core.rootScene.removeChild(buyArmor);
+		core.rootScene.removeChild(typeLabel);
+		core.rootScene.removeChild(health);
+		core.rootScene.removeChild(upgrade);
+	}
+	else if(this.type == 'unit' && this.owner != instance.uuid){
+		core.rootScene.removeChild(reinforceRegiment);
+		core.rootScene.removeChild(upgradeRegiment);
+		core.rootScene.removeChild(typeLabel);
+		core.rootScene.removeChild(unitSubtype);
+		core.rootScene.removeChild(health);
+		core.rootScene.removeChild(upgrade);
+		core.rootScene.removeChild(unitAttack);
+		core.rootScene.removeChild(unitDefense);
+		core.rootScene.removeChild(unitSpeed);
+		core.rootScene.removeChild(veterancy);
+		core.rootScene.removeChild(unitXP);
+	
+		core.rootScene.removeChild(reinforceCastle);
+		core.rootScene.removeChild(buyInfantry);
+		core.rootScene.removeChild(buyCavalry);
+		core.rootScene.removeChild(buyArmor);
+		core.rootScene.removeChild(typeLabel);
+		core.rootScene.removeChild(health);
+		core.rootScene.removeChild(upgrade);
+	
+	}
 		
- 	if(this.type == "castle") {
+ 	if(this.type == "castle" && this.owner == instance.uuid) {
 		/*** BUTTONS ***/
  		core.rootScene.addChild(reinforceCastle);
 		core.rootScene.addChild(buyInfantry);
@@ -535,7 +576,12 @@ var uiClick = function(event) {
 		core.rootScene.addChild(health);
 		core.rootScene.addChild(upgrade);
  	}
-	else if (this.type == "unit") {		
+	else if (this.type == "castle" && this.owner != instance.uuid){
+		core.rootScene.addChild(typeLabel);
+		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgrade);	
+	}
+	else if (this.type == "unit" && this.owner == instance.uuid) {		
 		/*** BUTTONS ***/
 		core.rootScene.addChild(reinforceRegiment);
 		core.rootScene.addChild(upgradeRegiment);
@@ -549,8 +595,17 @@ var uiClick = function(event) {
 		core.rootScene.addChild(unitDefense);
 		core.rootScene.addChild(unitSpeed);
 		core.rootScene.addChild(veterancy);
+		core.rootScene.addChild(unitXP);	
+	}
+	else if (this.type == "unit" && this.owner != instance.uuid) {
+		core.rootScene.addChild(typeLabel);
+		core.rootScene.addChild(unitSubtype);
+		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgrade);
+		core.rootScene.addChild(unitAttack);
+		core.rootScene.addChild(unitDefense);
+		core.rootScene.addChild(unitSpeed);
+		core.rootScene.addChild(veterancy);
 		core.rootScene.addChild(unitXP);
-		
-		
 	}
  }
