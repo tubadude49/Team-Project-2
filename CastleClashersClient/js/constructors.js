@@ -73,7 +73,7 @@ window.onload = function(){
 		var castle_mid = new Castle();
 		castle_mid.sprite.x = (background.width - castle_mid.sprite.width) / 2;
 		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
-		core.rootScene.addChild(castle_mid.sprite);*/
+		core.rootScene.addChild(castle_mid.sprite);
 		
 		var cav = new Unit("cavalry");
 		cav.sprite.x = 150;
@@ -85,7 +85,7 @@ window.onload = function(){
 		cav2.sprite.x = 250;
 		cav2.sprite.y = 250;
 		cav2.sprite.uuid = 250;
-		core.rootScene.addChild(cav2.sprite);
+		core.rootScene.addChild(cav2.sprite);*/
 		/*var tmp_cavalry = new Unit('cavalry');
 		tmp_cavalry.sprite.moveTo(100,100);*/
 		
@@ -353,49 +353,14 @@ var reinforceClick = function(event) {
 	ws.send(JSON.stringify(request));
 }
 
-var uiClick = function(event) {
-	//console.log('whichClick ' + this.type);
-	
-	/*** USED FOR CASTLE IF STATEMENT ***/
-	var reinforceCastle = new Sprite(200, 69);
- 	reinforceCastle.image = core.assets['assets/reinforceCastle.png'];
- 	reinforceCastle.x = core.width-coreUISize;
-	reinforceCastle.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
-	
-	var buyInfantry = new Sprite(200, 69);
- 	buyInfantry.image = core.assets['assets/buyInfantry.png'];
- 	buyInfantry.x = core.width-coreUISize;
-	buyInfantry.y = reinforceCastle.height;
-	buyInfantry.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick)
-	
-	var buyCavalry = new Sprite(200, 69);
- 	buyCavalry.image = core.assets['assets/buyCavalry.png'];
- 	buyCavalry.x = core.width-coreUISize;
-	buyCavalry.y = buyInfantry.y + buyCavalry.height;
-	buyCavalry.addEventListener(enchant.Event.TOUCH_START, buyCavalryClick);
-	
-	var buyArmor = new Sprite(200, 69);
- 	buyArmor.image = core.assets['assets/buyArmor.png'];
- 	buyArmor.x = core.width-coreUISize;
-	buyArmor.y = buyCavalry.y + buyArmor.height;
-	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
- 	/*************************************/
-	
- 	/*** UNIT IF STATEMENT ***/
-	var reinforceRegiment = new Sprite(200, 69);
- 	reinforceRegiment.image = core.assets['assets/reinforceRegiment.png'];
- 	reinforceRegiment.x = core.width-coreUISize;
-	reinforceRegiment.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
-	
-	var upgradeRegiment = new Sprite(200, 69);
- 	upgradeRegiment.image = core.assets['assets/upgradeRegiment.png'];
- 	upgradeRegiment.x = core.width-coreUISize;
-	upgradeRegiment.y = reinforceRegiment.height;
-	upgradeRegiment.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
- 	
-	
-	
-	/*** FOR CASTLES AND UNITS ***/
+var reinforceCastle = new Sprite(200, 69);
+var buyInfantry = new Sprite(200, 69);
+var buyCavalry = new Sprite(200, 69);
+var buyArmor = new Sprite(200, 69);
+var reinforceRegiment = new Sprite(200, 69);
+var upgradeRegiment = new Sprite(200, 69);
+
+/*** FOR CASTLES AND UNITS ***/
 		
  	var typeLabel = Label('');
  	var health = Label('');
@@ -412,17 +377,62 @@ var uiClick = function(event) {
  	var unitDefense = Label('');
  	var unitSpeed = Label('');
  	var unitSubtype = Label('');
+
+var uiClick = function(event) {
+	//console.log('whichClick ' + this.type);
+	
+	/*** USED FOR CASTLE IF STATEMENT ***/
+	
+ 	reinforceCastle.image = core.assets['assets/reinforceCastle.png'];
+ 	reinforceCastle.x = core.width-coreUISize;
+	reinforceCastle.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
+		
+ 	buyInfantry.image = core.assets['assets/buyInfantry.png'];
+ 	buyInfantry.x = core.width-coreUISize;
+	buyInfantry.y = reinforceCastle.height;
+	buyInfantry.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick)
+	
+	
+ 	buyCavalry.image = core.assets['assets/buyCavalry.png'];
+ 	buyCavalry.x = core.width-coreUISize;
+	buyCavalry.y = buyInfantry.y + buyCavalry.height;
+	buyCavalry.addEventListener(enchant.Event.TOUCH_START, buyCavalryClick);
+	
+	
+ 	buyArmor.image = core.assets['assets/buyArmor.png'];
+ 	buyArmor.x = core.width-coreUISize;
+	buyArmor.y = buyCavalry.y + buyArmor.height;
+	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
+ 	/*************************************/
+	
+ 	/*** UNIT IF STATEMENT ***/
+	
+ 	reinforceRegiment.image = core.assets['assets/reinforceRegiment.png'];
+ 	reinforceRegiment.x = core.width-coreUISize;
+	reinforceRegiment.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
+	
+	
+ 	upgradeRegiment.image = core.assets['assets/upgradeRegiment.png'];
+ 	upgradeRegiment.x = core.width-coreUISize;
+	upgradeRegiment.y = reinforceRegiment.height;
+	upgradeRegiment.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
+ 	
+	
+	
+	
  	
  	/***** CASTLE STATS SETUP *****/
- 	typeLabel.text += this.type;
+ 	typeLabel.text = this.type;
  	typeLabel.x = core.width-150;
  	typeLabel.y = core.height / 2;
+	
+	
  	
- 	health.text += 'Health: ' + this.health;
+ 	health.text = 'Health: ' + this.health;
  	health.x = typeLabel.x-49;
  	health.y = typeLabel.y+50;
  	
- 	upgrade.text += 'Upgrade lvl: ' + this.upgrade;
+ 	upgrade.text = 'Upgrade lvl: ' + this.upgrade;
  	upgrade.x = typeLabel.x-49;
  	upgrade.y = typeLabel.y+75;
  	
@@ -465,6 +475,8 @@ var uiClick = function(event) {
 		core.rootScene.removeChild(unitSpeed);
 		core.rootScene.removeChild(veterancy);
 		core.rootScene.removeChild(unitXP);
+		
+		
 	}
 	else if(this.type == 'unit') {
 		core.rootScene.removeChild(reinforceCastle);
