@@ -10,6 +10,8 @@ var bottomUISize = 50;
 var selected_obj = {};
 var selectButton;
 var attackButton;
+var goldImage;
+var goldAmount;
 var buttonSelected = 0;
 
 
@@ -20,7 +22,8 @@ window.onload = function(){
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/castle.png', 'assets/button_select.png', 
 				'assets/button_select_selected.png', 'assets/button_attack.png', 'assets/button_attack_selected.png',
  				'assets/attackUI.png', 'assets/upgradeUI.png', 'assets/buyInfantry.png', 'assets/buyCavalry.png',
-				'assets/buyArmor.png','assets/reinforceCastle.png','assets/reinforceRegiment.png','assets/upgradeRegiment.png');
+				'assets/buyArmor.png','assets/reinforceCastle.png','assets/reinforceRegiment.png','assets/upgradeRegiment.png',
+				'assets/gold.png');
 	
 	core.onload = function() {
 		
@@ -53,6 +56,18 @@ window.onload = function(){
 		attackButton.y = bottomUI.y;
 		attackButton.addEventListener(enchant.Event.TOUCH_START, attackButtonClick);
 		core.rootScene.addChild(attackButton);
+		
+		goldImage = new Sprite(32, 32);
+		goldImage.image = core.assets['assets/gold.png'];
+		goldImage.frame = 4;
+		goldImage.x = selectButton.x - 100;
+		goldImage.y = bottomUI.y + 10;
+		core.rootScene.addChild(goldImage);
+		
+		goldAmount = new Label('0');
+		goldAmount.x = goldImage.x + goldImage.width;
+		goldAmount.y = goldImage.y;
+		core.rootScene.addChild(goldAmount);
 		
 		/*var castle1 = new Castle();
 		castle1.sprite.x = 0;
@@ -263,6 +278,24 @@ var Instance = function() {
 	this.alliance = -1;	//uuid
 	this.war = -1;		//uuid
 	this.selected = 0;
+}
+
+var updateGold = function(instance) {
+	
+	goldAmount.text = instance.gold;
+	
+	if(instance.gold < 25) { 
+		goldImage.frame = 4;
+	} else if (instance.gold < 50) {
+		goldImage.frame = 5;
+	} else if (instance.gold < 100) {
+		goldImage.frame = 6;
+	} else if (instance.gold < 200) {
+		goldImage.frame = 7;
+	} else {
+		goldImage.frame = 8
+	}
+	
 }
 
 var castleFromData = function(castle, data) {

@@ -11,6 +11,7 @@ ws.onmessage = function(event) {
 	if(data.type) {
 		if(data.type == 'instance') {
 			instance = data;
+			updateGold(instance);
 		} else if(data.type == 'unit') {
 			var found = false;
 			for(i=0;i<units.length;i++) {
