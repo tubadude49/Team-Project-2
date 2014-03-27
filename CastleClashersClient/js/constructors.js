@@ -114,7 +114,7 @@ window.onload = function(){
 }
 
 var backgroundClick = function(event) {
-	console.log("backgroundClick");
+	
 	if(buttonSelected == 0) {
 		
 		if (selected_obj != null) {
@@ -138,19 +138,7 @@ var attackButtonClick = function(event) {
 }
 
 var castleClick = function(event) {
-	/*var label = Label('');
-	label.text += 'Castle Clicked';
-	label.x = this._x;
-	label.y = this._y;
-	core.rootScene.addChild(label);*/
-	
-	/*var request = {};
-	request.action = 'purchase';
-	request.purchase = 'new';
-	request.type = 'cavalry';
-	request.uuid = instance.uuid;
-	ws.send(JSON.stringify(request));*/
-	console.log("castleClick");
+		
 	if(buttonSelected == 0) {
 		if(selected_obj != null)
 		{
@@ -162,10 +150,13 @@ var castleClick = function(event) {
 		selected_obj = this;
 		this.backgroundColor = "#CCCC00";
 		
-		console.log("new uuid: " + selected_obj.uuid);
 	}
 	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
-		console.log("clicked uuid: " + selected_obj.uuid);
+		
+		selectButton.image = core.assets['assets/button_select_selected.png'];
+		attackButton.image = core.assets['assets/button_attack.png'];
+		buttonSelected = 0;
+		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
 		fields.target = this.uuid;
@@ -188,8 +179,7 @@ var Castle = function() {
 }
 
 var unitClick = function(event) {
-	
-	
+		
 	if(buttonSelected == 0 && this.owner == instance.uuid) {
 		if(selected_obj != null)
 		{
@@ -203,6 +193,10 @@ var unitClick = function(event) {
 		
 	}
 	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit' && this.owner != instance.uuid) {
+		
+		selectButton.image = core.assets['assets/button_select_selected.png'];
+		attackButton.image = core.assets['assets/button_attack.png'];
+		buttonSelected = 0;
 		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
@@ -417,8 +411,7 @@ var upgradeRegiment = new Sprite(200, 69);
  	var unitSubtype = Label('');
 
 var uiClick = function(event) {
-	//console.log('whichClick ' + this.type);
-	
+		
 	core.rootScene.removeChild(reinforceRegiment);
 	core.rootScene.removeChild(upgradeRegiment);
 	core.rootScene.removeChild(typeLabel);
