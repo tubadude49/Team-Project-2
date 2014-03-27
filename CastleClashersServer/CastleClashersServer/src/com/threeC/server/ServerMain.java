@@ -95,6 +95,14 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		return null;
 	}
 	
+	public void sendToAll(String s) {
+		for(WebSocketEngine wse : server.getEngines().values()) {
+			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
+				server.sendToken(wsc, JSONProcessor.JSONStringToToken(s));
+			}
+		}
+	}
+	
 	public void updateUnits(TokenServer server) {
 		for(Unit unit : units) {
 			if(unit.dest > 0) {
@@ -113,6 +121,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					if(dx == 0 && dy == 0) {
 						if(rnd.nextInt(2) == 0) {
 							unitDest.health = 0;
+							sendToAll(unitDest.toJSON());
 						} else {
 							unit.health = 0;
 						}
@@ -133,6 +142,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					if(dx == 0 && dy == 0) { 
 						castleDest.owner = unit.owner;
 						unit.dest = -1l;
+						sendToAll(castleDest.toJSON());
 						System.out.println("siege!");
 					}
 					//if(dx == 0 && dy == 0) { unit.dest = -1l; } 
