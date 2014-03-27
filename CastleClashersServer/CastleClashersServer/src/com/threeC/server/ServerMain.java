@@ -42,8 +42,8 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	public TokenServer server = null;
 	
 	public void distributeCastles() {
-		final int gameboardX = 1280;
-		final int gameboardY = 720;
+		final int gameboardX = 1280-86;
+		final int gameboardY = 720-41;
 		int validPlayers = 0;
 		
 		for(Player player : players) {
@@ -52,9 +52,9 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				if(validPlayers == 1) { 
 					/*Player1*/
 					castles.add(new Castle(0, 0, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(0, gameboardY-41, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(gameboardX-86, 0, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(gameboardX-86, gameboardY-41, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(0, gameboardY, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(gameboardX, 0, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(gameboardX, gameboardY, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 2) {
 					/*Player2*/
 					castles.add(new Castle(0, gameboardY, uuidDistributor.next(), player.uuid));
