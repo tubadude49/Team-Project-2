@@ -42,7 +42,9 @@ ws.onmessage = function(event) {
 	}
 }
 ws.onerror = function(error) {
-	console.log(error);
+	if(error.srcElement == WebSocket) {
+		console.log("Failed to connect to:" + error.srcElement.URL);
+	}
 }
 ws.onclose = function() {
 	console.log("connection closed");

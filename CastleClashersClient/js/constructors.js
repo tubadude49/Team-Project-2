@@ -40,7 +40,7 @@ window.onload = function(){
 		core.rootScene.addChild(bottomUI);
 		
 		selectButton = new Sprite(106, 43);
-		selectButton.image = core.assets['assets/button_select.png'];
+		selectButton.image = core.assets['assets/button_select_selected.png'];
 		selectButton.x = background.width/2 - selectButton.width;
 		selectButton.y = bottomUI.y;
 		selectButton.addEventListener(enchant.Event.TOUCH_START, selectButtonClick);
@@ -74,11 +74,17 @@ window.onload = function(){
 		castle_mid.sprite.y = (background.height - castle_mid.sprite.height) / 2;
 		core.rootScene.addChild(castle_mid.sprite);*/
 		
-		/*var cav = new Unit("cavalry");
-		cav.sprite.x = castle1.width;
-		cav.sprite.y = castle1.height;
-		core.rootScene.addChild(cav.sprite);*/
+		var cav = new Unit("cavalry");
+		cav.sprite.x = 150;
+		cav.sprite.y = 150;
+		cav.sprite.uuid = 150;
+		core.rootScene.addChild(cav.sprite);
 		
+		var cav2 = new Unit("cavalry");
+		cav2.sprite.x = 250;
+		cav2.sprite.y = 250;
+		cav2.sprite.uuid = 250;
+		core.rootScene.addChild(cav2.sprite);
 		/*var tmp_cavalry = new Unit('cavalry');
 		tmp_cavalry.sprite.moveTo(100,100);*/
 		
@@ -119,6 +125,7 @@ var castleClick = function(event) {
 		{
 			this.selected = true;
 			selected_obj = this;
+			console.log(this);
 			/*selected_uuid = this.uuid;
 			selected_type = 'unit';*/
 		}
@@ -158,19 +165,24 @@ var unitClick = function(event) {
 	if(buttonSelected == 0) {
 		if(!this.selected)
 		{
+			selected_obj.backgroundColor = null;
+			selected_obj.selected = false;
 			this.selected = true;
 			selected_obj = this;
+			this.backgroundColor = "#CCCC00";
 			/*selected_uuid = this.uuid;
 			selected_type = 'unit';*/
 		}
 		else if(this.selected)
 		{
+			console.log("selected");
 			this.selected = false;
+			this.backgroundColor = null;
 			selected_obj = {};
 			/*selected_uuid = -1;
 			selected_type = '';	*/
 		}
-		console.log("new uuid: " + selected_obj.uuid);
+		//console.log("new uuid: " + selected_obj.uuid);
 	}
 	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
 		console.log("clicked uuid: " + selected_obj.uuid);
@@ -343,7 +355,7 @@ var reinforceClick = function(event) {
 }
 
 var uiClick = function(event) {
-	console.log('whichClick ' + this.type);
+	//console.log('whichClick ' + this.type);
 	
 	/*** USED FOR CASTLE IF STATEMENT ***/
 	var reinforceCastle = new Sprite(200, 69);
