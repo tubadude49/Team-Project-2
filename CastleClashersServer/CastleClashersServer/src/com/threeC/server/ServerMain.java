@@ -82,14 +82,19 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	}
 	
 	public Object getByUUID(long uuid) {
-		for(Unit unit : units) {
-			if(unit.uuid == uuid) {
-				return unit;
+		for(int i=0;i<units.size();i++) {
+			if(units.get(i).uuid == uuid) {
+				return units.get(i);
 			}
 		}
-		for(Castle castle : castles) {
-			if(castle.uuid == uuid) {
-				return castle;
+		for(int i=0;i<castles.size();i++) {
+			if(castles.get(i).uuid == uuid) {
+				return castles.get(i);
+			}
+		}
+		for(int i=0;i<battles.size();i++) {
+			if(battles.get(i).uuid == uuid) {
+				return battles.get(i);
 			}
 		}
 		return null;
@@ -103,12 +108,13 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		}
 	}
 	
-	public void updateUnits(TokenServer server) {
-		for(Unit unit : units) {
-			if(unit.dest > 0) {
+	public void moveUnits() {
+		for(int i=0;i<units.size();i++) {
+			Unit unit = units.get(i);
+			if(unit.dest > 0 && unit.battle < 0) {
 				Object dest = getByUUID(unit.dest);
 				if(dest != null && dest instanceof Unit) {
-					Unit unitDest = (Unit)dest;
+					Unit unitDest = (Unit)dest;					
 					int dx = unitDest.x - unit.x;
 						if(dx < -10) { dx = -10; }
 						else if(dx > 10) { dx = 10; }
@@ -117,23 +123,6 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						else if(dy > 10) { dy = 10; }
 					unit.x += dx;
 					unit.y += dy;
-					//System.out.println(dx + ", " + dy);
-					if(Math.abs(unit.x-unitDest.x) < 50 && Math.abs(unit.y-unitDest.y) < 50) {
-						if(rnd.nextInt(2) == 0) {
-							unitDest.health = 0;
-							unitDest.dest = -1l;
-							sendToAll(unitDest.toJSON());
-						} else {
-							unit.health = 0;
-						}
-						/*unitDest.health = 0;
-						unitDest.dest = -1l;
-						sendToAll(unitDest.toJSON());
-						unit.health = 0;*/
-						unit.dest = -1l;
-						System.out.println("units battle!");
-					}
-					//if(dx == 0 && dy == 0) { unit.dest = -1l; } 
 				} else if(dest != null && dest instanceof Castle) {
 					Castle castleDest = (Castle)dest;
 					int dx = castleDest.x - unit.x; 
@@ -149,7 +138,6 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						unit.dest = -1l;
 						sendToAll(castleDest.toJSON());
 					}
-					//if(dx == 0 && dy == 0) { unit.dest = -1l; } 
 				}
 				for(WebSocketEngine wse : server.getEngines().values()) {
 					for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
@@ -158,6 +146,64 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				}				
 				
 			}		
+		}		
+	}
+	
+	public void battleUnits() {
+		for(int i=0;i<units.size();i++) {
+			Unit unit1 = units.get(i);
+			for(int j=0;j<units.size();j++) {
+				Unit unit2 = units.get(j);
+				if(unit1 == unit2 || unit1.owner == unit2.owner) { continue; }
+				if(	Math.abs(unit1.x-unit2.x) < 50 && Math.abs(unit1.y-unit2.y) < 50)
+				{					
+					if(unit1.battle < 0 && unit2.battle < 0) {
+						//new battle
+						Battle battle = new Battle(unit1.x+unit2.x/2, unit1.y+unit2.y/2, uuidDistributor.next());
+						battles.add(battle);
+						battle.add(unit1);
+						battle.add(unit2);
+						
+						sendToAll(unit1.toJSON());
+						sendToAll(unit2.toJSON());
+						sendToAll(battle.toJSON());
+					} else if(unit1.battle < 0 && unit2.battle >= 0) {
+						//add to unit2's battle
+						Battle battle = (Battle)getByUUID(unit2.battle);
+						battle.add(unit1);
+						
+						sendToAll(unit1.toJSON());
+						sendToAll(unit2.toJSON());
+						sendToAll(battle.toJSON());
+					} else if(unit1.battle >= 0 && unit2.battle < 0) {
+						//add to unit1's battle
+						Battle battle = (Battle)getByUUID(unit1.battle);
+						battle.add(unit2);
+						
+						sendToAll(unit1.toJSON());
+						sendToAll(unit2.toJSON());
+						sendToAll(battle.toJSON());
+					}					
+				}
+			}
+		}
+		
+		for(int i=0;i<units.size();i++) {
+			Unit unit = units.get(i);
+			if(unit.health <= 0) {
+				units.remove(i);
+				i--;
+			}
+		}	
+	}
+
+	public void runBattles() {
+		for(int i=0;i<battles.size();i++) {
+			Battle battle = battles.get(i);
+			battle.processBattleFrame();
+			if(battle.units.size() <= 1) {
+				battles.remove(i);
+			}
 		}
 	}
 	
@@ -328,7 +374,8 @@ public class ServerMain {
 	
 	public static void gameFire(JWebSocketListener jwsl, TokenServer server) {
 		System.out.println("frame:" + jwsl.frame);
-		jwsl.updateUnits(server);
+		jwsl.moveUnits();
+		jwsl.battleUnits();
 		for(WebSocketEngine wse : server.getEngines().values()) {
 			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
 				Player player = jwsl.getPlayerBySessionId(wsc.getSession().getSessionId());

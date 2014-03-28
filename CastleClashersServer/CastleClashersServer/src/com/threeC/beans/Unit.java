@@ -4,7 +4,8 @@ import org.json.JSONObject;
 
 public class Unit implements JSONStringifiable {
 	public long uuid;
-	public long owner;
+	public long owner;	
+	public long battle = -1l;
 	
 	public int xp;
 	public int veterancy;
