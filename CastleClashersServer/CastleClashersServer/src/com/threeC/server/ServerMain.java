@@ -27,9 +27,12 @@ import com.threeC.beans.UUIDDistributor;
 import com.threeC.beans.Unit;
 import com.threeC.beans.UnitFactory;
 
-class JWebSocketListener implements WebSocketServerTokenListener {
-	public int frame = 0;
-	public final int startAt = 30;
+class JWebSocketListener implements WebSocketServerTokenListener {	
+	public int status = 0; //0 = WAITING, 1 = STARTED
+	public boolean init = false;
+	
+	public boolean incomeRecalcReq = true;
+	
 	public LinkedList<Player> players = new LinkedList<Player>();
 	LinkedList<Castle> castles = new LinkedList<Castle>();
 	LinkedList<Unit> units = new LinkedList<Unit>();
@@ -40,6 +43,21 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	Random rnd = new Random(new Date().getTime());
 	
 	public TokenServer server = null;
+	
+	public void recalcIncome() {
+		if(incomeRecalcReq) {
+			for(Player player : players) {
+				player.income = 0;
+			}
+			for(Castle castle : castles) {
+				Player owner = (Player)getByUUID(castle.owner);
+				if(owner != null) {
+					owner.income += castle.income;
+				}			
+			}
+			incomeRecalcReq = false;
+		}
+	}
 	
 	public void distributeCastles() {
 		final int gameboardX = 1280-86;
@@ -54,8 +72,8 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					castles.add(new Castle(0, 0, uuidDistributor.next(), player.uuid));
 					/*castles.add(new Castle(0, gameboardY, uuidDistributor.next(), player.uuid));
 					castles.add(new Castle(gameboardX, 0, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(gameboardX, gameboardY, uuidDistributor.next(), player.uuid));
-					 */
+					castles.add(new Castle(gameboardX, gameboardY, uuidDistributor.next(), player.uuid));*/
+					 
 				} else if(validPlayers == 2) {
 					/*Player2*/
 					castles.add(new Castle(0, gameboardY, uuidDistributor.next(), player.uuid));
@@ -69,7 +87,20 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					player.active = false;
 				}
 			}
-		}		
+		}
+		castles.add(new Castle(gameboardX/2 - gameboardX/4, gameboardY/2, uuidDistributor.next(), -1));
+		castles.add(new Castle(gameboardX/2 + gameboardX/4, gameboardY/2, uuidDistributor.next(), -1));
+		castles.add(new Castle(gameboardX/2, gameboardY/2 - gameboardY/3, uuidDistributor.next(), -1));
+		castles.add(new Castle(gameboardX/2, gameboardY/2 + gameboardY/3, uuidDistributor.next(), -1));
+	}
+	
+	public boolean isValidPurchase(int x, int y, long ownerUuid) {
+		for(Castle castle : castles) {
+			if(castle.x == x && castle.y == y && castle.owner == ownerUuid) {
+				return true;
+			}
+		}
+		return false;
 	}
 		
 	public Player getPlayerBySessionId(String sessionId) {
@@ -97,6 +128,11 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				return battles.get(i);
 			}
 		}
+		for(int i=0;i<players.size();i++) {
+			if(players.get(i).uuid == uuid) {
+				return players.get(i);
+			}
+		}
 		return null;
 	}
 	
@@ -116,27 +152,32 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				if(dest != null && dest instanceof Unit) {
 					Unit unitDest = (Unit)dest;					
 					int dx = unitDest.x - unit.x;
-						if(dx < -10) { dx = -10; }
-						else if(dx > 10) { dx = 10; }
+						if(dx < -unit.speed) { dx = -unit.speed; }
+						else if(dx > unit.speed) { dx = unit.speed; }
 					int dy = unitDest.y - unit.y;
-						if(dy < -10) { dy = -10; }
-						else if(dy > 10) { dy = 10; }
+						if(dy < -unit.speed) { dy = -unit.speed; }
+						else if(dy > unit.speed) { dy = unit.speed; }
 					unit.x += dx;
 					unit.y += dy;
 				} else if(dest != null && dest instanceof Castle) {
-					Castle castleDest = (Castle)dest;
-					int dx = castleDest.x - unit.x; 
-						if(dx < -10) { dx = -10; }
-						else if(dx > 10) { dx = 10; }
-					int dy = castleDest.y - unit.y;
-						if(dy < -10) { dy = -10; }
-						else if(dy > 10) { dy = 10; }
+					Castle castle = (Castle)dest;
+					int dx = castle.x - unit.x; 
+						if(dx < -unit.speed) { dx = -unit.speed; }
+						else if(dx > unit.speed) { dx = unit.speed; }
+					int dy = castle.y - unit.y;
+						if(dy < -unit.speed) { dy = -unit.speed; }
+						else if(dy > unit.speed) { dy = unit.speed; }
 					unit.x += dx;
 					unit.y += dy;
-					if(dx == 0 && dy == 0) { 
-						castleDest.owner = unit.owner;
-						unit.dest = -1l;
-						sendToAll(castleDest.toJSON());
+					if(dx == 0 && dy == 0 && castle.owner != unit.owner) {
+						castle.health -= unit.attack * 10;
+						if(castle.health <= 0) {
+							castle.owner = unit.owner;
+							castle.health = castle.maxHealth / 2;
+							incomeRecalcReq = true;
+							unit.dest = -1l;
+						}
+						sendToAll(castle.toJSON());
 					}
 				}
 				for(WebSocketEngine wse : server.getEngines().values()) {
@@ -156,13 +197,34 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				Unit unit2 = units.get(j);
 				if(unit1 == unit2 || unit1.owner == unit2.owner) { continue; }
 				if(	Math.abs(unit1.x-unit2.x) < 50 && Math.abs(unit1.y-unit2.y) < 50)
-				{					
-					if(unit1.battle < 0 && unit2.battle < 0) {
+				{
+					/*unit1.takeDamage(unit2.attack - unit1.defense);
+					unit1.xp += 10;
+					//unit1.veterancy += unit1.xp = (unit1.xp % 100);
+					unit2.takeDamage(unit1.attack - unit2.defense);
+					unit2.xp += 10;
+					unit1.battle = unit2.battle = 1;
+					//unit2.veterancy += unit2.xp = (unit2.xp % 100);*/
+					
+					if(rnd.nextInt(2) == 0) {
+						unit1.takeDamage(unit1.health);					// kill the unit because I'm lazy
+						unit2.takeDamage(unit1.attack - unit2.defense);
+						unit2.xp += 10;
+						unit2.veterancy += unit2.xp = (unit2.xp % 100);
+					} else {
+						unit2.takeDamage(unit2.health);					// kill the unit because I'm lazy
+						unit1.takeDamage(unit2.attack - unit1.defense);						
+						unit1.xp += 10;
+						unit1.veterancy += unit1.xp = (unit1.xp % 100);
+					}
+					sendToAll(unit1.toJSON());
+					sendToAll(unit2.toJSON());
+					/*if(unit1.battle < 0 && unit2.battle < 0) {
 						//new battle
 						Battle battle = new Battle(unit1.x+unit2.x/2, unit1.y+unit2.y/2, uuidDistributor.next());
 						battles.add(battle);
-						battle.add(unit1);
-						battle.add(unit2);
+						//battle.add(unit1);
+						//battle.add(unit2);
 						
 						sendToAll(unit1.toJSON());
 						sendToAll(unit2.toJSON());
@@ -183,7 +245,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						sendToAll(unit1.toJSON());
 						sendToAll(unit2.toJSON());
 						sendToAll(battle.toJSON());
-					}					
+					}		*/			
 				}
 			}
 		}
@@ -201,7 +263,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		for(int i=0;i<battles.size();i++) {
 			Battle battle = battles.get(i);
 			battle.processBattleFrame();
-			if(battle.units.size() <= 1) {
+			if(battle.blufor.size() <= 0 || battle.opfor.size() <= 0) {
 				battles.remove(i);
 			}
 		}
@@ -209,18 +271,18 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	
 	@Override
 	public void processOpened(WebSocketServerEvent event) {
-		if(frame < startAt) {
+		if(status == 0) {
 			System.out.println("Connection Opened " + event.getSessionId());
 			players.add(new Player("", event.getSessionId(), uuidDistributor.next()));
-			System.out.println(players.get(0).toJSON());
-			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(players.get(0).toJSON())));
+			System.out.println(players.get(players.size()-1).toJSON());
+			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(players.get(players.size()-1).toJSON())));
+			status = players.size() >= 4 ? 1 : 0;
 		} else {
 			System.out.println("Connection rejected");
 			Player player = new Player("", event.getSessionId(), uuidDistributor.next());
 			player.active = false;
 			player.gold = 0;
-			players.add(player);
-			
+			players.add(player);			
 		}
 	}
 	
@@ -278,7 +340,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 							}
 						} else {
 							if(json.getString("purchase").equals("new")) {								
-								if(player.charge(25)) {
+								if(isValidPurchase(json.getInt("x"), json.getInt("y"), player.uuid) && player.charge(25)) {
 									Unit newUnit = UnitFactory.fromString(json.getString("type"), uuidDistributor.next(), player.uuid);
 									newUnit.x = json.getInt("x");
 									newUnit.y = json.getInt("y");
@@ -342,23 +404,17 @@ public class ServerMain {
 		jwsl.server = server;
 		while (JWebSocketInstance.getStatus() != JWebSocketInstance.SHUTTING_DOWN){
 			try {
-				if(jwsl.frame < jwsl.startAt) {
-					pregameFire(jwsl, server);
-				} else if(jwsl.frame == jwsl.startAt) {
+				if(jwsl.status == 1 && !jwsl.init) {
 					firstFire(jwsl, server);
-				} else {
+					jwsl.init = true;
+				} else if (jwsl.status == 1 && jwsl.init){
 					gameFire(jwsl, server);
 				}
-				jwsl.frame++;
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {}
 		}
 		System.out.println("Server shutting down...");
-	}
-	
-	public static void pregameFire(JWebSocketListener jwsl, TokenServer server) {
-		System.out.println(server.getEngines().size() + ":" + jwsl.frame);	
-	}
+	}	
 	
 	public static void firstFire(JWebSocketListener jwsl, TokenServer server) {
 		jwsl.distributeCastles();
@@ -372,15 +428,14 @@ public class ServerMain {
 		gameFire(jwsl, server);
 	}
 	
-	public static void gameFire(JWebSocketListener jwsl, TokenServer server) {
-		System.out.println("frame:" + jwsl.frame);
+	public static void gameFire(JWebSocketListener jwsl, TokenServer server) {		
 		jwsl.moveUnits();
 		jwsl.battleUnits();
+		jwsl.recalcIncome();
 		for(WebSocketEngine wse : server.getEngines().values()) {
 			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
 				Player player = jwsl.getPlayerBySessionId(wsc.getSession().getSessionId());
-				if(player.active) {
-					player.income = 5;
+				if(player.active) {					
 					player.incrGold();
 				}
 				server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));

@@ -10,9 +10,10 @@ public class Castle implements JSONStringifiable {
 	public int x;
 	public int y;
 
-	public static final int maxHealth = 1000;
+	public int maxHealth = 1000;
 	public int health = 1000;
 	public int upgrade;
+	public int income = 2;
 	
 	public final String type = "castle";
 	
@@ -60,6 +61,8 @@ public class Castle implements JSONStringifiable {
 		if(owner.charge(100)) {
 			upgrade++;
 			health += 500;
+			maxHealth += 500;
+			income += 1;
 			return true;
 		}
 		return false;		

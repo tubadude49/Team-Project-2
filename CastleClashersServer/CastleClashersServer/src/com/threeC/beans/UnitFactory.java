@@ -3,15 +3,15 @@ package com.threeC.beans;
 public class UnitFactory {
 	
 	public static Unit cavalry(long uuid, long owner) {
-		return new Unit(1, 1, 1, "cavalry", uuid, owner);
+		return new Unit(4, 3, 15, "cavalry", uuid, owner);
 	}
 	
 	public static Unit infantry(long uuid, long owner) {
-		return new Unit(1, 1, 1, "infantry", uuid, owner);		
+		return new Unit(5, 5, 10, "infantry", uuid, owner);		
 	}
 	
 	public static Unit cannon(long uuid, long owner) {
-		return new Unit(1, 1, 1, "cannon", uuid, owner);
+		return new Unit(10, 2, 7, "cannon", uuid, owner);
 	}
 
 	public static Unit fromString(String type, long uuid, long owner) {

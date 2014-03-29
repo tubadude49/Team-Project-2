@@ -1,7 +1,6 @@
 package com.threeC.beans;
 
 import java.util.LinkedList;
-import java.util.TreeMap;
 
 import org.json.JSONObject;
 
@@ -10,12 +9,8 @@ public class Battle implements JSONStringifiable {
 	public int x;
 	public int y;
 
-	//LinkedList<Unit> units = new LinkedList<Unit>();
-	
-	public TreeMap<Long, LinkedList<Unit>> units = new TreeMap<Long, LinkedList<Unit>>();
-	public TreeMap<Long, Integer> unitsAtk = new TreeMap<Long, Integer>();
-	
-	/*TreeMap<Long, Integer> owners = new TreeMap<Long, Integer>();*/
+	public LinkedList<Unit> blufor = new LinkedList<Unit>();
+	public LinkedList<Unit> opfor = new LinkedList<Unit>();
 		
 	public Battle(int x, int y, long uuid){
 		this.x = x;
@@ -23,43 +18,47 @@ public class Battle implements JSONStringifiable {
 		this.uuid = uuid;
 	}
 	
-	public void add(Unit unit) {
+	public void addBlufor(Unit unit) {
 		if(unit.battle < 0) {
 			unit.battle = this.uuid;
-			LinkedList<Unit> tmp = (units.containsKey(unit.owner)) ? units.get(unit.owner) : new LinkedList<Unit>();
-			tmp.add(unit);
-			units.put(unit.owner, tmp);			
-			unitsAtk.put(unit.owner, unitsAtk.get(unit.owner) + unit.attack);
+			blufor.add(unit);
 		}		
 	}
 	
-	public void processBattleFrame() {		
-		for(LinkedList<Unit> unitList : units.values()) {
-			int opposing = 0;
-			int attack = 0;
-			for(LinkedList<Unit> unitList2 : units.values()) {
-				if(unitList != unitList2) { opposing += unitList2.size(); }
+	public void addOpfor(Unit unit) {
+		if(unit.battle < 0) {
+			unit.battle = this.uuid;
+			opfor.add(unit);
+		}
+	}
+	
+	public void processBattleFrame() {
+		for(int i=0;i<Math.min(opfor.size(),blufor.size());i++) {
+			opfor.get(i).takeDamage(blufor.get(i).attack);
+			blufor.get(i).takeDamage(opfor.get(i).attack);
+			if(i+1 >= Math.min(opfor.size(),blufor.size())) {
+				for(int j=i+1;j<opfor.size();j++) {
+					blufor.get(i).takeDamage(opfor.get(j).attack);
+				}
+				for(int j=i+1;j<blufor.size();j++) {
+					opfor.get(i).takeDamage(blufor.get(j).attack);
+				}
 			}
-			for(Integer i : unitsAtk.values()) {
-				attack += i;
-			}
-			for(Unit unit : unitList) {
-				unit.takeDamage(attack / (opposing * (units.size() - 1)));
+		}	
+		
+		for(int i=0;i<blufor.size();i++) {
+			Unit unit = blufor.get(i);
+			if(unit.health <= 0) {
+				blufor.remove(i);
+				i--;
 			}
 		}
-		
-		for(LinkedList<Unit> unitList : units.values()) {
-			for(int i=0;i<unitList.size();i++) {
-				Unit unit = unitList.get(i);
-				Long key = unit.owner;
-				if(unit.health <= 0) {
-					unitList.remove(i);
-					unitsAtk.put(unit.owner, unitsAtk.get(unit.owner) - unit.attack);
-				}
-				/*if(unitList.size() <= 0) {
-					units.remove(key); uncomment this and feel the wrath of zeus
-				}*/
-			}
+		for(int i=0;i<opfor.size();i++) {
+			Unit unit = opfor.get(i);
+			if(unit.health <= 0) {
+				opfor.remove(i);
+				i--;
+			}			
 		}
 	}
 	
