@@ -1,5 +1,8 @@
 package com.threeC.server;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 
 import org.json.JSONException;
@@ -27,6 +30,7 @@ import com.threeC.beans.UnitFactory;
 
 class JWebSocketListener implements WebSocketServerTokenListener {	
 	public int status = 0; //0 = WAITING, 1 = STARTED, 2 = GAME ENDED
+	public int numPlayers = 0;
 	public boolean init = false;
 	
 	public boolean incomeRecalcReq = true;
@@ -269,13 +273,21 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			players.add(newPlayer);
 			System.out.println(newPlayer.toJSON());
 			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(newPlayer.toJSON())));
-			status = players.size() < 4 ? 0 : 1;
+			status = players.size() < numPlayers ? 0 : 1;
 		} else {
 			System.out.println("Connection rejected");
-			Player player = new Player("", event.getSessionId(), uuidDistributor.next());
-			player.active = false;
-			player.gold = 0;
-			players.add(player);			
+			Player player = getPlayerBySessionId(event.getSessionId());
+			if(player == null) {
+				player = new Player("", event.getSessionId(), uuidDistributor.next());
+				player.active = false;
+				player.gold = 0;
+				players.add(player);
+			} else {
+				player.active = true;
+			}
+			for(Castle castle : castles) {
+				event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(castle.toJSON())));
+			}
 		}
 	}
 	
@@ -287,12 +299,14 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	@Override
 	public void processClosed(WebSocketServerEvent event) {
 		System.out.println("Connection Closed");
-		for(int i=0;i<players.size();i++) {
+		Player player = getPlayerBySessionId(event.getSessionId());
+		player.active = false;
+		/*for(int i=0;i<players.size();i++) {
 			if(players.get(i).sessionId().equals(event.getSessionId())) {
 				players.remove(i);
 				break;
 			}
-		}
+		}*/
 	}
 	
 	@Override
@@ -389,6 +403,19 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 
 public class ServerMain {
 	public static void main(String[] args){
+		int i = -1;
+		while(i < 0) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+			System.out.print("Enter Integer:");
+	        try{
+	        	i = Integer.parseInt(br.readLine());
+	        } catch(NumberFormatException e){
+	        	e.printStackTrace();
+	        } catch (IOException e) {
+	        	e.printStackTrace();
+	        }
+		}
+		
 		JWebSocketFactory.printCopyrightToConsole();
 		JWebSocketConfig.initForConsoleApp(args);
 		JWebSocketFactory.start();
@@ -399,6 +426,8 @@ public class ServerMain {
 		JWebSocketListener jwsl = new JWebSocketListener();
 		server.addListener(jwsl);
 		jwsl.server = server;
+		jwsl.numPlayers = i;		
+		
 		while (JWebSocketInstance.getStatus() != JWebSocketInstance.SHUTTING_DOWN){
 			try {
 				long start = System.currentTimeMillis();
