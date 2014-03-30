@@ -26,7 +26,7 @@ window.onload = function(){
 		bottomUI.backgroundColor = "#81DAF5";
 		core.rootScene.addChild(bottomUI);
 		
-		selectButton = new Sprite(106, 43);
+		/*selectButton = new Sprite(106, 43);
 		selectButton.image = core.assets['assets/button_select_selected.png'];
 		selectButton.x = background.width/2 - selectButton.width;
 		selectButton.y = bottomUI.y;
@@ -38,7 +38,7 @@ window.onload = function(){
 		attackButton.x = background.width/2 + attackButton.width;
 		attackButton.y = bottomUI.y;
 		attackButton.addEventListener(enchant.Event.TOUCH_START, attackButtonClick);
-		core.rootScene.addChild(attackButton);
+		core.rootScene.addChild(attackButton);*/
 		
 		goldImage = new Sprite(32, 32);
 		goldImage.image = core.assets['assets/gold.png'];

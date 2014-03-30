@@ -1,6 +1,5 @@
 var backgroundClick = function(event) {
 	
-	if(buttonSelected == 0) {
 		
 		if (selected_obj != null) {
 			selected_obj.backgroundColor = null;
@@ -27,10 +26,10 @@ var backgroundClick = function(event) {
 			core.rootScene.removeChild(health);
 			core.rootScene.removeChild(upgrade);
 		}
-	}	
+
 }
 
-var selectButtonClick = function(event) {
+/*var selectButtonClick = function(event) {
 	this.image = core.assets['assets/button_select_selected.png'];
 	attackButton.image = core.assets['assets/button_attack.png'];
 	buttonSelected = 0;
@@ -40,7 +39,7 @@ var attackButtonClick = function(event) {
 	this.image = core.assets['assets/button_attack_selected.png'];
 	selectButton.image = core.assets['assets/button_select.png'];
 	buttonSelected = 1;
-}
+}*/
 
 var castleClick = function(event) {
 		
@@ -83,9 +82,9 @@ var unitClick = function(event) {
 	}
 	else if(selected_obj != null && selected_obj.type == 'unit' && this.owner != instance.uuid) {
 		
-		selectButton.image = core.assets['assets/button_select_selected.png'];
+		/*selectButton.image = core.assets['assets/button_select_selected.png'];
 		attackButton.image = core.assets['assets/button_attack.png'];
-		buttonSelected = 0;
+		buttonSelected = 0;*/
 		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
