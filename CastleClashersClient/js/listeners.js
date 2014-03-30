@@ -44,7 +44,7 @@ var attackButtonClick = function(event) {
 
 var castleClick = function(event) {
 		
-	if(buttonSelected == 0) {
+	if(this.owner == instance.uuid || selected_obj == null) {
 		if(selected_obj != null)
 		{
 			selected_obj.backgroundColor = null;
@@ -56,11 +56,8 @@ var castleClick = function(event) {
 		this.backgroundColor = "#CCCC00";
 		
 	}
-	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit') {
+	else if(selected_obj != null && selected_obj.type == 'unit') {
 		
-		selectButton.image = core.assets['assets/button_select_selected.png'];
-		attackButton.image = core.assets['assets/button_attack.png'];
-		buttonSelected = 0;
 		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
@@ -72,7 +69,7 @@ var castleClick = function(event) {
 
 var unitClick = function(event) {
 		
-	if(buttonSelected == 0 && this.owner == instance.uuid) {
+	if(this.owner == instance.uuid) {
 		if(selected_obj != null)
 		{
 			selected_obj.backgroundColor = null;
@@ -84,7 +81,7 @@ var unitClick = function(event) {
 		this.backgroundColor = "#CCCC00";
 		
 	}
-	else if(buttonSelected == 1 && selected_obj.uuid != -1 && selected_obj.type == 'unit' && this.owner != instance.uuid) {
+	else if(selected_obj != null && selected_obj.type == 'unit' && this.owner != instance.uuid) {
 		
 		selectButton.image = core.assets['assets/button_select_selected.png'];
 		attackButton.image = core.assets['assets/button_attack.png'];
