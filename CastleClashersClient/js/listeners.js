@@ -57,11 +57,12 @@ var castleClick = function(event) {
 	}
 	else if(selected_obj != null && selected_obj.type == 'unit') {
 		
-		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
 		fields.target = this.uuid;
 		fields.action = 'moveto';
+		selected_obj.backgroundColor = null;
+		selected_obj.selected = false;
 		ws.send(JSON.stringify(fields));
 	}
 }
@@ -90,6 +91,8 @@ var unitClick = function(event) {
 		fields.selected = selected_obj.uuid;
 		fields.target = this.uuid;
 		fields.action = 'moveto';
+		selected_obj.backgroundColor = null;
+		selected_obj.selected = false;
 		ws.send(JSON.stringify(fields));
 	}	
 }
