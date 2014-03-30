@@ -3,9 +3,9 @@ var host2 = "ws://compute.cse.tamu.edu:10088";
 var host3 = "ws://25.10.234.5:10088";
 var ws = new WebSocket(host, 'json');
 
-ws.onopen = function() {
+ws.onopen = function(event) {
 	console.log("connection established");
-}
+};
 ws.onmessage = function(event) {
 	var data = JSON.parse(event.data);
 	//console.log(data);
@@ -27,11 +27,11 @@ ws.onmessage = function(event) {
 				}
 			}
 			if(!found) {
-				var unit = new Unit(data.subtype);
+				var unit = new Unit(data.subtype, data.x, data.y);
 				units.push(unitFromData(unit,data));
 			}
 		} else if(data.type == 'castle') {			
-			console.log(data);
+			//console.log(data);
 			var found = false;
 			for(i=0;i<castles.length;i++) {
 				if(castles[i].sprite.uuid == data.uuid) {
@@ -42,17 +42,17 @@ ws.onmessage = function(event) {
 				}
 			}
 			if(!found) {
-				var castle = new Castle();
+				var castle = new Castle(data.x, data.y);
 				castles.push(castleFromData(castle,data));
 			}
 		}
 	}
-}
+};
 ws.onerror = function(error) {
 	if(error.srcElement == WebSocket) {
 		console.log("Failed to connect to:" + error.srcElement.URL);
 	}
-}
-ws.onclose = function() {
+};
+ws.onclose = function(event) {
 	console.log("connection closed");
-}
+};

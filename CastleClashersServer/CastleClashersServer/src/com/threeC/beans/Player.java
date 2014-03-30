@@ -16,7 +16,7 @@ public class Player implements JSONStringifiable {
 	public long war = -1l;
 	
 	public String sessionId;
-	
+		
 	public Player(String name, String sessionId, long uuid) {
 		this.name = name;
 		this.sessionId = sessionId;

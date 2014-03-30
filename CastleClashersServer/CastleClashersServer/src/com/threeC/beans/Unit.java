@@ -67,7 +67,8 @@ public class Unit implements JSONStringifiable {
 	
 	public void addXp(int xp) {
 		this.xp += xp;
-		// veterancy go here
+		this.veterancy += this.xp / 100;
+		this.xp %= 100;
 	}
 	
 	public void takeDamage(int damage) {
