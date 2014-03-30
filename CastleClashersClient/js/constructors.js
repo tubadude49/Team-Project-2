@@ -56,6 +56,8 @@ var Castle = function(x, y) {
 var Unit = function(subtype, x, y) {
 	if(subtype == "cannon")
 		this.sprite = new Sprite(72,24);
+	else if(subtype == "infantry")
+		this.sprite = new Sprite(68,42);
 	else
 		this.sprite = new Sprite(50,37);
 	this.sprite.moveTo(x, y);
