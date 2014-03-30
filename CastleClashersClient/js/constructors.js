@@ -11,7 +11,7 @@ var selected_obj = {};
 var selectButton;
 var attackButton;
 var goldImage;
-var goldAmount;
+var goldAmount ;
 var buttonSelected = 0;
 
 // FOR CASTLES AND UNITS 
@@ -128,7 +128,9 @@ var Instance = function() {
 
 var updateGold = function(instance) {
 	
-	goldAmount.text = instance.gold;
+	if (goldAmount != null) {
+		goldAmount.text = instance.gold;
+	}
 	
 	if(instance.gold < 25) { 
 		goldImage.frame = 4;
