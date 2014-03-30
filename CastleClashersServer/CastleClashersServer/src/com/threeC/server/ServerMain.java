@@ -1,8 +1,6 @@
 package com.threeC.server;
 
-import java.util.Date;
 import java.util.LinkedList;
-import java.util.Random;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,27 +38,26 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	LinkedList<Siege> sieges = new LinkedList<Siege>();
 	
 	UUIDDistributor uuidDistributor = new UUIDDistributor();
-	Random rnd = new Random(new Date().getTime());
 	
 	public TokenServer server = null;
 	
 	public void checkWin() {
 		long p1 = -1l, p2 = -1l;
-		for(int i=0;i<players.size();i++) {
-			Player player = players.get(i);
-			if(player.active) {
-				if(p1 < 0) {
-					p1 = player.uuid;
-				} else if(p2 < 0) {
-					p2 = player.uuid;
+		for(Castle castle : castles) {			
+			if(castle.owner >= 0) {
+				if(p1 < 0 || p1 == castle.owner) {
+					p1 = castle.owner;
+				} else if(p2 < 0 || p2 == castle.owner) {
+					p2 = castle.owner;
 				} else {
 					return;
 				}
 			}
 		}
+		if(p1 < 0 && p2 < 0) { return; }
 		Player player1 = (Player)getByUUID(p1);	
 		if(player1 != null && player1.alliance == p2) {
-			sendToAll("{'type'='win','player1'=" + player1.uuid + ",'player2'=" + p2 + "}");
+			//sendToAll("{'type':'win','player1':" + player1.uuid + ",'player2':" + p2 + "}");
 			status = 2;
 		} else {
 			return;
@@ -94,9 +91,9 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				if(validPlayers == 1) { 
 					/*Player1*/
 					castles.add(new Castle(0, 50, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(0, gameboardY + 50, uuidDistributor.next(), player.uuid));
+					/*castles.add(new Castle(0, gameboardY + 50, uuidDistributor.next(), player.uuid));
 					castles.add(new Castle(gameboardX, 50, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(gameboardX, gameboardY + 50, uuidDistributor.next(), player.uuid));
+					castles.add(new Castle(gameboardX, gameboardY + 50, uuidDistributor.next(), player.uuid));*/
 					 
 				} else if(validPlayers == 2) {
 					/*Player2*/
@@ -272,7 +269,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			players.add(newPlayer);
 			System.out.println(newPlayer.toJSON());
 			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(newPlayer.toJSON())));
-			status = players.size() < 1 ? 0 : 1;
+			status = players.size() < 4 ? 0 : 1;
 		} else {
 			System.out.println("Connection rejected");
 			Player player = new Player("", event.getSessionId(), uuidDistributor.next());
@@ -413,7 +410,7 @@ public class ServerMain {
 				}
 				long end = System.currentTimeMillis();
 				Thread.sleep(1000-(end-start));
-			} catch (InterruptedException e) {}
+			} catch (InterruptedException e) { e.printStackTrace(); }
 		}
 		System.out.println("Server shutting down...");
 	}	
@@ -436,7 +433,7 @@ public class ServerMain {
 				server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));
 			}
 		}
-		//jwsl.checkWin();
+		jwsl.checkWin();
 		//System.out.println(jwsl.status);
 	}
 }

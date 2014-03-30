@@ -45,7 +45,9 @@ ws.onmessage = function(event) {
 				var castle = new Castle(data.x, data.y);
 				castles.push(castleFromData(castle,data));
 			}
-		}
+		} /*else if(data.type == 'win') {
+			console.log(data);
+		}*/
 	}
 };
 ws.onerror = function(error) {

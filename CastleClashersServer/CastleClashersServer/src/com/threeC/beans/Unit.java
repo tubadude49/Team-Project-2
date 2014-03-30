@@ -10,10 +10,11 @@ public class Unit implements JSONStringifiable {
 	public int xp;
 	public int veterancy;
 	
-	public static final int maxHealth = 100;
-	public int health = 100;
+	public int maxHealth;
+	public int health;
 	public int upgrade;
 	
+	public int siege;
 	public int attack;
 	public int defense;
 	public int speed;
@@ -25,10 +26,12 @@ public class Unit implements JSONStringifiable {
 	public String type = "unit";
 	public String subtype;
 	
-	protected Unit(int attack, int defense, int speed, String subtype, long uuid, long owner) {
+	protected Unit(int siege, int attack, int defense, int speed, int health, String subtype, long uuid, long owner) {
+		this.siege = siege;
 		this.attack = attack;
 		this.defense = defense;
 		this.speed = speed;
+		this.health = this.maxHealth = health;
 		this.subtype = subtype;
 		this.uuid = uuid;
 		this.owner = owner;
