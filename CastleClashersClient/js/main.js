@@ -51,6 +51,12 @@ window.onload = function(){
 		goldAmount.x = goldImage.x + goldImage.width;
 		goldAmount.y = goldImage.y;
 		core.rootScene.addChild(goldAmount);
+		
+		typeLabel.font = "bold 32px arial,serif";
+		health.font = "bold 20px arial,serif";
+		upgrade.font = "bold 20px arial,serif";
+		goldAmount.font = "bold 26px arial,serif";
+		
 		/*
 		var castle1 = new Castle();
 		castle1.sprite.x = 0;
