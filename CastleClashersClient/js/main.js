@@ -43,7 +43,7 @@ window.onload = function(){
 		goldImage = new Sprite(32, 32);
 		goldImage.image = core.assets['assets/gold.png'];
 		goldImage.frame = 4;
-		goldImage.x = selectButton.x - 100;
+		goldImage.x = 100;
 		goldImage.y = bottomUI.y + 10;
 		core.rootScene.addChild(goldImage);
 		
