@@ -43,7 +43,7 @@ var attackButtonClick = function(event) {
 
 var castleClick = function(event) {
 		
-	if(this.owner == instance.uuid || selected_obj == null) {
+	if(selected_obj == null || (this.owner == instance.uuid && selected_obj.type != 'unit') ) {
 		if(selected_obj != null)
 		{
 			selected_obj.backgroundColor = null;
@@ -55,7 +55,7 @@ var castleClick = function(event) {
 		this.backgroundColor = "#CCCC00";
 		
 	}
-	else if(selected_obj != null && selected_obj.type == 'unit') {
+	else{
 		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
