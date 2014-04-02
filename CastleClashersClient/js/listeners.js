@@ -53,6 +53,7 @@ var castleClick = function(event) {
 		fields.action = 'moveto';
 		selected_obj.backgroundColor = null;
 		selected_obj.selected = false;
+		selected_obj = null;
 		ws.send(JSON.stringify(fields));
 	}
 }
