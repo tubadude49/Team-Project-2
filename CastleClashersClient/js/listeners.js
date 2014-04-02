@@ -1,4 +1,4 @@
-var offerAllianceClick = function(event) {
+/*var offerAllianceClick = function(event) {
 	var request = {};
 	request.action = 'offer';
 	request.target = selected_obj.owner;
@@ -17,7 +17,7 @@ var breakAllianceClick = function(event) {
 	request.action = 'break';
 	request.target = selected_obj.owner;
 	ws.send(JSON.stringify(request));
-}
+}*/
 
 var backgroundClick = function(event) {		
 		if (selected_obj != null) {
@@ -49,8 +49,8 @@ var backgroundClick = function(event) {
 			core.rootScene.removeChild(buyArmor);
 			core.rootScene.removeChild(health);
 			core.rootScene.removeChild(upgrade);
-			core.rootScene.removeChild(warCastle);
-			core.rootScene.removeChild(allianceCastle);
+			/*core.rootScene.removeChild(warCastle);
+			core.rootScene.removeChild(allianceCastle);*/
 			
 		}
 
@@ -70,7 +70,7 @@ var castleClick = function(event) {
 		this.backgroundColor = "#CCCC00";
 		
 	}
-	else if (this.owner == instance.uuid){
+	else {
 		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
@@ -198,8 +198,8 @@ var uiClick = function(event) {
 	core.rootScene.removeChild(unitXP);
 	
 	core.rootScene.removeChild(reinforceCastle);
-	core.rootScene.addChild(warCastle);
-	core.rootScene.addChild(allianceCastle);
+	/*core.rootScene.addChild(warCastle);
+	core.rootScene.addChild(allianceCastle);*/
 	core.rootScene.removeChild(buyInfantry);
 	core.rootScene.removeChild(buyCavalry);
 	core.rootScene.removeChild(buyArmor);
@@ -234,14 +234,14 @@ var uiClick = function(event) {
 	buyArmor.y = buyCavalry.y + buyArmor.height;
 	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
 	
-	warCastle.image = core.assets['assets/war.png'];
+	/*warCastle.image = core.assets['assets/war.png'];
 	warCastle.x = core.width-coreUISize;
 	warCastle.addEventListener(enchant.Event.TOUCH_START, declareWarClick);
  	
 	allianceCastle.image = core.assets['assets/alliance.png'];
 	allianceCastle.x = core.width-coreUISize;
 	allianceCastle.y = warCastle.height;
-	warCastle.addEventListener(enchant.Event.TOUCH_START, offerAllianceClick)
+	warCastle.addEventListener(enchant.Event.TOUCH_START, offerAllianceClick)*/
  	//--------------------------------------
  	
 	//    UNIT IF STATEMENT 
@@ -333,8 +333,8 @@ var uiClick = function(event) {
  	}
 	else if (this.type == "castle" && this.owner != instance.uuid){
 		//BUTTONS
-		core.rootScene.addChild(warCastle);
-		core.rootScene.addChild(allianceCastle);
+		/*core.rootScene.addChild(warCastle);
+		core.rootScene.addChild(allianceCastle);*/
 		//   LABELS
 		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
