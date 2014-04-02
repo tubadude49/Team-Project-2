@@ -20,10 +20,9 @@ import org.jwebsocket.config.JWebSocketConfig;
 import org.jwebsocket.instance.JWebSocketInstance;
 import org.jwebsocket.packetProcessors.JSONProcessor;
 
-import com.threeC.beans.Battle;
+import com.threeC.beans.OfferManager;
 import com.threeC.beans.Player;
 import com.threeC.beans.Castle;
-import com.threeC.beans.Siege;
 import com.threeC.beans.UUIDDistributor;
 import com.threeC.beans.Unit;
 import com.threeC.beans.UnitFactory;
@@ -38,8 +37,9 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	public LinkedList<Player> players = new LinkedList<Player>();
 	LinkedList<Castle> castles = new LinkedList<Castle>();
 	LinkedList<Unit> units = new LinkedList<Unit>();
-	LinkedList<Battle> battles = new LinkedList<Battle>();
-	LinkedList<Siege> sieges = new LinkedList<Siege>();
+	OfferManager offerManager = new OfferManager();
+	//LinkedList<Battle> battles = new LinkedList<Battle>();
+	//LinkedList<Siege> sieges = new LinkedList<Siege>();
 	
 	UUIDDistributor uuidDistributor = new UUIDDistributor();
 	
@@ -151,11 +151,11 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				return castles.get(i);
 			}
 		}
-		for(int i=0;i<battles.size();i++) {
+		/*for(int i=0;i<battles.size();i++) {
 			if(battles.get(i).uuid == uuid) {
 				return battles.get(i);
 			}
-		}
+		}*/
 		for(int i=0;i<players.size();i++) {
 			if(players.get(i).uuid == uuid) {
 				return players.get(i);
@@ -168,6 +168,18 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		for(WebSocketEngine wse : server.getEngines().values()) {
 			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
 				server.sendToken(wsc, JSONProcessor.JSONStringToToken(s));
+			}
+		}
+	}
+	
+	public void sendToUUID(long uuid, String s) {
+		Player player = (Player)getByUUID(uuid);
+		if(player == null) { return; }
+		for(WebSocketEngine wse : server.getEngines().values()) {
+			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
+				if(wsc.getSession().getSessionId().equals(player.sessionId)) {
+					server.sendToken(wsc, JSONProcessor.JSONStringToToken(s));
+				}				
 			}
 		}
 	}
@@ -198,7 +210,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					unit.x += dx;
 					unit.y += dy;
 					if(dx == 0 && dy == 0 && castle.owner != unit.owner) {
-						castle.health -= unit.attack * 10;
+						castle.health -= unit.siege;
 						if(castle.health <= 0) {
 							castle.owner = unit.owner;
 							castle.health = castle.maxHealth / 2;
@@ -256,13 +268,13 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	}
 
 	public void runBattles() {
-		for(int i=0;i<battles.size();i++) {
+		/*for(int i=0;i<battles.size();i++) {
 			Battle battle = battles.get(i);
 			battle.processBattleFrame();
 			if(battle.blufor.size() <= 0 || battle.opfor.size() <= 0) {
 				battles.remove(i);
 			}
-		}
+		}*/
 	}
 	
 	@Override
@@ -332,70 +344,78 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
 								if(castle.owner == player.uuid && castle.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
-									for(WebSocketEngine wse : server.getEngines().values()) {
-										for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
-											server.sendToken(wsc, JSONProcessor.JSONStringToToken(castle.toJSON()));
-										}
-									}
+									sendToAll(castle.toJSON());
+									incomeRecalcReq = true;
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
-								if(castle.owner == player.uuid && castle.upgrade(player)) {
+								if(castle.owner == player.uuid && castle.reinforce(player, server)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
-									for(WebSocketEngine wse : server.getEngines().values()) {
-										for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
-											server.sendToken(wsc, JSONProcessor.JSONStringToToken(castle.toJSON()));
-										}
-									}
 								}
 							}
 						} else {
 							if(json.getString("purchase").equals("new")) {								
 								if(isValidPurchase(json.getInt("x"), json.getInt("y"), player.uuid) && player.charge(25)) {
-									Unit newUnit = UnitFactory.fromString(json.getString("type"), uuidDistributor.next(), player.uuid);
-									newUnit.x = json.getInt("x");
-									newUnit.y = json.getInt("y");
-									units.add(newUnit);
-									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
-									for(WebSocketEngine wse : server.getEngines().values()) {
-										for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
-											server.sendToken(wsc, JSONProcessor.JSONStringToToken(newUnit.toJSON()));
-										}
-									}
+									UnitFactory.fromString(json.getString("type"), uuidDistributor.next(), player.uuid, json.getInt("x"), json.getInt("y"), server, units);
+									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));									
 								}						
 							} else if(json.getString("purchase").equals("upgrade")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
 								if(unit.owner == player.uuid && unit.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
-									for(WebSocketEngine wse : server.getEngines().values()) {
-										for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
-											server.sendToken(wsc, JSONProcessor.JSONStringToToken(unit.toJSON()));
-										}
-									}
+									sendToAll(unit.toJSON());
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
 								if(unit.owner == player.uuid && unit.reinforce(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
-									for(WebSocketEngine wse : server.getEngines().values()) {
-										for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
-											server.sendToken(wsc, JSONProcessor.JSONStringToToken(unit.toJSON()));
-										}
-									}
+									sendToAll(unit.toJSON());
 								}
 							}
 						}						
-					} else if( json.has("action") && json.getString("action").equals("moveto") 
+					} else if( json.getString("action").equals("moveto") 
 							&& json.has("selected") 
 							&& json.has("target") ) {
-						Unit unit = (Unit)getByUUID(json.getLong("selected"));
-						unit.dest = json.getLong("target");
+						Object selected = getByUUID(json.getLong("selected"));
+						if(selected instanceof Unit) {
+							Unit unit = (Unit)selected;
+							unit.dest = json.getLong("target");
+						}						
 						
 					} else if( json.getString("action").equals("surrender") ) {
 						player.active = false;
 						player.gold = 0;
 						event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+					} else if( json.getString("action").equals("offer")							 
+							&& json.has("target") ) {						
+						offerManager.newOffer(player, (Player)getByUUID(json.getLong("target")));
+						sendToUUID(json.getLong("target"), json.toString());
+					} else if( json.getString("action").equals("decline")
+							&& json.has("target") ) {
+						offerManager.decline(player, (Player)getByUUID(json.getLong("target")));
+						sendToUUID(json.getLong("target"), json.toString());
+					} else if(json.getString("action").equals("accept")
+							&& json.has("target") ) {
+						offerManager.accept(player, (Player)getByUUID(json.getLong("target")));
+						sendToUUID(json.getLong("target"), json.toString());
+					} else if(json.getString("action").equals("break")
+							&& json.has("target") ) {
+						Player target = (Player)getByUUID(json.getLong("target"));
+						if(target != null) {
+							player.alliance = -1l;
+							target.alliance = -1l;
+							event.sendToken(JSONProcessor.JSONStringToToken(json.toString()));							
+						}
+					} else if(json.getString("action").equals("chat") 
+							&& json.has("chat")
+							&& json.has("to") ) {
+						if(json.getString("to").equals("all")) {
+							sendToAll(json.toString());
+						} else {
+							sendToUUID(json.getLong("to"), json.toString());
+						}
 					}
+					
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

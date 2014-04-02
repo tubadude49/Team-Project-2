@@ -26,6 +26,8 @@ public class Unit implements JSONStringifiable {
 	public String type = "unit";
 	public String subtype;
 	
+	public boolean built = false;
+	
 	protected Unit(int siege, int attack, int defense, int speed, int health, String subtype, long uuid, long owner) {
 		this.siege = siege;
 		this.attack = attack;
@@ -44,7 +46,7 @@ public class Unit implements JSONStringifiable {
 
 	@Override
 	public String toJSON() {
-		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "health", "upgrade", "veterancy", "owner", "attack", "defense", "speed", "dest", "type", "subtype" } );
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "health", "upgrade", "veterancy", "owner", "attack", "defense", "speed", "dest", "type", "subtype", "built" } );
 		return json.toString();
 	}
 
@@ -87,10 +89,15 @@ public class Unit implements JSONStringifiable {
 	}
 	
 	public synchronized boolean upgrade(Player owner) {
-		if(owner.charge(15)) {
-			upgrade++;
-			return true;
-		}
+		if(upgrade < 3) {
+			if(owner.charge(15)) {
+				upgrade ++;
+				health += 15;
+				attack += 1;
+				defense += 1;
+				return true;
+			}
+		}		
 		return false;
 	}
 	

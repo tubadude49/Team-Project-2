@@ -1,3 +1,17 @@
+var offerAllianceClick = function(event) {
+	var request = {};
+	request.action = 'offer';
+	request.target = selected_obj.owner;
+	ws.send(JSON.stringify(request));
+}
+
+var breakAllianceClick = function(event) {
+	var request = {};
+	request.action = 'break';
+	request.target = selected_obj.owner;
+	ws.send(JSON.stringify(request));
+}
+
 var backgroundClick = function(event) {		
 		if (selected_obj != null) {
 			selected_obj.backgroundColor = null;
@@ -87,6 +101,17 @@ var battleClick = function(event) {
 	this.viewing = !this.viewing;
 }
 
+var reinforceClick = function(event) {
+	var request = {};
+	request.action = 'purchase';
+	request.purchase = 'reinforce';
+	request.type = selected_obj.type;
+	request.uuid = selected_obj.uuid;
+	request.x = selected_obj._x;
+	request.y = selected_obj._y;
+	ws.send(JSON.stringify(request));
+}
+
 var upgradeClick = function(event) {
 	var request = {};
 	request.action = 'purchase';
@@ -172,7 +197,7 @@ var uiClick = function(event) {
 	
  	reinforceCastle.image = core.assets['assets/reinforceCastle.png'];
  	reinforceCastle.x = core.width-coreUISize;
-	reinforceCastle.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
+	reinforceCastle.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
 		
  	buyInfantry.image = core.assets['assets/buyInfantry.png'];
  	buyInfantry.x = core.width-coreUISize;

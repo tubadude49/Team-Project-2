@@ -80,8 +80,8 @@ var Unit = function(subtype, x, y) {
 	this.sprite.destY = 0;
 	this.sprite.selected = false;
 	this.sprite.subtype = subtype;
-	core.rootScene.addChild(this.sprite);
 	this.sprite.type = "unit";
+	this.sprite.built = false;
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
 }
@@ -161,7 +161,7 @@ var castleFromData = function(castle, data) {
 	return castle;
 }
 
-var unitFromData = function(unit, data) {	
+var unitFromData = function(unit, data) {
 	unit.sprite.uuid = data.uuid;
 	unit.sprite.health = data.health;
 	unit.sprite.upgrade = data.upgrade;
@@ -172,6 +172,9 @@ var unitFromData = function(unit, data) {
 	unit.sprite.speed = data.speed;
 	unit.sprite.dest = data.dest;
 	unit.sprite.moveTo(data.x,data.y);
+	if(data.built) {
+		core.rootScene.addChild(unit.sprite);
+	}
 	return unit;
 }
 

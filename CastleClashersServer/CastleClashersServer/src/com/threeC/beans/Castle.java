@@ -2,6 +2,10 @@ package com.threeC.beans;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jwebsocket.api.WebSocketConnector;
+import org.jwebsocket.api.WebSocketEngine;
+import org.jwebsocket.packetProcessors.JSONProcessor;
+import org.jwebsocket.server.TokenServer;
 
 public class Castle implements JSONStringifiable {
 	public long uuid;
@@ -49,22 +53,25 @@ public class Castle implements JSONStringifiable {
 		
 	}
 	
-	public synchronized boolean reinforce(Player owner) {
-		if(owner.charge(50)) {
-			health = maxHealth;
+	public synchronized boolean reinforce(Player owner, TokenServer server) {
+		if(this.health < this.maxHealth && owner.charge(50)) {
+			new HealthThread(this, server);
+			//health = maxHealth;
 			return true;
 		}
 		return false;
 	}
 	
 	public synchronized boolean upgrade(Player owner) {
-		if(owner.charge(100)) {
-			upgrade++;
-			health += 500;
-			maxHealth += 500;
-			income += 1;
-			return true;
-		}
+		if(upgrade < 3) {
+			if(owner.charge(100)) {
+				upgrade++;
+				health += 500;
+				maxHealth += 500;
+				income += 1;
+				return true;
+			}
+		}		
 		return false;		
 	}
 	
@@ -80,4 +87,34 @@ public class Castle implements JSONStringifiable {
 	
 	}
 	
+}
+
+class HealthThread extends Thread implements Runnable {
+	TokenServer server;
+	Castle castle;
+	
+	public HealthThread(Castle castle, TokenServer server) {
+		this.castle = castle;
+		this.server = server;
+		this.start();
+	}
+	
+	@Override
+	public void run() {
+		int heal = castle.maxHealth - castle.health;
+		while(heal > 0) {
+			try {
+				synchronized(castle) {
+					castle.health += (heal > 10) ? 10 : heal;
+				}
+				heal -= 10;
+				for(WebSocketEngine wse : server.getEngines().values()) {
+					for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
+						server.sendToken(wsc, JSONProcessor.JSONStringToToken(castle.toJSON()));
+					}
+				}
+				Thread.sleep(100);
+			} catch (InterruptedException e) { e.printStackTrace(); }
+		}
+	}
 }
