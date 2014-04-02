@@ -22,6 +22,9 @@ var buyCavalry = new Sprite(200, 69);
 var buyArmor = new Sprite(200, 69);
 var reinforceRegiment = new Sprite(200, 69);
 var upgradeRegiment = new Sprite(200, 69);
+var upgradeCastle = new Sprite(200,69);
+var warCastle = new Sprite(200, 69);
+var allianceCastle = new Sprite(200, 69);
 
 var healthImg = new Sprite(32,32);
 var health = Label('');

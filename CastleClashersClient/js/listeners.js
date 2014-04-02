@@ -5,6 +5,13 @@ var offerAllianceClick = function(event) {
 	ws.send(JSON.stringify(request));
 }
 
+var declareWarClick = function(event) {
+	var request = {};
+	request.action = 'declare';
+	request.target = selected_obj.owner;
+	ws.send(JSON.stringify(request));
+}
+
 var breakAllianceClick = function(event) {
 	var request = {};
 	request.action = 'break';
@@ -36,11 +43,15 @@ var backgroundClick = function(event) {
 			core.rootScene.removeChild(unitXP);
 			
 			core.rootScene.removeChild(reinforceCastle);
+			core.rootScene.removeChild(upgradeCastle);
 			core.rootScene.removeChild(buyInfantry);
 			core.rootScene.removeChild(buyCavalry);
 			core.rootScene.removeChild(buyArmor);
 			core.rootScene.removeChild(health);
 			core.rootScene.removeChild(upgrade);
+			core.rootScene.removeChild(warCastle);
+			core.rootScene.removeChild(allianceCastle);
+			
 		}
 
 }
@@ -167,8 +178,8 @@ var reinforceClick = function(event) {
 	ws.send(JSON.stringify(request));
 }
 
+
 var uiClick = function(event) {
-		
 	core.rootScene.removeChild(reinforceRegiment);
 	core.rootScene.removeChild(upgradeRegiment);
 	core.rootScene.removeChild(healthImg);
@@ -187,6 +198,8 @@ var uiClick = function(event) {
 	core.rootScene.removeChild(unitXP);
 	
 	core.rootScene.removeChild(reinforceCastle);
+	core.rootScene.addChild(warCastle);
+	core.rootScene.addChild(allianceCastle);
 	core.rootScene.removeChild(buyInfantry);
 	core.rootScene.removeChild(buyCavalry);
 	core.rootScene.removeChild(buyArmor);
@@ -197,11 +210,16 @@ var uiClick = function(event) {
 	
  	reinforceCastle.image = core.assets['assets/reinforceCastle.png'];
  	reinforceCastle.x = core.width-coreUISize;
-	reinforceCastle.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
-		
+	reinforceCastle.addEventListener(enchant.Event.TOUCH_START, reinforceClick);
+	
+	upgradeCastle.image = core.assets['assets/upgradeCastle.png'];
+	upgradeCastle.x = core.width-coreUISize;
+	upgradeCastle.y = reinforceCastle.height;
+	upgradeCastle.addEventListener(enchant.Event.TOUCH_START, upgradeClick)
+	
  	buyInfantry.image = core.assets['assets/buyInfantry.png'];
  	buyInfantry.x = core.width-coreUISize;
-	buyInfantry.y = reinforceCastle.height;
+	buyInfantry.y = upgradeCastle.y + buyInfantry.height;
 	buyInfantry.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick)
 	
 	
@@ -215,6 +233,15 @@ var uiClick = function(event) {
  	buyArmor.x = core.width-coreUISize;
 	buyArmor.y = buyCavalry.y + buyArmor.height;
 	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
+	
+	warCastle.image = core.assets['assets/war.png'];
+	warCastle.x = core.width-coreUISize;
+	warCastle.addEventListener(enchant.Event.TOUCH_START, declareWarClick);
+ 	
+	allianceCastle.image = core.assets['assets/alliance.png'];
+	allianceCastle.x = core.width-coreUISize;
+	allianceCastle.y = warCastle.height;
+	warCastle.addEventListener(enchant.Event.TOUCH_START, offerAllianceClick)
  	//--------------------------------------
  	
 	//    UNIT IF STATEMENT 
@@ -294,6 +321,7 @@ var uiClick = function(event) {
 	if(this.type == "castle" && this.owner == instance.uuid) {
 		//   BUTTONS 
  		core.rootScene.addChild(reinforceCastle);
+		core.rootScene.addChild(upgradeCastle);
 		core.rootScene.addChild(buyInfantry);
 		core.rootScene.addChild(buyCavalry);
 		core.rootScene.addChild(buyArmor);
@@ -305,6 +333,10 @@ var uiClick = function(event) {
 		core.rootScene.addChild(upgrade);
  	}
 	else if (this.type == "castle" && this.owner != instance.uuid){
+		//BUTTONS
+		core.rootScene.addChild(warCastle);
+		core.rootScene.addChild(allianceCastle);
+		//   LABELS
 		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
 		core.rootScene.addChild(upgradeImg);
