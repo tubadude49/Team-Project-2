@@ -10,8 +10,8 @@ var establishWS = function () {
 		console.log("connection established");
 	};
 	ws.onmessage = function(event) {
+		if(event.data.substr(0,1) != '{') { return; }
 		var data = JSON.parse(event.data);
-		//console.log(data);
 		if(data.type) {
 			if(data.type == 'instance') {
 				instance = data;

@@ -10,11 +10,11 @@ import org.jwebsocket.server.TokenServer;
 public class UnitFactory {
 	
 	public static void fromString(String type, long uuid, long owner, int x, int y, TokenServer server, LinkedList<Unit> deposit) {
-		if( type.equals("cannon") ) {
+		if( type.equals("cavalry") ) {
 			new FactoryThread(new Unit(20, 8, 2, 15, 100, "cavalry", uuid, owner), x, y, deposit, server, 5000);
 		} else if ( type.equals("infantry") ) {
 			new FactoryThread(new Unit(40, 6, 2, 10, 150, "infantry", uuid, owner), x, y, deposit, server, 5000);
-		} else if ( type.equals("cavalry") ) {
+		} else if ( type.equals("cannon") ) {
 			new FactoryThread(new Unit(80, 10, 2, 7, 50, "cannon", uuid, owner), x, y, deposit, server, 5000);
 		}
 	}

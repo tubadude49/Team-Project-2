@@ -257,66 +257,65 @@ var uiClick = function(event) {
 	upgradeRegiment.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
  	
  	
- 	//    CASTLE STATS SETUP
-	var imgYoffset = 9;
+ 	//    CASTLE STATS SETUP	
 	
 	healthImg.image = core.assets['assets/redcross.png'];
 	healthImg.x = 0;
-	healthImg.y = imgYoffset;
+	healthImg.y = 9;
 	
  	health.text = this.health;
  	health.x = 40;
- 	health.y = imgYoffset;
+ 	health.y = healthImg.y;
  	
 	upgradeImg.image = core.assets['assets/upgrade.png'];
 	upgradeImg.x = healthImg.x + healthImg.width + 55 + 16;
-	upgradeImg.y = imgYoffset;
+	upgradeImg.y = healthImg.y;
 	
  	upgrade.text = this.upgrade;
  	upgrade.x = upgradeImg.x + 40;
- 	upgrade.y = imgYoffset;
+ 	upgrade.y = healthImg.y;
  	
 	//     UNIT STATS SETUP
 		
 	unitAttackImg.image = core.assets['assets/attack2.png'];
 	unitAttackImg.x = upgradeImg.x + upgradeImg.width + 55 + 16;
-	unitAttackImg.y = imgYoffset;
+	unitAttackImg.y = healthImg.y;
 	
 	unitAttack.text = this.attack;
 	unitAttack.x = unitAttackImg.x + 40;
-	unitAttack.y = imgYoffset;
+	unitAttack.y = healthImg.y;
 	
 	unitDefenseImg.image = core.assets['assets/defense.png'];
 	unitDefenseImg.x = unitAttackImg.x + unitAttackImg.width + 55 + 16;
-	unitDefenseImg.y = imgYoffset;
+	unitDefenseImg.y = healthImg.y;
 	
 	unitDefense.text = this.defense;
 	unitDefense.x = unitDefenseImg.x + 40;
-	unitDefense.y = imgYoffset;
+	unitDefense.y = healthImg.y;
 	
 	unitSpeedImg.image = core.assets['assets/speed.png'];
 	unitSpeedImg.x = unitDefenseImg.x + unitDefenseImg.width + 55 + 16;
-	unitSpeedImg.y = imgYoffset;
+	unitSpeedImg.y = healthImg.y;
 	
 	unitSpeed.text = this.speed;
 	unitSpeed.x = unitSpeedImg.x + 40;
-	unitSpeed.y = imgYoffset;
+	unitSpeed.y = healthImg.y;
 	
 	veterancyImg.image = core.assets['assets/veterancy.png'];
 	veterancyImg.x = unitSpeedImg.x + unitSpeedImg.width + 55 + 16;
-	veterancyImg.y = imgYoffset;
+	veterancyImg.y = healthImg.y;
 	
 	veterancy.text = this.veterancy;
 	veterancy.x = veterancyImg.x + 40;
-	veterancy.y = imgYoffset;
+	veterancy.y = healthImg.y;
 	
 	unitXPImg.image = core.assets['assets/xp.png'];
 	unitXPImg.x = veterancyImg.x + veterancyImg.width + 55 + 16;
-	unitXPImg.y = imgYoffset;
+	unitXPImg.y = healthImg.y;
 	
 	unitXP.text = this.xp;	
 	unitXP.x = unitXPImg.x + 40;
-	unitXP.y = imgYoffset;
+	unitXP.y = healthImg.y;
 	
 	if(this.type == "castle" && this.owner == instance.uuid) {
 		//   BUTTONS 

@@ -29,6 +29,7 @@ window.onload = function(){
 		goldImage.image = core.assets['assets/gold.png'];
 		goldImage.frame = 4;
 		goldImage.x = core.width / 2;
+		goldImage.y = 9;
 		core.rootScene.addChild(goldImage);
 		
 		goldAmount = new Label('0');
