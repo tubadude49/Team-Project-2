@@ -1,11 +1,15 @@
 window.onload = function(){
+	establishWS();
+
 	core = new Core(1280+coreUISize,720+bottomUISize);
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/button_select.png', 'assets/button_select_selected.png', 
 				'assets/button_attack.png', 'assets/button_attack_selected.png', 'assets/attackUI.png', 'assets/upgradeUI.png', 
 				'assets/buyInfantry.png', 'assets/buyCavalry.png', 'assets/buyArmor.png','assets/reinforceCastle.png', 
 				'assets/reinforceRegiment.png','assets/upgradeRegiment.png', 'assets/gold.png', 'assets/cannon.png', 
-				'assets/castle.png', 'assets/castle_bronze.png', 'assets/castle_silver.png', 'assets/castle_gold.png');
+				'assets/castle.png', 'assets/castle_bronze.png', 'assets/castle_silver.png', 'assets/castle_gold.png',
+				'assets/redcross.png', 'assets/defense.png', 'assets/attack2.png', 'assets/upgrade.png', 'assets/veterancy.png',
+				'assets/xp.png', 'assets/speed.png');
 	
 	core.onload = function() {
 		
@@ -51,11 +55,17 @@ window.onload = function(){
 		goldAmount.x = goldImage.x + goldImage.width;
 		goldAmount.y = goldImage.y;
 		core.rootScene.addChild(goldAmount);
-		
-		typeLabel.font = "bold 32px arial,serif";
-		health.font = "bold 20px arial,serif";
-		upgrade.font = "bold 20px arial,serif";
+				
+		health.font = "bold 26px arial,serif";
+		upgrade.font = "bold 26px arial,serif";
 		goldAmount.font = "bold 26px arial,serif";
+		castleUpgrade.font = "bold 26px arial,serif";
+		unitXP.font = "bold 26px arial,serif";
+		veterancy.font = "bold 26px arial,serif";
+		unitUpgrade.font = "bold 26px arial,serif";
+		unitAttack.font = "bold 26px arial,serif";
+		unitDefense.font = "bold 26px arial,serif";
+		unitSpeed.font = "bold 26px arial,serif";
 		
 		/*
 		var castle1 = new Castle();

@@ -1,6 +1,4 @@
-var backgroundClick = function(event) {
-	
-		
+var backgroundClick = function(event) {		
 		if (selected_obj != null) {
 			selected_obj.backgroundColor = null;
 			selected_obj.selected = false;
@@ -8,38 +6,30 @@ var backgroundClick = function(event) {
 			
 			core.rootScene.removeChild(reinforceRegiment);
 			core.rootScene.removeChild(upgradeRegiment);
-			core.rootScene.removeChild(typeLabel);
-			core.rootScene.removeChild(unitSubtype);
+			core.rootScene.removeChild(healthImg);
 			core.rootScene.removeChild(health);
+			core.rootScene.removeChild(upgradeImg);
 			core.rootScene.removeChild(upgrade);
+			core.rootScene.removeChild(unitAttackImg);
 			core.rootScene.removeChild(unitAttack);
+			core.rootScene.removeChild(unitDefenseImg);
 			core.rootScene.removeChild(unitDefense);
+			core.rootScene.removeChild(unitSpeedImg);
 			core.rootScene.removeChild(unitSpeed);
+			core.rootScene.removeChild(veterancyImg);
 			core.rootScene.removeChild(veterancy);
+			core.rootScene.removeChild(unitXPImg);
 			core.rootScene.removeChild(unitXP);
 			
 			core.rootScene.removeChild(reinforceCastle);
 			core.rootScene.removeChild(buyInfantry);
 			core.rootScene.removeChild(buyCavalry);
 			core.rootScene.removeChild(buyArmor);
-			core.rootScene.removeChild(typeLabel);
 			core.rootScene.removeChild(health);
 			core.rootScene.removeChild(upgrade);
 		}
 
 }
-
-/*var selectButtonClick = function(event) {
-	this.image = core.assets['assets/button_select_selected.png'];
-	attackButton.image = core.assets['assets/button_attack.png'];
-	buttonSelected = 0;
-}
-
-var attackButtonClick = function(event) {
-	this.image = core.assets['assets/button_attack_selected.png'];
-	selectButton.image = core.assets['assets/button_select.png'];
-	buttonSelected = 1;
-}*/
 
 var castleClick = function(event) {
 		
@@ -82,11 +72,6 @@ var unitClick = function(event) {
 		
 	}
 	else if(selected_obj != null && selected_obj.type == 'unit' && this.owner != instance.uuid) {
-		
-		/*selectButton.image = core.assets['assets/button_select_selected.png'];
-		attackButton.image = core.assets['assets/button_attack.png'];
-		buttonSelected = 0;*/
-		
 		var fields = {};
 		fields.selected = selected_obj.uuid;
 		fields.target = this.uuid;
@@ -98,8 +83,6 @@ var unitClick = function(event) {
 }
 
 var battleClick = function(event) {
-	//console.log(this);
-	//ws.send(this);
 	this.viewing = !this.viewing;
 }
 
@@ -162,21 +145,25 @@ var uiClick = function(event) {
 		
 	core.rootScene.removeChild(reinforceRegiment);
 	core.rootScene.removeChild(upgradeRegiment);
-	core.rootScene.removeChild(typeLabel);
-	core.rootScene.removeChild(unitSubtype);
+	core.rootScene.removeChild(healthImg);
 	core.rootScene.removeChild(health);
+	core.rootScene.removeChild(upgradeImg);
 	core.rootScene.removeChild(upgrade);
+	core.rootScene.removeChild(unitAttackImg);
 	core.rootScene.removeChild(unitAttack);
+	core.rootScene.removeChild(unitDefenseImg);
 	core.rootScene.removeChild(unitDefense);
+	core.rootScene.removeChild(unitSpeedImg);
 	core.rootScene.removeChild(unitSpeed);
+	core.rootScene.removeChild(veterancyImg);
 	core.rootScene.removeChild(veterancy);
+	core.rootScene.removeChild(unitXPImg);
 	core.rootScene.removeChild(unitXP);
 	
 	core.rootScene.removeChild(reinforceCastle);
 	core.rootScene.removeChild(buyInfantry);
 	core.rootScene.removeChild(buyCavalry);
 	core.rootScene.removeChild(buyArmor);
-	core.rootScene.removeChild(typeLabel);
 	core.rootScene.removeChild(health);
 	core.rootScene.removeChild(upgrade);
 	
@@ -217,44 +204,66 @@ var uiClick = function(event) {
 	upgradeRegiment.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
  	
  	
- 	//    CASTLE STATS SETUP 
- 	typeLabel.text = this.type;
- 	typeLabel.x = core.width-150;
- 	typeLabel.y = core.height / 2;
-	 	
- 	health.text = 'Health: ' + this.health;
- 	health.x = typeLabel.x-49;
- 	health.y = typeLabel.y+50;
+ 	//    CASTLE STATS SETUP
+	var imgYoffset = 9;
+	
+	healthImg.image = core.assets['assets/redcross.png'];
+	healthImg.x = 0;
+	healthImg.y = imgYoffset;
+	
+ 	health.text = this.health;
+ 	health.x = 40;
+ 	health.y = imgYoffset;
  	
- 	upgrade.text = 'Upgrade lvl: ' + this.upgrade;
- 	upgrade.x = typeLabel.x-49;
- 	upgrade.y = typeLabel.y+75;
+	upgradeImg.image = core.assets['assets/upgrade.png'];
+	upgradeImg.x = healthImg.x + healthImg.width + 55 + 16;
+	upgradeImg.y = imgYoffset;
+	
+ 	upgrade.text = this.upgrade;
+ 	upgrade.x = upgradeImg.x + 40;
+ 	upgrade.y = imgYoffset;
  	
 	//     UNIT STATS SETUP
-	unitSubtype.text = this.type + ':' + this.subtype;
-	unitSubtype.x = core.width-150;
-	unitSubtype.y = typeLabel.y;
-	typeLabel.y = core.height / 2;
+		
+	unitAttackImg.image = core.assets['assets/attack2.png'];
+	unitAttackImg.x = upgradeImg.x + upgradeImg.width + 55 + 16;
+	unitAttackImg.y = imgYoffset;
 	
-	unitAttack.text = 'Attack: ' + this.attack;
-	unitAttack.x = health.x;
-	unitAttack.y = upgrade.y + 25;
+	unitAttack.text = this.attack;
+	unitAttack.x = unitAttackImg.x + 40;
+	unitAttack.y = imgYoffset;
 	
-	unitDefense.text = 'Defence: ' + this.defense;
-	unitDefense.x = health.x + 75;
-	unitDefense.y = upgrade.y + 25;
+	unitDefenseImg.image = core.assets['assets/defense.png'];
+	unitDefenseImg.x = unitAttackImg.x + unitAttackImg.width + 55 + 16;
+	unitDefenseImg.y = imgYoffset;
 	
-	unitSpeed.text = 'Speed: ' + this.speed;
-	unitSpeed.x = health.x;
-	unitSpeed.y = unitDefense.y + 25;
+	unitDefense.text = this.defense;
+	unitDefense.x = unitDefenseImg.x + 40;
+	unitDefense.y = imgYoffset;
 	
-	veterancy.text = 'Veterancy: ' + this.veterancy;
-	veterancy.x = health.x;
-	veterancy.y = unitSpeed.y + 25;
+	unitSpeedImg.image = core.assets['assets/speed.png'];
+	unitSpeedImg.x = unitDefenseImg.x + unitDefenseImg.width + 55 + 16;
+	unitSpeedImg.y = imgYoffset;
 	
-	unitXP.text = 'XP: ' + this.xp;
-	unitXP.x = health.x;
-	unitXP.y = veterancy.y + 25;
+	unitSpeed.text = this.speed;
+	unitSpeed.x = unitSpeedImg.x + 40;
+	unitSpeed.y = imgYoffset;
+	
+	veterancyImg.image = core.assets['assets/veterancy.png'];
+	veterancyImg.x = unitSpeedImg.x + unitSpeedImg.width + 55 + 16;
+	veterancyImg.y = imgYoffset;
+	
+	veterancy.text = this.veterancy;
+	veterancy.x = veterancyImg.x + 40;
+	veterancy.y = imgYoffset;
+	
+	unitXPImg.image = core.assets['assets/xp.png'];
+	unitXPImg.x = veterancyImg.x + veterancyImg.width + 55 + 16;
+	unitXPImg.y = imgYoffset;
+	
+	unitXP.text = this.xp;	
+	unitXP.x = unitXPImg.x + 40;
+	unitXP.y = imgYoffset;
 	
 	if(this.type == "castle" && this.owner == instance.uuid) {
 		//   BUTTONS 
@@ -264,13 +273,15 @@ var uiClick = function(event) {
 		core.rootScene.addChild(buyArmor);
 		
 		//   LABELS
-		core.rootScene.addChild(typeLabel);
+		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgradeImg);
 		core.rootScene.addChild(upgrade);
  	}
 	else if (this.type == "castle" && this.owner != instance.uuid){
-		core.rootScene.addChild(typeLabel);
+		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgradeImg);
 		core.rootScene.addChild(upgrade);	
 	}
 	else if (this.type == "unit" && this.owner == instance.uuid) {		
@@ -279,25 +290,35 @@ var uiClick = function(event) {
 		core.rootScene.addChild(upgradeRegiment);
 		
 		// LABELS
-		core.rootScene.addChild(typeLabel);
-		core.rootScene.addChild(unitSubtype);
+		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgradeImg);
 		core.rootScene.addChild(upgrade);
+		core.rootScene.addChild(unitAttackImg);
 		core.rootScene.addChild(unitAttack);
+		core.rootScene.addChild(unitDefenseImg);
 		core.rootScene.addChild(unitDefense);
+		core.rootScene.addChild(unitSpeedImg);
 		core.rootScene.addChild(unitSpeed);
+		core.rootScene.addChild(veterancyImg);
 		core.rootScene.addChild(veterancy);
-		core.rootScene.addChild(unitXP);	
+		core.rootScene.addChild(unitXPImg);
+		core.rootScene.addChild(unitXP);
 	}
 	else if (this.type == "unit" && this.owner != instance.uuid) {
-		core.rootScene.addChild(typeLabel);
-		core.rootScene.addChild(unitSubtype);
+		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
+		core.rootScene.addChild(upgradeImg);
 		core.rootScene.addChild(upgrade);
+		core.rootScene.addChild(unitAttackImg);
 		core.rootScene.addChild(unitAttack);
+		core.rootScene.addChild(unitDefenseImg);
 		core.rootScene.addChild(unitDefense);
+		core.rootScene.addChild(unitSpeedImg);
 		core.rootScene.addChild(unitSpeed);
+		core.rootScene.addChild(veterancyImg);
 		core.rootScene.addChild(veterancy);
+		core.rootScene.addChild(unitXPImg);
 		core.rootScene.addChild(unitXP);
 	}
  }

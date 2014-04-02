@@ -23,21 +23,26 @@ var buyArmor = new Sprite(200, 69);
 var reinforceRegiment = new Sprite(200, 69);
 var upgradeRegiment = new Sprite(200, 69);
 
-var typeLabel = Label('');
+var healthImg = new Sprite(32,32);
 var health = Label('');
+var upgradeImg = new Sprite(32,32);
 var upgrade = Label('');
  	
 //  CASTLE 
 var castleUpgrade = Label('');
  	
 //  UNITS 
-var unitXP = Label('');
-var veterancy = Label('');
 var unitUpgrade = Label('');
+var unitAttackImg = new Sprite(32,32);
 var unitAttack = Label('');
+var unitDefenseImg = new Sprite(32,32);
 var unitDefense = Label('');
+var unitSpeedImg = new Sprite(32,32);
 var unitSpeed = Label('');
-var unitSubtype = Label('');
+var veterancyImg = new Sprite(32,32);
+var veterancy = Label('');
+var unitXPImg = new Sprite(32,32);
+var unitXP = Label('');
 
 var Castle = function(x, y) {
 	this.sprite = new Sprite(86, 41);

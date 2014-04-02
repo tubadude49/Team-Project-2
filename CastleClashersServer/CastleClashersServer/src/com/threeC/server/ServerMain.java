@@ -274,6 +274,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			System.out.println(newPlayer.toJSON());
 			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(newPlayer.toJSON())));
 			status = players.size() < numPlayers ? 0 : 1;
+			System.out.println("status: " + status);
 		} else {
 			System.out.println("Connection rejected");
 			Player player = getPlayerBySessionId(event.getSessionId());
@@ -287,6 +288,9 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			}
 			for(Castle castle : castles) {
 				event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(castle.toJSON())));
+			}
+			for(Unit unit : units) {
+				event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(unit.toJSON())));
 			}
 		}
 	}
@@ -406,7 +410,7 @@ public class ServerMain {
 		int i = -1;
 		while(i < 0) {
 			BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			System.out.print("Enter Integer:");
+			System.out.print("Number of players: ");
 	        try{
 	        	i = Integer.parseInt(br.readLine());
 	        } catch(NumberFormatException e){
@@ -462,7 +466,7 @@ public class ServerMain {
 				server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));
 			}
 		}
-		jwsl.checkWin();
+		//jwsl.checkWin();
 		//System.out.println(jwsl.status);
 	}
 }
