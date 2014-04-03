@@ -89,7 +89,7 @@ var unitClick = function(event) {
 		if(selected_obj != null)
 		{
 			selected_obj.backgroundColor = null;
-			selected_obj.selected = false;
+			selected_obj = null;
 		}
 		
 		this.selected = true;
@@ -103,9 +103,10 @@ var unitClick = function(event) {
 		fields.target = this.uuid;
 		fields.action = 'moveto';
 		selected_obj.backgroundColor = null;
-		selected_obj.selected = false;
+		selected_obj = null;
 		ws.send(JSON.stringify(fields));
-	}	
+	}
+	
 }
 
 var battleClick = function(event) {
