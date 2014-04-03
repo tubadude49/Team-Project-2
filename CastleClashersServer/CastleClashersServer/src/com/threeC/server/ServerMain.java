@@ -244,7 +244,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						unit2.battle = unit1.uuid;
 						
 						unit1.takeDamage(unit2.attack - unit1.defense);
-						unit1.addXp(10);						
+						unit1.addXp(10);		
 						
 						unit2.takeDamage(unit1.attack - unit2.defense);
 						unit2.addXp(10);
@@ -367,7 +367,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
-								if(unit.owner == player.uuid && unit.reinforce(player)) {
+								if(unit.owner == player.uuid && unit.reinforce(player, server)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									sendToAll(unit.toJSON());
 								}
