@@ -185,6 +185,7 @@ var unitFromData = function(unit, data) {
 	unit.sprite.speed = data.speed;
 	unit.sprite.dest = data.dest;
 	unit.sprite.moveTo(data.x,data.y);
+	unit.sprite.frame = unit.sprite.owner;
 	if(data.built) {
 		core.rootScene.addChild(unit.sprite);
 	}
