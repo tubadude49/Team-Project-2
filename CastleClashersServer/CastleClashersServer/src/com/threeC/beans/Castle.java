@@ -55,8 +55,7 @@ public class Castle implements JSONStringifiable {
 	
 	public synchronized boolean reinforce(Player owner, TokenServer server) {
 		if(this.health < this.maxHealth && owner.charge(50)) {
-			new HealthThread(this, server);
-			//health = maxHealth;
+			new CastleHealThread(this, server);
 			return true;
 		}
 		return false;
@@ -89,11 +88,11 @@ public class Castle implements JSONStringifiable {
 	
 }
 
-class HealthThread extends Thread implements Runnable {
+class CastleHealThread extends Thread implements Runnable {
 	TokenServer server;
 	Castle castle;
 	
-	public HealthThread(Castle castle, TokenServer server) {
+	public CastleHealThread(Castle castle, TokenServer server) {
 		this.castle = castle;
 		this.server = server;
 		this.start();

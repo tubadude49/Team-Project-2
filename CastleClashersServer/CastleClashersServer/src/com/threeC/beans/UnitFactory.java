@@ -43,11 +43,11 @@ class FactoryThread extends Thread implements Runnable {
 				int sleep = buildTime > 100 ? 100 : buildTime;
 				Thread.sleep(sleep);
 				buildTime -= sleep;
-				for(WebSocketEngine wse : server.getEngines().values()) {
+				/*for(WebSocketEngine wse : server.getEngines().values()) {
 					for(WebSocketConnector wsc : server.getConnectors(wse).values()) {
 						server.sendToken(wsc, JSONProcessor.JSONStringToToken(newUnit.toJSON()));
 					}
-				}
+				}*/
 			} catch (InterruptedException e) { e.printStackTrace();	}
 		}
 		newUnit.built = true;

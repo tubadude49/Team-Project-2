@@ -198,6 +198,7 @@ var uiClick = function(event) {
 	core.rootScene.removeChild(unitXP);
 	
 	core.rootScene.removeChild(reinforceCastle);
+	core.rootScene.removeChild(upgradeCastle);
 	/*core.rootScene.addChild(warCastle);
 	core.rootScene.addChild(allianceCastle);*/
 	core.rootScene.removeChild(buyInfantry);

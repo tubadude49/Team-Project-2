@@ -288,7 +288,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			status = players.size() < numPlayers ? 0 : 1;
 			System.out.println("status: " + status);
 		} else {
-			System.out.println("Connection rejected");
+			System.out.println("Connection Opened " + event.getSessionId());
 			Player player = getPlayerBySessionId(event.getSessionId());
 			if(player == null) {
 				player = new Player("", event.getSessionId(), uuidDistributor.next());
