@@ -22,6 +22,7 @@ public class Unit implements JSONStringifiable {
 	public int attack;
 	public int defense;
 	public int speed;
+	public boolean healing = false;
 	
 	public int x;
 	public int y;
@@ -95,7 +96,7 @@ public class Unit implements JSONStringifiable {
 	}
 	
 	public synchronized boolean reinforce(Player owner, TokenServer server) {
-		if(this.health < this.maxHealth && owner.charge(10)) {
+		if(this.health < this.maxHealth && !this.healing && owner.charge(10)) {
 			new UnitHealThread(this, server);
 			return true;
 		}
@@ -143,6 +144,7 @@ class UnitHealThread extends Thread implements Runnable {
 	Unit unit;
 	
 	public UnitHealThread(Unit unit, TokenServer server) {
+		unit.healing = true;
 		this.unit = unit;
 		this.server = server;
 		this.start();
@@ -153,6 +155,7 @@ class UnitHealThread extends Thread implements Runnable {
 		int heal = unit.maxHealth - unit.health;
 		while(heal > 0) {
 			try {
+				if(unit.health >= unit.maxHealth || unit.health <= 0) { break; }
 				synchronized(unit) {
 					unit.health += (heal > 1) ? 1 : heal;
 				}
@@ -165,5 +168,6 @@ class UnitHealThread extends Thread implements Runnable {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) { e.printStackTrace(); }
 		}
+		unit.healing = false;
 	}
 }

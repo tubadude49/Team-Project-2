@@ -18,6 +18,7 @@ public class Castle implements JSONStringifiable {
 	public int health = 1000;
 	public int upgrade;
 	public int income = 2;
+	public boolean healing = false;
 	
 	public final String type = "castle";
 	
@@ -54,7 +55,7 @@ public class Castle implements JSONStringifiable {
 	}
 	
 	public synchronized boolean reinforce(Player owner, TokenServer server) {
-		if(this.health < this.maxHealth && owner.charge(50)) {
+		if(this.health < this.maxHealth && !this.healing && owner.charge(50)) {
 			new CastleHealThread(this, server);
 			return true;
 		}
@@ -93,6 +94,7 @@ class CastleHealThread extends Thread implements Runnable {
 	Castle castle;
 	
 	public CastleHealThread(Castle castle, TokenServer server) {
+		castle.healing = true;
 		this.castle = castle;
 		this.server = server;
 		this.start();
@@ -103,6 +105,7 @@ class CastleHealThread extends Thread implements Runnable {
 		int heal = castle.maxHealth - castle.health;
 		while(heal > 0) {
 			try {
+				if(castle.health >= castle.maxHealth || castle.health <= 0) { break; } 
 				synchronized(castle) {
 					castle.health += (heal > 10) ? 10 : heal;
 				}
@@ -115,5 +118,6 @@ class CastleHealThread extends Thread implements Runnable {
 				Thread.sleep(100);
 			} catch (InterruptedException e) { e.printStackTrace(); }
 		}
+		castle.healing = false;
 	}
 }

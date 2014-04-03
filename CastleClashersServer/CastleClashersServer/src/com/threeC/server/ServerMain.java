@@ -342,14 +342,14 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						if(json.getString("type").equals("castle")) {
 							if(json.getString("purchase").equals("upgrade")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
-								if(castle.owner == player.uuid && castle.upgrade(player)) {
+								if(castle != null && castle.owner == player.uuid && castle.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									sendToAll(castle.toJSON());
 									incomeRecalcReq = true;
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
-								if(castle.owner == player.uuid && castle.reinforce(player, server)) {
+								if(castle != null && castle.owner == player.uuid && castle.reinforce(player, server)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 								}
 							}
@@ -361,13 +361,13 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								}						
 							} else if(json.getString("purchase").equals("upgrade")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
-								if(unit.owner == player.uuid && unit.upgrade(player)) {
+								if(unit != null && unit.owner == player.uuid && unit.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									sendToAll(unit.toJSON());
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
-								if(unit.owner == player.uuid && unit.reinforce(player, server)) {
+								if(unit != null && unit.owner == player.uuid && unit.reinforce(player, server)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									sendToAll(unit.toJSON());
 								}
@@ -377,7 +377,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 							&& json.has("selected") 
 							&& json.has("target") ) {
 						Object selected = getByUUID(json.getLong("selected"));
-						if(selected instanceof Unit) {
+						if(selected != null && selected instanceof Unit) {
 							Unit unit = (Unit)selected;
 							unit.dest = json.getLong("target");
 						}						
@@ -387,13 +387,19 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						player.gold = 0;
 						event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 					} else if( json.getString("action").equals("offer")							 
-							&& json.has("target") ) {						
-						offerManager.newOffer(player, (Player)getByUUID(json.getLong("target")));
-						sendToUUID(json.getLong("target"), json.toString());
+							&& json.has("target") ) {
+						Player target = (Player)getByUUID(json.getLong("target"));
+						if(target != null) {
+							offerManager.newOffer(player, target);
+							sendToUUID(json.getLong("target"), json.toString());
+						}
 					} else if( json.getString("action").equals("decline")
 							&& json.has("target") ) {
-						offerManager.decline(player, (Player)getByUUID(json.getLong("target")));
-						sendToUUID(json.getLong("target"), json.toString());
+						Player target = (Player)getByUUID(json.getLong("target"));
+						if(target != null) {
+							offerManager.decline(player, target);
+							sendToUUID(json.getLong("target"), json.toString());
+						}
 					} else if(json.getString("action").equals("accept")
 							&& json.has("target") ) {
 						offerManager.accept(player, (Player)getByUUID(json.getLong("target")));
