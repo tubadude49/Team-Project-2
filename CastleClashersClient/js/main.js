@@ -10,7 +10,7 @@ window.onload = function(){
 				'assets/castle.png', 'assets/castle_bronze.png', 'assets/castle_silver.png', 'assets/castle_gold.png',
 				'assets/redcross.png', 'assets/defense.png', 'assets/attack2.png', 'assets/upgrade.png', 'assets/veterancy.png',
 				'assets/xp.png', 'assets/speed.png', 'assets/cobble.png', 'assets/grass1.png', 'assets/upgradeCastle.png',
-				'assets/war.png', 'assets/alliance.png');
+				'assets/war.png', 'assets/alliance.png','assets/flags.png');
 	
 	core.onload = function() {
 		

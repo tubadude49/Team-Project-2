@@ -56,6 +56,15 @@ var Castle = function(x, y) {
 	this.sprite.health = 0;
 	this.sprite.upgrade = 0;
 	this.sprite.selected = false;
+	this.sprite.owner = 0;
+	
+	this.sprite.fsprite = new Sprite(16,16);
+	this.sprite.fsprite.moveTo(x, y);
+	this.sprite.fsprite.image = core.assets['assets/flags.png'];
+	this.sprite.fsprite.type = "flag";
+	
+	
+	core.rootScene.addChild(this.sprite.fsprite);
 	core.rootScene.addChild(this.sprite);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, castleClick);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
@@ -161,6 +170,7 @@ var castleFromData = function(castle, data) {
 	castle.sprite.health = data.health;
 	castle.sprite.upgrade = data.upgrade;
 	castle.sprite.owner = data.owner;
+	castle.sprite.fsprite.frame = c_sprite.uuid;
 	return castle;
 }
 
