@@ -94,6 +94,7 @@ var Unit = function(subtype, x, y) {
 	this.sprite.subtype = subtype;
 	this.sprite.type = "unit";
 	this.sprite.built = false;
+	this.sprite.tl.setTimeBased = true;
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
 }
@@ -184,7 +185,7 @@ var unitFromData = function(unit, data) {
 	unit.sprite.defense = data.defense;
 	unit.sprite.speed = data.speed;
 	unit.sprite.dest = data.dest;
-	unit.sprite.moveTo(data.x,data.y);
+	unit.sprite.tl.moveTo(data.x,data.y, 300);
 	unit.sprite.frame = unit.sprite.owner;
 	if(data.built) {
 		core.rootScene.addChild(unit.sprite);
