@@ -170,7 +170,7 @@ var castleFromData = function(castle, data) {
 	castle.sprite.health = data.health;
 	castle.sprite.upgrade = data.upgrade;
 	castle.sprite.owner = data.owner;
-	castle.sprite.fsprite.frame = c_sprite.uuid;
+	castle.sprite.fsprite.frame = castle.sprite.owner.uuid + 1;
 	return castle;
 }
 
@@ -193,6 +193,7 @@ var unitFromData = function(unit, data) {
 
 var updateCastle = function(c_sprite) {
 	
+	castle.sprite.fsprite.frame = c_sprite.uuid + 1;
 	if (c_sprite.upgrade == 0) {
 		c_sprite.image = core.assets['assets/castle.png'];
 	} else if (c_sprite.upgrade == 1) {
