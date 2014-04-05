@@ -83,6 +83,7 @@ var Unit = function(subtype, x, y) {
 	this.sprite.owner = 0;
 	this.sprite.xp = 0;
 	this.sprite.veterancy = 0;
+	this.sprite.maxHealth = 0;
 	this.sprite.health = 0;
 	this.sprite.upgrade = 0;
 	this.sprite.attack = 0;
@@ -97,6 +98,11 @@ var Unit = function(subtype, x, y) {
 	this.sprite.tl.setTimeBased();
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
+	
+	this.hsprite = new Sprite(48,10);
+	this.hsprite.moveTo(x,y);
+	this.hsprite.image = core.assets['assets/bar.png'];
+	this.hsprite.tl.setTimeBased();
 }
 
 
@@ -186,10 +192,22 @@ var unitFromData = function(unit, data) {
 	unit.sprite.speed = data.speed;
 	unit.sprite.dest = data.dest;
 	unit.sprite.tl.moveTo(data.x,data.y, 300);
+	unit.hsprite.tl.moveTo(data.x,data.y - 10,300);
 	unit.sprite.frame = unit.sprite.owner;
-	if(data.built) {
-		core.rootScene.addChild(unit.sprite);
+	if(unit.sprite.health > unit.sprite.maxHealth)//Upgrade or level up occurred
+	{
+		unit.sprite.maxHealth = unit.sprite.health;
 	}
+	unit.hsprite.frame = 22 - (Math.ceil(22 * (unit.sprite.health/unit.sprite.maxHealth)));
+	
+	//console.log(unit.sprite.health + "/" + unit.sprite.maxHealth + "-" + unit.hsprite.frame);
+	if(data.built && !unit.sprite.built) {
+		core.rootScene.addChild(unit.sprite);
+		core.rootScene.addChild(unit.hsprite);
+		unit.sprite.built = true;
+		unit.sprite.maxHealth = unit.sprite.health;
+	}
+
 	return unit;
 }
 

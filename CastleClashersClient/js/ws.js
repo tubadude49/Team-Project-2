@@ -23,6 +23,7 @@ var establishWS = function () {
 						units[i] = unitFromData(units[i],data);
 						if(units[i].sprite.health <= 0) {
 							core.rootScene.removeChild(units[i].sprite);
+							core.rootScene.removeChild(units[i].hsprite);
 							units.splice(i,1);
 						}
 						found = true;
