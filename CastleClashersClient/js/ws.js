@@ -59,9 +59,11 @@ var establishWS = function () {
 					var castle = new Castle(data.x, data.y);
 					castles.push(castleFromData(castle,data));
 				}
-			} /*else if(data.type == 'win') {
-				console.log(data);
-			}*/
+			} else if(data.type == 'battle') {	
+				drawBattle(data);	// { data.type = 'battle', data.x, data.y }
+			} else if(data.type == 'siege') {
+				drawSiege(data); 	// { data.type = 'siege', data.x, data.y }
+			}
 		}
 	};
 	ws.onerror = function(error) {

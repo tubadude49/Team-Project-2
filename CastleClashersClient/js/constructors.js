@@ -23,8 +23,8 @@ var buyArmor = new Sprite(200, 69);
 var reinforceRegiment = new Sprite(200, 69);
 var upgradeRegiment = new Sprite(200, 69);
 var upgradeCastle = new Sprite(200,69);
-/*var warCastle = new Sprite(200, 69);
-var allianceCastle = new Sprite(200, 69);*/
+//var warCastle = new Sprite(200, 69);
+//var allianceCastle = new Sprite(200, 69);
 
 var healthImg = new Sprite(32,32);
 var health = Label('');
@@ -108,38 +108,19 @@ var Unit = function(subtype, x, y) {
 
 
 var Battle = function() {
-	this.type = "battle";
-	this.uuid = 0;
-	this.x = 0;
-	this.y = 0;
-	this.viewing = false;
-	this.players = [];
-	this.units = [];
-	this.action = "";
-	this.selected;
-	
-	//scene.addChild(this);
-	this.addEventListener(enchant.Event.TOUCH_START, battleClick);
-}
-
-var siegeClick = function(event) {
-	//console.log(this);
-	//ws.send(this);
+	this.sprite.type = "battle";
+	this.sprite.x = 0;
+	this.sprite.y = 0;
+	this.sprite.image = core.assets['assets/swords.png'];
+	this.sprite.tl.setTimeBased();
 }
 
 var Siege = function() {
-	this.type = "siege";
-	this.uuid = 0;
-	this.x = 0;
-	this.y = 0;
-	this.viewing = false;
-	this.castle = -1; 	//uuid
-	this.units = [];
-	this.action = "";
-	this.selected;
-	
-	//scene.addChild(this);
-	this.addEventListener(enchant.Event.TOUCH_START, siegeLClick);
+	this.sprite.type = "siege";
+	this.sprite.x = 0;
+	this.sprite.y = 0;
+	this.sprite.image = core.assets['assets/fireball.png'];
+	this.sprite.tl.setTimeBased();
 }
 
 var Instance = function() {
@@ -170,6 +151,26 @@ var updateGold = function(instance) {
 		goldImage.frame = 8
 	}
 	
+}
+
+var drawBattle = function(data) {
+	var batt = new Battle();
+	batt.sprite.x = data.x;
+	batt.sprite.y = data.y;	
+	core.rootScene.addChild(batt.sprite);
+	batt.sprite.tl.delay(1500).then(function() {
+		core.rootScene.removeChild(batt.sprite);
+	});		
+}
+
+var drawSiege = function(data) {
+	var siege_engine = new Siege();
+	siege_engine.sprite.x = data.x;
+	siege_engine.sprite.y = data.y;	
+	core.rootScene.addChild(siege_engine.sprite);
+	siege_engine.sprite.tl.delay(1500).then(function() {
+		core.rootScene.removeChild(siege_engine.sprite);
+	});		
 }
 
 var castleFromData = function(castle, data) {
