@@ -47,8 +47,6 @@ var veterancy = Label('');
 var unitXPImg = new Sprite(32,32);
 var unitXP = Label('');
 
-var invalidMessage = Label('');
-
 var Castle = function(x, y) {
 	this.sprite = new Sprite(86, 41);
 	this.sprite.moveTo(x, y);

@@ -41,7 +41,6 @@ var backgroundClick = function(event) {
 			core.rootScene.removeChild(veterancy);
 			core.rootScene.removeChild(unitXPImg);
 			core.rootScene.removeChild(unitXP);
-			core.rootScene.removeChild(invalidMessage);
 			
 			core.rootScene.removeChild(reinforceCastle);
 			core.rootScene.removeChild(upgradeCastle);
@@ -198,7 +197,6 @@ var uiClick = function(event) {
 	core.rootScene.removeChild(veterancy);
 	core.rootScene.removeChild(unitXPImg);
 	core.rootScene.removeChild(unitXP);
-	core.rootScene.removeChild(invalidMessage);
 	
 	core.rootScene.removeChild(reinforceCastle);
 	core.rootScene.removeChild(upgradeCastle);
@@ -383,11 +381,3 @@ var uiClick = function(event) {
 		core.rootScene.addChild(unitXP);
 	}
  }
- 
- var invalidSent = function(event)
-{
-	invalidMessage.text = '';//replace with message from JSON
-	invalidMessage.x = core.width/2;
-	invalidMessage.y = core.height - 10;
-	core.rootScene.addChild(invalidMessage);
-}
