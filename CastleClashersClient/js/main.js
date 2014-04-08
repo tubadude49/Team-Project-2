@@ -1,6 +1,9 @@
 window.onload = function(){
-	establishWS();
+	establishWS();	
+	establishCore();
+}
 
+var establishCore = function() {
 	core = new Core(1280+coreUISize,720);
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/button_select.png', 'assets/button_select_selected.png', 
@@ -14,7 +17,22 @@ window.onload = function(){
 	
 	core.onload = function() {
 		
-		var background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
+		startButton.text = "Start";
+		startButton.x = core.width / 2 - 100;
+		startButton.y = 50;
+		core.rootScene.addChild(startButton);
+		startButton.on(enchant.Event.TOUCH_START, startClick);
+		
+		tutorButton.text = "Tutorial";
+		tutorButton.x = core.width / 2 - 140;
+		tutorButton.y = startButton.y + 150;
+		core.rootScene.addChild(tutorButton);
+		tutorButton.on(enchant.Event.TOUCH_START, tutorClick);
+				
+		startButton.font = "bold 60px arial,serif";
+		tutorButton.font = "bold 60px arial,serif";
+				
+		/*var background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
 		background.image = core.assets['assets/grass1.png'];
 		background.moveTo(0, 50);
 		background.addEventListener(enchant.Event.TOUCH_START, backgroundClick);
@@ -46,7 +64,7 @@ window.onload = function(){
 		unitUpgrade.font = "bold 26px arial,serif";
 		unitAttack.font = "bold 26px arial,serif";
 		unitDefense.font = "bold 26px arial,serif";
-		unitSpeed.font = "bold 26px arial,serif";
+		unitSpeed.font = "bold 26px arial,serif";*/
 		
 		
 	}
