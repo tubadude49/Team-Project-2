@@ -16,13 +16,13 @@ var buttonSelected = 0;
 
 // FOR CASTLES AND UNITS 
  
-var reinforceCastle = new Sprite(200, 69);
-var buyInfantry = new Sprite(200, 69);
-var buyCavalry = new Sprite(200, 69);
-var buyArmor = new Sprite(200, 69);
-var reinforceRegiment = new Sprite(200, 69);
-var upgradeRegiment = new Sprite(200, 69);
-var upgradeCastle = new Sprite(200,69);
+var healCastle = new Label(); //new Sprite(200, 69);
+var buyInfantry = new Label(); //new Sprite(200, 69);
+var buyCavalry = new Label(); //new Sprite(200, 69);
+var buyArmor = new Label(); //new Sprite(200, 69);
+var healRegiment = new Label(); //new Sprite(200, 69);
+var upgradeRegiment = new Label(); //new Sprite(200, 69);
+var upgradeCastle = new Label(); //new Sprite(200,69);
 //var warCastle = new Sprite(200, 69);
 //var allianceCastle = new Sprite(200, 69);
 
@@ -105,21 +105,21 @@ var Unit = function(subtype, x, y) {
 	this.hsprite.tl.setTimeBased();
 }
 
-
-
 var Battle = function() {
+	this.sprite = new Sprite(21,21);
+	this.sprite.image = core.assets['assets/swords.png'];
 	this.sprite.type = "battle";
 	this.sprite.x = 0;
 	this.sprite.y = 0;
-	this.sprite.image = core.assets['assets/swords.png'];
 	this.sprite.tl.setTimeBased();
 }
 
 var Siege = function() {
+	this.sprite = new Sprite(43,39);
+	this.sprite.image = core.assets['assets/fireball.png'];
 	this.sprite.type = "siege";
 	this.sprite.x = 0;
 	this.sprite.y = 0;
-	this.sprite.image = core.assets['assets/fireball.png'];
 	this.sprite.tl.setTimeBased();
 }
 
@@ -139,18 +139,19 @@ var updateGold = function(instance) {
 		goldAmount.text = instance.gold;
 	}
 	
-	if(instance.gold < 25) { 
-		goldImage.frame = 4;
-	} else if (instance.gold < 50) {
-		goldImage.frame = 5;
-	} else if (instance.gold < 100) {
-		goldImage.frame = 6;
-	} else if (instance.gold < 200) {
-		goldImage.frame = 7;
-	} else {
-		goldImage.frame = 8
+	if(goldImage != null) {
+		if(instance.gold < 25) { 
+			goldImage.frame = 4;
+		} else if (instance.gold < 50) {
+			goldImage.frame = 5;
+		} else if (instance.gold < 100) {
+			goldImage.frame = 6;
+		} else if (instance.gold < 200) {
+			goldImage.frame = 7;
+		} else {
+			goldImage.frame = 8
+		}
 	}
-	
 }
 
 var drawBattle = function(data) {
@@ -158,7 +159,7 @@ var drawBattle = function(data) {
 	batt.sprite.x = data.x;
 	batt.sprite.y = data.y;	
 	core.rootScene.addChild(batt.sprite);
-	batt.sprite.tl.delay(1500).then(function() {
+	batt.sprite.tl.delay(1250).then(function() {
 		core.rootScene.removeChild(batt.sprite);
 	});		
 }
@@ -168,7 +169,7 @@ var drawSiege = function(data) {
 	siege_engine.sprite.x = data.x;
 	siege_engine.sprite.y = data.y;	
 	core.rootScene.addChild(siege_engine.sprite);
-	siege_engine.sprite.tl.delay(1500).then(function() {
+	siege_engine.sprite.tl.delay(1250).then(function() {
 		core.rootScene.removeChild(siege_engine.sprite);
 	});		
 }

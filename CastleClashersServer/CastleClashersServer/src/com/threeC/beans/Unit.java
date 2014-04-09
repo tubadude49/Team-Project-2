@@ -51,7 +51,7 @@ public class Unit implements JSONStringifiable {
 
 	@Override
 	public String toJSON() {
-		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "health", "upgrade", "veterancy", "owner", "attack", "defense", "speed", "dest", "type", "subtype", "built" } );
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "x", "y", "maxHealth", "health", "upgrade", "veterancy", "owner", "attack", "defense", "speed", "dest", "type", "subtype", "built" } );
 		return json.toString();
 	}
 

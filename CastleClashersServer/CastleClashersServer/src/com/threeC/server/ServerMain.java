@@ -30,6 +30,7 @@ import com.threeC.beans.UnitFactory;
 class JWebSocketListener implements WebSocketServerTokenListener {	
 	public int status = 0; //0 = WAITING, 1 = STARTED, 2 = GAME ENDED
 	public int numPlayers = 0;
+	public int joinedPlayers = 0;
 	public boolean init = false;
 	
 	public boolean incomeRecalcReq = true;
@@ -208,17 +209,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						if(dy < -unit.speed) { dy = -unit.speed; }
 						else if(dy > unit.speed) { dy = unit.speed; }
 					unit.x += dx;
-					unit.y += dy;
-					if(dx == 0 && dy == 0 && castle.owner != unit.owner) {
-						castle.health -= unit.siege;
-						if(castle.health <= 0) {
-							castle.owner = unit.owner;
-							castle.health = castle.maxHealth / 2;
-							incomeRecalcReq = true;
-							unit.dest = -1l;
-						}
-						sendToAll(castle.toJSON());
-					}
+					unit.y += dy;					
 				}
 				sendToAll(unit.toJSON());				
 				
@@ -252,6 +243,11 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						sendToAll(unit1.toJSON());
 						sendToAll(unit2.toJSON());
 						
+						sendToAll("{\"type\":\"battle\",\"x\":" 
+								+ ((unit1.x+unit2.x)/2) + ",\"y\":" 
+								+ ((unit1.y+unit2.y)/2)								
+								+ "}");
+						
 						break;
 					}
 				}
@@ -266,6 +262,34 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			}
 		}	
 	}
+	
+	public void siegeCastles() {
+		for(int i=0;i<castles.size();i++) {
+			Castle castle = castles.get(i);
+			for(int j=0;j<units.size();j++) {
+				Unit unit = units.get(j);
+				if(unit.owner != castle.owner 
+					&& Math.abs(unit.x-castle.x) <= 50
+					&& Math.abs(unit.y-castle.y) <= 50) {
+						unit.battle = castle.uuid;
+						castle.health -= unit.siege;
+						if(castle.health <= 0) {
+							castle.owner = unit.owner;
+							castle.health = castle.maxHealth / 2;
+							incomeRecalcReq = true;							
+						}
+						sendToAll(castle.toJSON());
+						
+						sendToAll("{\"type\":\"siege\",\"x\":" 
+								+ ((unit.x+castle.x)/2) + ",\"y\":" 
+								+ ((unit.y+castle.y)/2)				
+								+ "}");
+						break;
+				}
+			}
+			
+		}	
+	}	
 
 	public void runBattles() {
 		/*for(int i=0;i<battles.size();i++) {
@@ -285,8 +309,6 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			players.add(newPlayer);
 			System.out.println(newPlayer.toJSON());
 			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(newPlayer.toJSON())));
-			status = players.size() < numPlayers ? 0 : 1;
-			System.out.println("status: " + status);
 		} else {
 			System.out.println("Connection Opened " + event.getSessionId());
 			Player player = getPlayerBySessionId(event.getSessionId());
@@ -298,6 +320,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			} else {
 				player.active = true;
 			}
+			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken("{\"type\":\"start\"}")));
 			for(Castle castle : castles) {
 				event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(castle.toJSON())));
 			}
@@ -420,6 +443,16 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						} else {
 							sendToUUID(json.getLong("to"), json.toString());
 						}
+					} else if(json.getString("action").equals("join") &&
+							json.has("name") ) {
+						player.name = json.getString("name");
+						if(joinedPlayers < numPlayers) {
+							player.active = true;
+							joinedPlayers++;
+							status = joinedPlayers < numPlayers ? 0 : 1;
+							sendToAll("{\"type\":\"start\"}");
+							System.out.println("status: " + status);
+						}
 					}
 					
 				}
@@ -468,7 +501,7 @@ public class ServerMain {
 					gameFire(jwsl, server);
 				}
 				long end = System.currentTimeMillis();
-				Thread.sleep(1000-(end-start));
+				Thread.sleep(1000-(end-start) > 0 ? 1000-(end-start) : 0);
 			} catch (InterruptedException e) { e.printStackTrace(); }
 		}
 		System.out.println("Server shutting down...");
@@ -482,6 +515,7 @@ public class ServerMain {
 	public static void gameFire(JWebSocketListener jwsl, TokenServer server) {		
 		jwsl.moveUnits();
 		jwsl.battleUnits();
+		jwsl.siegeCastles();
 		jwsl.recalcIncome();
 		for(WebSocketEngine wse : server.getEngines().values()) {
 			for(WebSocketConnector wsc : server.getConnectors(wse).values()) {

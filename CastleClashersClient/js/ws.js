@@ -4,7 +4,7 @@ var host3 = "ws://25.10.234.5:10088";
 var ws;
 
 var establishWS = function () {
-	ws = new WebSocket(host2, 'json');
+	ws = new WebSocket(host, 'json');
 	
 	ws.onopen = function(event) {
 		console.log("connection established");
@@ -63,6 +63,8 @@ var establishWS = function () {
 				drawBattle(data);	// { data.type = 'battle', data.x, data.y }
 			} else if(data.type == 'siege') {
 				drawSiege(data); 	// { data.type = 'siege', data.x, data.y }
+			} else if(data.type == 'start') {
+				initGameboard();
 			}
 		}
 	};
