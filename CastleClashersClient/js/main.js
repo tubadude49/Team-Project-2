@@ -28,10 +28,10 @@ var establishCore = function() {
 		tutorButton.y = startButton.y + 150;
 		core.rootScene.addChild(tutorButton);
 		tutorButton.on(enchant.Event.TOUCH_START, tutorClick);
-				
+
 		startButton.font = "bold 60px arial,serif";
 		tutorButton.font = "bold 60px arial,serif";
-				
+
 		/*var background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
 		background.image = core.assets['assets/grass1.png'];
 		background.moveTo(0, 50);

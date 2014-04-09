@@ -27,7 +27,7 @@ var leaveClick = function() {
 	core.rootScene.addChild(startButton);
 	core.rootScene.addChild(tutorButton);
 	
-	core.rootScene.removeChild(nameTextbox);	
+	core.rootScene.removeChild(nameTextbox);
 	core.rootScene.removeChild(leaveButton);
 }
 
