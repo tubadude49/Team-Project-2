@@ -62,7 +62,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		if(p1 < 0 && p2 < 0) { return; }
 		Player player1 = (Player)getByUUID(p1);	
 		if(player1 != null && player1.alliance == p2) {
-			//sendToAll("{'type':'win','player1':" + player1.uuid + ",'player2':" + p2 + "}");
+			//sendToAll("{\"type\":\"win\",\"player1\":" + player1.uuid + ",\"player2\":" + p2 + "}");
 			status = 2;
 		} else {
 			return;

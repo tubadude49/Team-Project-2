@@ -2,19 +2,24 @@ var handleRightClick = function(event) {
 	if(clickArray.length >= 2) {		
 		var selected = clickArray[clickArray.length-2];
 		var target = clickArray[clickArray.length-1];
-		if(selected.uuid != target.uuid) {			
+		if(selected.uuid != target.uuid 
+		&& selected.type == 'unit' 
+		&& (target.type == 'castle' || target.type == 'unit')) {			
 			var fields = {};
 			fields.selected = selected.uuid;
 			fields.target = target.uuid;
-			fields.action = 'moveto';
-			if(selected_obj) {
-				selected_obj.backgroundColor = null;
-				selected_obj.selected = false;
-				selected_obj = null;
-			}
+			fields.action = 'moveto';			
 			ws.send(JSON.stringify(fields));
 		}
+		/*if(selected_obj) {
+			selected_obj.backgroundColor = null;
+			selected_obj.selected = false;
+			selected_obj = null;
+		}*/
 		clickArray = [];
+		clickArray.push(selected);
+		unitClick(selected);
+		uiClick(selected);
 	}
 	event.preventDefault();
 	return false;
@@ -76,6 +81,33 @@ var backgroundClick = function(event) {
 			
 		}
 
+}
+
+var startClick = function(event) {
+	clickStart = {};
+	clickStart.x = event.x;
+	clickStart.y = event.y;
+}
+
+var dragClick = function(event) {
+	console.log('drag x:' + event.x + ' y:' + event.y);
+}
+
+var endClick = function(event) {
+	var selected_objs = [];
+	for(i=0;i<core.rootScene.length;i++) {
+		if(clickStart.x <= core.rootScene[i].x
+		//&& clickStart.x <= core.rootScene[i].x + core.rootScene[i].width
+		&& event.x >= core.rootScene[i].x
+		//&& event.x <= core.rootScene[i].x + core.rootScene[i].width
+		&& clickStart.y <= core.rootScene[i].y
+		//&& clickStart.y <= core.rootScene[i].y + core.rootScene[i].height
+		&& event.y >= core.rootScene[i].y
+		//&& event.y <= core.rootScene[i].y + core.rootScene[i].height
+		) {
+			selected_objs.push(core.rootScene[i]);
+		}
+	}
 }
 
 var castleClick = function(event) {

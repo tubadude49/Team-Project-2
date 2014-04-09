@@ -4,6 +4,7 @@ window.onload = function(){
 }
 
 var clickArray = [];
+var clickStart;
 
 var establishCore = function() {
 	core = new Core(1280+coreUISize,720);
@@ -23,7 +24,7 @@ var establishCore = function() {
 		startButton.x = core.width / 2 - 100;
 		startButton.y = 50;
 		core.rootScene.addChild(startButton);
-		startButton.on(enchant.Event.TOUCH_START, startClick);
+		startButton.on(enchant.Event.TOUCH_START, startButtonClick);
 		
 		tutorButton.text = "Tutorial";
 		tutorButton.x = core.width / 2 - 140;

@@ -9,7 +9,7 @@ var joinButton = new Label();
 
 var testButton = new Label();
 
-var startClick = function() {
+var startButtonClick = function() {
 	core.rootScene.removeChild(startButton);
 	core.rootScene.removeChild(tutorButton);
 	
@@ -79,7 +79,10 @@ var initGameboard = function() {
 	var background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
 	background.image = core.assets['assets/grass1.png'];
 	background.moveTo(0, 50);
-	background.addEventListener(enchant.Event.TOUCH_START, backgroundClick);
+	//background.addEventListener(enchant.Event.TOUCH_START, backgroundClick);
+	background.on(enchant.Event.TOUCH_START, startClick);
+	background.on(enchant.Event.TOUCH_DRAG, dragClick);
+	background.on(enchant.Event.TOUCH_END, endClick);
 	core.rootScene.addChild(background);
 	
 	var backgroundUI = new Sprite(coreUISize, core.height);
