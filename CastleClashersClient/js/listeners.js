@@ -76,14 +76,6 @@ var clearUI = function() {
 	/*core.rootScene.removeChild(warCastle);
 	core.rootScene.removeChild(allianceCastle);*/
 	
-	core.rootScene.removeChild(castleIcon);
-	core.rootScene.removeChild(infantryIcon);
-	core.rootScene.removeChild(cavalryIcon);
-	core.rootScene.removeChild(armorIcon);
-	core.rootScene.removeChild(selectedCastles);
-	core.rootScene.removeChild(selectedInfantry);
-	core.rootScene.removeChild(selectedCavalry);
-	core.rootScene.removeChild(selectedArmor);
 }
 
 var startClick = function(event) {
@@ -132,6 +124,15 @@ var endClick = function(event) {
 }
 
 var selectedUnitUI = function(selected_objs) {
+	core.rootScene.removeChild(castleIcon);
+	core.rootScene.removeChild(infantryIcon);
+	core.rootScene.removeChild(cavalryIcon);
+	core.rootScene.removeChild(armorIcon);
+	core.rootScene.removeChild(selectedCastles);
+	core.rootScene.removeChild(selectedInfantry);
+	core.rootScene.removeChild(selectedCavalry);
+	core.rootScene.removeChild(selectedArmor);
+	
 	var castleCount = 0;
 	var infantryCount = 0;
 	var cavalryCount = 0;
