@@ -184,11 +184,12 @@ var drawSiege = function(data) {
 
 var drawMessage = function(data)
 {
-	message.text = data.text;
+	message.text = data;
 	message.color = '#f00';//Red
 	message.font = "bold 60px ken-vector-future-thin";
 	message.x = core.width/2 - 30;
 	message.y = core.height/2;
+	message.width = 1000;
 	core.rootScene.addChild(message);
 	var timer = new Sprite(0,0);
 	timer.tl.setTimeBased();
