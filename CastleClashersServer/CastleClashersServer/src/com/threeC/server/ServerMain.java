@@ -269,6 +269,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			for(int j=0;j<units.size();j++) {
 				Unit unit = units.get(j);
 				if(unit.owner != castle.owner 
+					&& unit.battle < 0
 					&& Math.abs(unit.x-castle.x) <= 50
 					&& Math.abs(unit.y-castle.y) <= 50) {
 						unit.battle = castle.uuid;
@@ -276,7 +277,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						if(castle.health <= 0) {
 							castle.owner = unit.owner;
 							castle.health = castle.maxHealth / 2;
-							incomeRecalcReq = true;							
+							incomeRecalcReq = true;
 						}
 						sendToAll(castle.toJSON());
 						
@@ -284,7 +285,6 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								+ ((unit.x+castle.x)/2) + ",\"y\":" 
 								+ ((unit.y+castle.y)/2)				
 								+ "}");
-						break;
 				}
 			}
 			
@@ -369,11 +369,15 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									sendToAll(castle.toJSON());
 									incomeRecalcReq = true;
+								} else {
+									event.sendToken(JSONProcessor.JSONStringToToken("{\"type\":\"message\",\"message\":\"Failed to purchase upgrade\"}"));
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Castle castle = (Castle)getByUUID(json.getLong("uuid"));
 								if(castle != null && castle.owner == player.uuid && castle.reinforce(player, server)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
+								} else {
+									event.sendToken(JSONProcessor.JSONStringToToken("{\"type\":\"message\",\"message\":\"Failed to purchase heal\"}"));
 								}
 							}
 						} else {
@@ -381,18 +385,24 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 								if(isValidPurchase(json.getInt("x"), json.getInt("y"), player.uuid) && player.charge(25)) {
 									UnitFactory.fromString(json.getString("type"), uuidDistributor.next(), player.uuid, json.getInt("x"), json.getInt("y"), server, units);
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));									
-								}						
+								} else {
+									event.sendToken(JSONProcessor.JSONStringToToken("{\"type\":\"message\",\"message\":\"Failed to purchase unit\"}"));
+								}
 							} else if(json.getString("purchase").equals("upgrade")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
 								if(unit != null && unit.owner == player.uuid && unit.upgrade(player)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									sendToAll(unit.toJSON());
+								} else {
+									event.sendToken(JSONProcessor.JSONStringToToken("{\"type\":\"message\",\"message\":\"Failed to purchase upgrade\"}"));
 								}
 							} else if(json.getString("purchase").equals("reinforce")) {
 								Unit unit = (Unit)getByUUID(json.getLong("uuid"));
 								if(unit != null && unit.owner == player.uuid && unit.reinforce(player, server)) {
 									event.sendToken(JSONProcessor.JSONStringToToken(player.toJSON()));
 									sendToAll(unit.toJSON());
+								} else {
+									event.sendToken(JSONProcessor.JSONStringToToken("{\"type\":\"message\",\"message\":\"Failed to purchase heal\"}"));
 								}
 							}
 						}						
@@ -400,9 +410,17 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 							&& json.has("selected") 
 							&& json.has("target") ) {
 						Object selected = getByUUID(json.getLong("selected"));
+						Object target = getByUUID(json.getLong("target"));
 						if(selected != null && selected instanceof Unit) {
 							Unit unit = (Unit)selected;
-							unit.dest = json.getLong("target");
+							if(target != null && target instanceof Unit) {
+								Unit utarget = (Unit)target;
+								if(unit.owner != utarget.owner) {
+									unit.dest = json.getLong("target");
+								}
+							} else {
+								unit.dest = json.getLong("target");
+							}
 						}						
 						
 					} else if( json.getString("action").equals("surrender") ) {

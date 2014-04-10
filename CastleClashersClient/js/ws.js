@@ -27,11 +27,17 @@ var establishWS = function () {
 							units.splice(i,1);
 						}
 						found = true;
-						/*if (selected_obj != null) {
-							if (selected_obj.uuid == data.uuid) {
-								units[i].sprite.dispatchEvent(new Event(enchant.Event.TOUCH_START));
+						if (selected_objs.length > 0) {
+							for(i=0;i<selected_objs.length;i++) {
+								if(selected_objs[i].type == 'castle' && selected_objs[i].uuid == data.uuid) {
+									uiClick(selected_objs[i]);
+									break;
+								} else if(i+1 >= selected_objs.length && selected_objs[i].uuid == data.uuid) {
+									uiClick(selected_objs[i]);
+									break;
+								}
 							}
-						}*/	
+						}
 						break;
 					}
 				}
@@ -39,19 +45,24 @@ var establishWS = function () {
 					var unit = new Unit(data.subtype, data.x, data.y);
 					units.push(unitFromData(unit,data));
 				}
-			} else if(data.type == 'castle') {			
-				//console.log(data);
+			} else if(data.type == 'castle') {
 				var found = false;
 				for(i=0;i<castles.length;i++) {
 					if(castles[i].sprite.uuid == data.uuid) {
 						castles[i] = castleFromData(castles[i],data);
 						updateCastle(castles[i].sprite);
 						found = true;
-						/*if (selected_obj != null) {
-							if (selected_obj.uuid == data.uuid) {
-								castles[i].sprite.dispatchEvent(new Event(enchant.Event.TOUCH_START));
+						if (selected_objs.length > 0) {
+							for(i=0;i<selected_objs.length;i++) {
+								if(selected_objs[i].type == 'castle' && selected_objs[i].uuid == data.uuid) {
+									uiClick(selected_objs[i]);
+									break;
+								} else if(i+1 >= selected_objs.length  && selected_objs[i].uuid == data.uuid) {
+									uiClick(selected_objs[i]);
+									break;
+								}
 							}
-						}*/
+						}
 						break;
 					}
 				}
@@ -60,11 +71,14 @@ var establishWS = function () {
 					castles.push(castleFromData(castle,data));
 				}
 			} else if(data.type == 'battle') {	
-				drawBattle(data);	// { data.type = 'battle', data.x, data.y }
+				drawBattle(data);
 			} else if(data.type == 'siege') {
-				drawSiege(data); 	// { data.type = 'siege', data.x, data.y }
+				drawSiege(data);
 			} else if(data.type == 'start') {
 				initGameboard();
+			} else if(data.type == 'message') {
+				console.log(data.message);
+				drawMessage(data.message);
 			}
 		}
 	};
