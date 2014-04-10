@@ -413,13 +413,15 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						Object target = getByUUID(json.getLong("target"));
 						if(selected != null && selected instanceof Unit) {
 							Unit unit = (Unit)selected;
-							if(target != null && target instanceof Unit) {
-								Unit utarget = (Unit)target;
-								if(unit.owner != utarget.owner) {
+							if(unit.owner == player.uuid){ 
+								if(target != null && target instanceof Unit) {
+									Unit utarget = (Unit)target;
+									if(unit.owner != utarget.owner) {
+										unit.dest = json.getLong("target");
+									}
+								} else {
 									unit.dest = json.getLong("target");
 								}
-							} else {
-								unit.dest = json.getLong("target");
 							}
 						}						
 						
