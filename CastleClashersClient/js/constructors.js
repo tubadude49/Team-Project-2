@@ -26,6 +26,16 @@ var upgradeCastle = new Label(); //new Sprite(200,69);
 //var warCastle = new Sprite(200, 69);
 //var allianceCastle = new Sprite(200, 69);
 
+// for selected unit UI
+var castleIcon = new Sprite(83, 41);
+var infantryIcon = new Sprite(68, 42);
+var cavalryIcon = new Sprite(50, 37);
+var armorIcon = new Sprite(72, 24);
+var selectedCastles = new Label();
+var selectedInfantry = new Label();
+var selectedCavalry = new Label();
+var selectedArmor = new Label();
+
 var healthImg = new Sprite(32,32);
 var health = Label('');
 var upgradeImg = new Sprite(32,32);
