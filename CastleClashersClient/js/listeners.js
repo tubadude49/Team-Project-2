@@ -75,6 +75,15 @@ var clearUI = function() {
 	core.rootScene.removeChild(upgrade);
 	/*core.rootScene.removeChild(warCastle);
 	core.rootScene.removeChild(allianceCastle);*/
+	
+	core.rootScene.removeChild(castleIcon);
+	core.rootScene.removeChild(infantryIcon);
+	core.rootScene.removeChild(cavalryIcon);
+	core.rootScene.removeChild(armorIcon);
+	core.rootScene.removeChild(selectedCastles);
+	core.rootScene.removeChild(selectedInfantry);
+	core.rootScene.removeChild(selectedCavalry);
+	core.rootScene.removeChild(selectedArmor);
 }
 
 var startClick = function(event) {
@@ -117,7 +126,85 @@ var endClick = function(event) {
 	if(selected_objs.length <= 0) {		
 		clearUI();
 	}
-	console.log(selected_objs.length);
+	
+	selectedUnitUI(selected_objs);
+	//console.log(selected_objs.length);
+}
+
+var selectedUnitUI = function(selected_objs) {
+	var castleCount = 0;
+	var infantryCount = 0;
+	var cavalryCount = 0;
+	var cannonCount = 0;
+	
+	for(i=0;i<selected_objs.length;i++) {
+		console.log(selected_objs[i]);
+		if(selected_objs[i].type == 'castle') {
+			castleCount++;
+		} else if(selected_objs[i].type == 'unit') {
+			if(selected_objs[i].subtype == 'infantry') {
+				infantryCount++;
+			} else if(selected_objs[i].subtype == 'cavalry') {
+				cavalryCount++;
+			} else if(selected_objs[i].subtype == 'cannon') {
+				cannonCount++;
+			}		
+		}
+	}
+	var currentLocation = core.height*1/2;
+	
+	if(castleCount > 0) {
+		castleIcon.image = core.assets['assets/castle.png'];
+		castleIcon.x = core.width - coreUISize + 25;
+		castleIcon.y = currentLocation;
+		currentLocation += castleIcon.height + 25;
+		castleIcon.scaleX = 1;
+		castleIcon.scaleY = 1;
+		castleIcon.frame = 5;
+		selectedCastles.text = castleCount;
+		selectedCastles.x = core.width - coreUISize + 125;//castleIcon.x + castleIcon.width + 25;
+		selectedCastles.y = castleIcon.y;
+		selectedCastles.font = "bold 18px ken-vector-future-thin";
+		core.rootScene.addChild(castleIcon);
+		core.rootScene.addChild(selectedCastles);
+	}
+	if(infantryCount > 0) {
+		infantryIcon.image = core.assets['assets/infantry.png'];
+		infantryIcon.x = core.width - coreUISize + 25;
+		infantryIcon.y = currentLocation;
+		currentLocation += infantryIcon.height + 25;
+		selectedInfantry.text = infantryCount;
+		selectedInfantry.x = core.width - coreUISize + 125;//infantryIcon.x + infantryIcon.width + 25;
+		selectedInfantry.y = infantryIcon.y;
+		selectedInfantry.font = "bold 18px ken-vector-future-thin";
+		core.rootScene.addChild(infantryIcon);
+		core.rootScene.addChild(selectedInfantry);
+	}
+	if(cavalryCount > 0) {
+		cavalryIcon.image = core.assets['assets/cavalry.png'];
+		cavalryIcon.x = core.width - coreUISize + 25;
+		cavalryIcon.y = currentLocation;
+		currentLocation += cavalryIcon.height + 25;
+		selectedCavalry.text = cavalryCount;
+		selectedCavalry.x = core.width - coreUISize + 125;//cavalryIcon.x + cavalryIcon.width + 25;
+		selectedCavalry.y = cavalryIcon.y;
+		selectedCavalry.font = "bold 18px ken-vector-future-thin";
+		core.rootScene.addChild(cavalryIcon);
+		core.rootScene.addChild(selectedCavalry);
+	}
+	if(cannonCount > 0) {
+		armorIcon.image = core.assets['assets/cannon.png'];
+		armorIcon.x = core.width - coreUISize + 25;
+		armorIcon.y = currentLocation;
+		currentLocation += armorIcon.height + 25;
+		selectedArmor.text = cannonCount;
+		selectedArmor.x = core.width - coreUISize + 125;//armorIcon.x + armorIcon.width + 25;
+		selectedArmor.y = armorIcon.y;
+		selectedArmor.font = "bold 18px ken-vector-future-thin";
+		core.rootScene.addChild(armorIcon);
+		core.rootScene.addChild(selectedArmor);
+	}	
+	
 }
 
 /*var castleClick = function(event) {
@@ -225,32 +312,8 @@ var healClick = function(event) {
 }
 
 var uiClick = function(event) {
-	core.rootScene.removeChild(healRegiment);
-	core.rootScene.removeChild(upgradeRegiment);
-	core.rootScene.removeChild(healthImg);
-	core.rootScene.removeChild(health);
-	core.rootScene.removeChild(upgradeImg);
-	core.rootScene.removeChild(upgrade);
-	core.rootScene.removeChild(unitAttackImg);
-	core.rootScene.removeChild(unitAttack);
-	core.rootScene.removeChild(unitDefenseImg);
-	core.rootScene.removeChild(unitDefense);
-	core.rootScene.removeChild(unitSpeedImg);
-	core.rootScene.removeChild(unitSpeed);
-	core.rootScene.removeChild(veterancyImg);
-	core.rootScene.removeChild(veterancy);
-	core.rootScene.removeChild(unitXPImg);
-	core.rootScene.removeChild(unitXP);
 	
-	core.rootScene.removeChild(healCastle);
-	core.rootScene.removeChild(upgradeCastle);
-	/*core.rootScene.addChild(warCastle);
-	core.rootScene.addChild(allianceCastle);*/
-	core.rootScene.removeChild(buyInfantry);
-	core.rootScene.removeChild(buyCavalry);
-	core.rootScene.removeChild(buyArmor);
-	core.rootScene.removeChild(health);
-	core.rootScene.removeChild(upgrade);
+	clearUI();
 	
 	//  USED FOR CASTLE IF STATEMENT 
 		
