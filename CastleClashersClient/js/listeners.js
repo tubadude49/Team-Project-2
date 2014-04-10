@@ -16,13 +16,13 @@ var handleRightClick = function(event) {
 				ws.send(JSON.stringify(fields));
 			}
 		}
-		clickArray = [];
 		/*clickArray.push(selected);
 		unitClick(selected);
 		uiClick(selected);*/
 	}
 	clearUI();
 	selected_objs = [];
+	clickArray = [];
 	event.preventDefault();
 	return false;
 }
