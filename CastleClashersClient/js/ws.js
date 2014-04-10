@@ -27,11 +27,11 @@ var establishWS = function () {
 							units.splice(i,1);
 						}
 						found = true;
-						if (selected_obj != null) {
+						/*if (selected_obj != null) {
 							if (selected_obj.uuid == data.uuid) {
 								units[i].sprite.dispatchEvent(new Event(enchant.Event.TOUCH_START));
 							}
-						}	
+						}*/	
 						break;
 					}
 				}
@@ -47,11 +47,11 @@ var establishWS = function () {
 						castles[i] = castleFromData(castles[i],data);
 						updateCastle(castles[i].sprite);
 						found = true;
-						if (selected_obj != null) {
+						/*if (selected_obj != null) {
 							if (selected_obj.uuid == data.uuid) {
 								castles[i].sprite.dispatchEvent(new Event(enchant.Event.TOUCH_START));
 							}
-						}	
+						}*/
 						break;
 					}
 				}

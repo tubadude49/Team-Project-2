@@ -81,7 +81,6 @@ var initGameboard = function() {
 	background.moveTo(0, 50);
 	//background.addEventListener(enchant.Event.TOUCH_START, backgroundClick);
 	background.on(enchant.Event.TOUCH_START, startClick);
-	background.on(enchant.Event.TOUCH_DRAG, dragClick);
 	background.on(enchant.Event.TOUCH_END, endClick);
 	core.rootScene.addChild(background);
 	

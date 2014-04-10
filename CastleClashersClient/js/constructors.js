@@ -7,7 +7,7 @@ var core;
 var instance;
 var coreUISize = 200;
 var bottomUISize = 50;
-var selected_obj = {};
+var selected_objs = [];
 var selectButton;
 var attackButton;
 var goldImage;
@@ -66,8 +66,11 @@ var Castle = function(x, y) {
 	
 	core.rootScene.addChild(this.sprite.fsprite);
 	core.rootScene.addChild(this.sprite);
-	this.sprite.addEventListener(enchant.Event.TOUCH_START, castleClick);
+	/*this.sprite.addEventListener(enchant.Event.TOUCH_START, castleClick);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
+	*/
+	this.sprite.on(enchant.Event.TOUCH_START, startClick);
+	this.sprite.on(enchant.Event.TOUCH_END, endClick);
 }
 
 var Unit = function(subtype, x, y) {
@@ -96,8 +99,11 @@ var Unit = function(subtype, x, y) {
 	this.sprite.type = "unit";
 	this.sprite.built = false;
 	this.sprite.tl.setTimeBased();
-	this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
+	/*this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
 	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
+	*/
+	this.sprite.on(enchant.Event.TOUCH_START, startClick);
+	this.sprite.on(enchant.Event.TOUCH_END, endClick);
 	
 	this.hsprite = new Sprite(48,10);
 	this.hsprite.moveTo(x,y);
