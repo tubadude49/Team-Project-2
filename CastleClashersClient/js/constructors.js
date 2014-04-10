@@ -47,6 +47,8 @@ var veterancy = Label('');
 var unitXPImg = new Sprite(32,32);
 var unitXP = Label('');
 
+var message = Label('');
+
 var Castle = function(x, y) {
 	this.sprite = new Sprite(86, 41);
 	this.sprite.moveTo(x, y);
@@ -178,6 +180,22 @@ var drawSiege = function(data) {
 	siege_engine.sprite.tl.delay(1250).then(function() {
 		core.rootScene.removeChild(siege_engine.sprite);
 	});		
+}
+
+var drawMessage = function(data)
+{
+	message.text = data.text;
+	message.color = '#f00';//Red
+	message.font = "bold 60px ken-vector-future-thin";
+	message.x = core.width/2;
+	message.y = core.height - 20;
+	core.rootScene.addChild(message);
+	var timer = new Sprite(0,0);
+	timer.tl.setTimeBased();
+	timer.tl.delay(3000).then(function() {
+		core.rootScene.removeChild(message);
+	});
+	
 }
 
 var castleFromData = function(castle, data) {
