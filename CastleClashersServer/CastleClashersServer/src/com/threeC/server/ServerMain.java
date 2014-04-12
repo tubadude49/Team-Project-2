@@ -85,39 +85,55 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		}
 	}
 	
-	public void distributeCastles() {
-		final int gameboardX = 1280-86;
-		final int gameboardY = 720-41-50;
-		int validPlayers = 0;
+	public void distributeCastles(int gameboardSizeX, int gameboardSizeY) {
+		/*final int gameboardX = 1280-86;
+		final int gameboardY = 720-41-50;*/
+		
+		int i = 0;
+		int r = Math.min(gameboardSizeX, gameboardSizeY)/2;
+		int x = gameboardSizeX/2;
+		int y = gameboardSizeY/2;
+		int n = numPlayers;
+		int a = Math.PI / (2*n);
 		
 		for(Player player : players) {
 			if(player.active) {
-				validPlayers++; 
-				if(validPlayers == 1) { 
-					/*Player1*/
-					castles.add(new Castle(0, 50, uuidDistributor.next(), player.uuid));
-					/*castles.add(new Castle(0, gameboardY + 50, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(gameboardX, 50, uuidDistributor.next(), player.uuid));
-					castles.add(new Castle(gameboardX, gameboardY + 50, uuidDistributor.next(), player.uuid));*/
-					 
+				if(i < n) {
+					castles.add(new Castle((int)(x + r * Math.cos(2 * Math.PI * i / n + a)), (int)(y + r * Math.sin(2 * Math.PI * i / n + a)), uuidDistributor.next(), player.uuid));
+					i++;
+				}
+				/*if(validPlayers == 1) {
+					castles.add(new Castle(0, 50, uuidDistributor.next(), player.uuid));					 
 				} else if(validPlayers == 2) {
-					/*Player2*/
 					castles.add(new Castle(0, gameboardY + 50, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 3) {
-					/*Player3*/
 					castles.add(new Castle(gameboardX, 50, uuidDistributor.next(), player.uuid));
 				} else if(validPlayers == 4) {
-					/*Player4*/
 					castles.add(new Castle(gameboardX, gameboardY + 50, uuidDistributor.next(), player.uuid));
-				} else {
+				}*/ else {
 					player.active = false;
 				}
 			}
 		}
-		castles.add(new Castle(gameboardX/2 - gameboardX/4, gameboardY/2 + 50, uuidDistributor.next(), -1));
+		
+		i = 0;
+		r /= 2;
+		a += Math.PI;
+		for(;i<n;i++) {
+			castles.add(new Castle((int)(x + r * Math.cos(2 * Math.PI * i / n + a)), (int)(y + r * Math.sin(2 * Math.PI * i / n + a)), uuidDistributor.next(), -1));
+		}
+		
+		i = 0;
+		r /= 2;
+		n -= 2;
+		a -= Math.PI;
+		for(;i<n;i++) {
+			castles.add(new Castle((int)(x + r * Math.cos(2 * Math.PI * i / n + a)), (int)(y + r * Math.sin(2 * Math.PI * i / n + a)), uuidDistributor.next(), -1));
+		}
+		/*castles.add(new Castle(gameboardX/2 - gameboardX/4, gameboardY/2 + 50, uuidDistributor.next(), -1));
 		castles.add(new Castle(gameboardX/2 + gameboardX/4, gameboardY/2 + 50, uuidDistributor.next(), -1));
 		castles.add(new Castle(gameboardX/2, gameboardY/2 - gameboardY/3 + 50, uuidDistributor.next(), -1));
-		castles.add(new Castle(gameboardX/2, gameboardY/2 + gameboardY/3 + 50, uuidDistributor.next(), -1));
+		castles.add(new Castle(gameboardX/2, gameboardY/2 + gameboardY/3 + 50, uuidDistributor.next(), -1));*/
 		for(Castle castle : castles) {
 			sendToAll(castle.toJSON());
 		}
@@ -530,7 +546,7 @@ public class ServerMain {
 	}	
 	
 	public static void firstFire(JWebSocketListener jwsl, TokenServer server) {
-		jwsl.distributeCastles();		
+		jwsl.distributeCastles(1280, 720);		
 		gameFire(jwsl, server);
 	}
 	
