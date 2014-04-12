@@ -10,6 +10,8 @@ var joinButton = new Label();
 var testButton = new Label();
 
 var startButtonClick = function() {
+	establishWS();
+
 	core.rootScene.removeChild(startButton);
 	core.rootScene.removeChild(tutorButton);
 	

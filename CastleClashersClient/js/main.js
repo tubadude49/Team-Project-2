@@ -1,5 +1,4 @@
-window.onload = function(){
-	establishWS();	
+window.onload = function(){	
 	establishCore();
 }
 
@@ -16,9 +15,14 @@ var establishCore = function() {
 				'assets/castle.png', 'assets/castle_bronze.png', 'assets/castle_silver.png', 'assets/castle_gold.png',
 				'assets/redcross.png', 'assets/defense.png', 'assets/attack2.png', 'assets/upgrade.png', 'assets/veterancy.png',
 				'assets/xp.png', 'assets/speed.png', 'assets/cobble.png', 'assets/grass1.png', 'assets/upgradeCastle.png',
-				'assets/war.png', 'assets/alliance.png','assets/flags.png','assets/bar.png','assets/fireball.png','assets/swords.png');
+				'assets/war.png', 'assets/alliance.png','assets/flags.png','assets/bar.png','assets/fireball.png','assets/swords.png',
+				'assets/yellowpix.png');
 	
 	core.onload = function() {
+		vert1.image = core.assets['assets/yellowpix.png'];
+		vert2.image = core.assets['assets/yellowpix.png'];
+		hori1.image = core.assets['assets/yellowpix.png'];
+		hori2.image = core.assets['assets/yellowpix.png'];
 		
 		startButton.text = "Start";
 		startButton.x = core.width / 2 - 100;

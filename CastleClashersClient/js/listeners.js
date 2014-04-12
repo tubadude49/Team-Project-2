@@ -16,15 +16,41 @@ var handleRightClick = function(event) {
 				ws.send(JSON.stringify(fields));
 			}
 		}
-		/*clickArray.push(selected);
-		unitClick(selected);
-		uiClick(selected);*/
 	}
 	clearUI();
 	selected_objs = [];
 	clickArray = [];
 	event.preventDefault();
 	return false;
+}
+
+var vert1 = new Sprite(1,1);
+var vert2 = new Sprite(1,1);
+var hori1 = new Sprite(1,1);
+var hori2 = new Sprite(1,1);
+var handleMouseMove = function(event) {
+	if(clickStart && clickStart.x && clickStart.y) {
+		var maxStartY, minStartY, maxStartX, minStartX;	
+		maxStartY = Math.max(clickStart.y, event.offsetY);
+		minStartY = Math.min(clickStart.y, event.offsetY);
+		maxStartX = Math.max(clickStart.x, event.offsetX);
+		minStartX = Math.min(clickStart.x, event.offsetX);
+		
+		vert1.moveTo(minStartX, minStartY);
+		vert2.moveTo(minStartX, maxStartY);
+		vert1.width = vert2.width = maxStartX - minStartX;
+		hori1.moveTo(minStartX, minStartY);
+		hori2.moveTo(maxStartX, minStartY);
+		hori1.height = hori2.height = maxStartY - minStartY;
+		
+		if(!clickStart.init) {
+			core.rootScene.addChild(vert1);
+			core.rootScene.addChild(vert2);
+			core.rootScene.addChild(hori1);
+			core.rootScene.addChild(hori2);
+			clickStart.init = true;
+		}
+	}
 }
 
 /*var offerAllianceClick = function(event) {
@@ -73,8 +99,7 @@ var clearUI = function() {
 	core.rootScene.removeChild(buyArmor);
 	core.rootScene.removeChild(health);
 	core.rootScene.removeChild(upgrade);
-	/*core.rootScene.removeChild(warCastle);
-	core.rootScene.removeChild(allianceCastle);*/
+	/*core.rootScene.removeChild(allianceCastle);*/
 	
 }
 
@@ -84,17 +109,18 @@ var startClick = function(event) {
 	clickStart.y = event.y;
 }
 
-/*var dragClick = function(event) {
-	console.log('drag x:' + event.x + ' y:' + event.y);
-}*/
-
 var endClick = function(event) {
 	selected_objs = [];
+	var maxY, minY, maxX, minX;	
+		maxY = Math.max(clickStart.y, event.y);
+		minY = Math.min(clickStart.y, event.y);
+		maxX = Math.max(clickStart.x, event.x);
+		minX = Math.min(clickStart.x, event.x);
 	for(i=0;i<core.rootScene.childNodes.length;i++) {
-		if((clickStart.x <= core.rootScene.childNodes[i].x || clickStart.x <= core.rootScene.childNodes[i].x + core.rootScene.childNodes[i].width)
-		&& (event.x >= core.rootScene.childNodes[i].x || event.x >= core.rootScene.childNodes[i].x + core.rootScene.childNodes[i].width)
-		&& (clickStart.y <= core.rootScene.childNodes[i].y || clickStart.y <= core.rootScene.childNodes[i].y + core.rootScene.childNodes[i].height)
-		&& (event.y >= core.rootScene.childNodes[i].y || event.y >= core.rootScene.childNodes[i].y + core.rootScene.childNodes[i].height)
+		if((minX <= core.rootScene.childNodes[i].x || minX <= core.rootScene.childNodes[i].x + core.rootScene.childNodes[i].width)
+		&& (maxX >= core.rootScene.childNodes[i].x || maxX >= core.rootScene.childNodes[i].x + core.rootScene.childNodes[i].width)
+		&& (minY <= core.rootScene.childNodes[i].y || minY <= core.rootScene.childNodes[i].y + core.rootScene.childNodes[i].height)
+		&& (maxY >= core.rootScene.childNodes[i].y || maxY >= core.rootScene.childNodes[i].y + core.rootScene.childNodes[i].height)
 		) {
 			if(core.rootScene.childNodes[i].type 
 			&& (core.rootScene.childNodes[i].type == 'unit' || core.rootScene.childNodes[i].type == 'castle')) {				
@@ -117,10 +143,13 @@ var endClick = function(event) {
 	}
 	if(selected_objs.length <= 0) {		
 		clearUI();
-	}
-	
+	}	
 	selectedUnitUI(selected_objs);
-	//console.log(selected_objs.length);
+	clickStart = {};
+	core.rootScene.removeChild(vert1);
+	core.rootScene.removeChild(vert2);
+	core.rootScene.removeChild(hori1);
+	core.rootScene.removeChild(hori2);
 }
 
 var selectedUnitUI = function(selected_objs) {
@@ -139,7 +168,7 @@ var selectedUnitUI = function(selected_objs) {
 	var cannonCount = 0;
 	
 	for(i=0;i<selected_objs.length;i++) {
-		console.log(selected_objs[i]);
+		//console.log(selected_objs[i]);
 		if(selected_objs[i].type == 'castle') {
 			castleCount++;
 		} else if(selected_objs[i].type == 'unit') {

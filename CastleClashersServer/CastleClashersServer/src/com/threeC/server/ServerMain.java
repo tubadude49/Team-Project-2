@@ -470,8 +470,10 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 							player.active = true;
 							joinedPlayers++;
 							status = joinedPlayers < numPlayers ? 0 : 1;
-							sendToAll("{\"type\":\"start\"}");
-							System.out.println("status: " + status);
+							if(status == 1) {
+								sendToAll("{\"type\":\"start\"}");
+								System.out.println("status: " + status);
+							}
 						}
 					}
 					
