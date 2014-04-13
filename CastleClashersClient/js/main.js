@@ -6,7 +6,7 @@ var clickArray = [];
 var clickStart;
 
 var establishCore = function() {
-	core = new Core(1280+coreUISize,720);
+	core = new Core(1280+coreUISize,1280);
 
 	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/button_select.png', 'assets/button_select_selected.png', 
 				'assets/button_attack.png', 'assets/button_attack_selected.png', 'assets/attackUI.png', 'assets/upgradeUI.png', 
