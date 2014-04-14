@@ -16,7 +16,7 @@ var establishCore = function() {
 				'assets/redcross.png', 'assets/defense.png', 'assets/attack2.png', 'assets/upgrade.png', 'assets/veterancy.png',
 				'assets/xp.png', 'assets/speed.png', 'assets/cobble.png', 'assets/grass1.png', 'assets/upgradeCastle.png',
 				'assets/war.png', 'assets/alliance.png','assets/flags.png','assets/bar.png','assets/fireball.png','assets/swords.png',
-				'assets/yellowpix.png');
+				'assets/yellowpix.png','assets/greenArrow.png','assets/tut.png');
 	
 	core.onload = function() {
 		vert1.image = core.assets['assets/yellowpix.png'];

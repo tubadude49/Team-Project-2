@@ -66,10 +66,6 @@ var leaveClick = function(event) {
 	core.rootScene.removeChild(leaveButton);	
 }
 
-var tutorClick = function() {
-	console.log(" there is no tutorial :( ");
-}
-
 var initGameboard = function() {
 	core.rootScene.removeChild(startButton);
 	core.rootScene.removeChild(tutorButton);
