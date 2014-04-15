@@ -13,7 +13,6 @@ public class Player implements JSONStringifiable {
 	public float income = 0;
 	
 	public long alliance = -1l;
-	public long war = -1l;
 	
 	public String sessionId;
 		
@@ -34,11 +33,9 @@ public class Player implements JSONStringifiable {
 	
 	@Override
 	public String toJSON() {
-		JSONObject json = new JSONObject(this, new String[] { "uuid", "name", "gold", "income" } );
+		JSONObject json = new JSONObject(this, new String[] { "uuid", "name", "gold", "income", "alliance" } );
 		try {
 			json.put("type", "instance");
-			json.put("alliance", alliance);
-			json.put("war", war);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

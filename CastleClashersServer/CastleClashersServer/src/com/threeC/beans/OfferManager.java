@@ -9,8 +9,21 @@ public class OfferManager {
 		
 	}
 	
-	public void newOffer(Player source, Player target) {
-		offers.add(new Offer(source, target));
+	public void offer(Player source, Player target) {
+		boolean found = false;
+		for(int i=0;i<offers.size();i++) {
+			Offer offer = offers.get(i);
+			if((offer.source.uuid == source.uuid && offer.target.uuid == target.uuid)
+			|| (offer.source.uuid == target.uuid && offer.target.uuid == source.uuid)) {
+				offer.accept();
+				offers.remove(i);
+				found = true;
+				break;
+			}
+		}
+		if(!found) {
+			offers.add(new Offer(source, target));			
+		}
 	}
 	
 	public void accept(Player source, Player target) {
@@ -46,7 +59,9 @@ class Offer {
 	}
 	
 	public void accept() {
-		source.alliance = target.uuid;
-		target.alliance = source.uuid;		
+		if(source.alliance < 0 && target.alliance < 0) {
+			source.alliance = target.uuid;
+			target.alliance = source.uuid;
+		}
 	}
 }

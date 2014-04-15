@@ -176,7 +176,7 @@ var selectedUnitUI = function(selected_objs) {
 			}		
 		}
 	}
-	var currentLocation = core.height*1/2;
+	var currentLocation = core.height*5/8;
 	
 	if(castleCount > 0) {
 		castleIcon.image = core.assets['assets/castle.png'];
@@ -470,14 +470,18 @@ var uiClick = function(event) {
  	}
 	else if (event.type == "castle" && event.owner != instance.uuid){
 		//BUTTONS
-		if(instance.alliance == event.owner) {
-			allianceCastle.text = "Break Alliance";
+		if(event.owner != -1 && instance.alliance == event.owner) {
+			allianceCastle.text = "Break   Alliance";
+			allianceCastle.width = 140;
+			allianceCastle.uuid = event.owner;
+			allianceCastle.removeEventListener(offerAllianceClick);
 			allianceCastle.on(enchant.Event.TOUCH_START, breakAllianceClick);
 			core.rootScene.addChild(allianceCastle);
-		} else {
+		} else if(event.owner != -1){
 			allianceCastle.text = "Request Alliance";
 			allianceCastle.width = 140;
 			allianceCastle.uuid = event.owner;
+			allianceCastle.removeEventListener(breakAllianceClick);
 			allianceCastle.on(enchant.Event.TOUCH_START, offerAllianceClick);
 			core.rootScene.addChild(allianceCastle);			
 		}

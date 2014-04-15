@@ -16,6 +16,12 @@ var establishWS = function () {
 			if(data.type == 'instance') {
 				instance = data;
 				updateGold(instance);
+				for(i=0;i<selected_objs.length;i++) {
+					if(selected_objs[i].type == 'castle') {
+						uiClick(selected_objs[i]);
+						break;
+					}
+				}
 			} else if(data.type == 'unit') {				
 				var found = false;
 				for(i=0;i<units.length;i++) {
