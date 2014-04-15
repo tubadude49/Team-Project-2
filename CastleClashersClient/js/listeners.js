@@ -53,26 +53,21 @@ var handleMouseMove = function(event) {
 	}
 }
 
-/*var offerAllianceClick = function(event) {
+var offerAllianceClick = function(event) {
+	/*console.log(event);
+	console.log(this);*/
 	var request = {};
 	request.action = 'offer';
-	request.target = selected_obj.owner;
-	ws.send(JSON.stringify(request));
-}
-
-var declareWarClick = function(event) {
-	var request = {};
-	request.action = 'declare';
-	request.target = selected_obj.owner;
+	request.target = this.uuid;
 	ws.send(JSON.stringify(request));
 }
 
 var breakAllianceClick = function(event) {
 	var request = {};
 	request.action = 'break';
-	request.target = selected_obj.owner;
+	request.target = this.uuid;
 	ws.send(JSON.stringify(request));
-}*/
+}
 
 var clearUI = function() {		
 	core.rootScene.removeChild(healRegiment);
@@ -99,7 +94,7 @@ var clearUI = function() {
 	core.rootScene.removeChild(buyArmor);
 	core.rootScene.removeChild(health);
 	core.rootScene.removeChild(upgrade);
-	/*core.rootScene.removeChild(allianceCastle);*/
+	core.rootScene.removeChild(allianceCastle);
 	
 }
 
@@ -345,8 +340,7 @@ var uiClick = function(event) {
 	
 	clearUI();
 	
-	//  USED FOR CASTLE IF STATEMENT 
-		
+	//  USED FOR CASTLE IF STATEMENT 		
 	healCastle.text = "Heal";
 	healCastle.x = core.width-coreUISize+25;
 	healCastle.y = 20;
@@ -359,33 +353,30 @@ var uiClick = function(event) {
 	upgradeCastle.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
 	upgradeCastle.font = "bold 24px ken-vector-future-thin";
 	
- 	buyInfantry.text = "Buy Infantry";
+ 	buyInfantry.text = "Buy                               Infantry";
+	buyInfantry.width = 140;
  	buyInfantry.x = core.width-coreUISize+25;
 	buyInfantry.y = upgradeCastle.y+50;
 	buyInfantry.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick);
 	buyInfantry.font = "bold 24px ken-vector-future-thin";	
 	
- 	buyCavalry.text = "Buy Cavalry";
+ 	buyCavalry.text = "Buy                               Cavalry";
+	buyCavalry.width = 140;
  	buyCavalry.x = core.width-coreUISize+25;
-	buyCavalry.y = buyInfantry.y + 50;
+	buyCavalry.y = buyInfantry.y + 80;
 	buyCavalry.addEventListener(enchant.Event.TOUCH_START, buyCavalryClick);
 	buyCavalry.font = "bold 24px ken-vector-future-thin";
 	
- 	buyArmor.text = "Buy Armor";
+ 	buyArmor.text = "Buy                               Armor";
+	buyArmor.width = 140;
  	buyArmor.x = core.width-coreUISize+25;
-	buyArmor.y = buyCavalry.y + 50;
+	buyArmor.y = buyCavalry.y + 80;
 	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
 	buyArmor.font = "bold 24px ken-vector-future-thin";
 	
-	/*warCastle.image = core.assets['assets/war.png'];
-	warCastle.x = core.width-coreUISize;
-	warCastle.addEventListener(enchant.Event.TOUCH_START, declareWarClick);
- 	
-	allianceCastle.image = core.assets['assets/alliance.png'];
-	allianceCastle.x = core.width-coreUISize;
-	allianceCastle.y = warCastle.height;
-	warCastle.addEventListener(enchant.Event.TOUCH_START, offerAllianceClick)*/
- 	//--------------------------------------
+	allianceCastle.x = core.width-coreUISize+25;
+	allianceCastle.y = 500;
+	allianceCastle.font = "bold 24px ken-vector-future-thin";
  	
 	//    UNIT IF STATEMENT 
 	
@@ -479,8 +470,17 @@ var uiClick = function(event) {
  	}
 	else if (event.type == "castle" && event.owner != instance.uuid){
 		//BUTTONS
-		/*core.rootScene.addChild(warCastle);
-		core.rootScene.addChild(allianceCastle);*/
+		if(instance.alliance == event.owner) {
+			allianceCastle.text = "Break Alliance";
+			allianceCastle.on(enchant.Event.TOUCH_START, breakAllianceClick);
+			core.rootScene.addChild(allianceCastle);
+		} else {
+			allianceCastle.text = "Request Alliance";
+			allianceCastle.width = 140;
+			allianceCastle.uuid = event.owner;
+			allianceCastle.on(enchant.Event.TOUCH_START, offerAllianceClick);
+			core.rootScene.addChild(allianceCastle);			
+		}
 		//   LABELS
 		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
