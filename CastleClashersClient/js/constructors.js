@@ -110,9 +110,6 @@ var Unit = function(subtype, x, y) {
 	this.sprite.type = "unit";
 	this.sprite.built = false;
 	this.sprite.tl.setTimeBased();
-	/*this.sprite.addEventListener(enchant.Event.TOUCH_START, unitClick);
-	this.sprite.addEventListener(enchant.Event.TOUCH_START, uiClick);
-	*/
 	this.sprite.on(enchant.Event.TOUCH_START, startClick);
 	this.sprite.on(enchant.Event.TOUCH_END, endClick);
 	
@@ -122,6 +119,7 @@ var Unit = function(subtype, x, y) {
 	this.hsprite.tl.setTimeBased();
 }
 
+// a battle is represented by a sword icon
 var Battle = function() {
 	this.sprite = new Sprite(21,21);
 	this.sprite.image = core.assets['assets/swords.png'];
@@ -131,6 +129,7 @@ var Battle = function() {
 	this.sprite.tl.setTimeBased();
 }
 
+// a siege is represented by a fireball icon
 var Siege = function() {
 	this.sprite = new Sprite(43,39);
 	this.sprite.image = core.assets['assets/fireball.png'];
@@ -140,6 +139,7 @@ var Siege = function() {
 	this.sprite.tl.setTimeBased();
 }
 
+// equivalent to the Server's Player class
 var Instance = function() {
 	this.type = "instance";
 	this.uuid = 0;
@@ -150,6 +150,8 @@ var Instance = function() {
 	this.selected = 0;
 }
 
+// function that updates the gold image and label
+// called from ws.js when a message containing an instance is received
 var updateGold = function(instance) {
 	
 	if (goldAmount != null) {
@@ -171,6 +173,8 @@ var updateGold = function(instance) {
 	}
 }
 
+// displays the battle icon to the client
+// called from ws.js when a battle is received
 var drawBattle = function(data) {
 	var batt = new Battle();
 	batt.sprite.x = data.x;
@@ -181,6 +185,7 @@ var drawBattle = function(data) {
 	});		
 }
 
+// displays the siege icon to the client; gives an indication the users that a siege is happening
 var drawSiege = function(data) {
 	var siege_engine = new Siege();
 	siege_engine.sprite.x = data.x;
@@ -191,6 +196,8 @@ var drawSiege = function(data) {
 	});		
 }
 
+// "error messages" display when a user tries to do something they cannot do
+// Ex. Trying to upgrade a unit with maximum upgrade level
 var drawMessage = function(data)
 {
 	message.text = data;
@@ -208,6 +215,7 @@ var drawMessage = function(data)
 	
 }
 
+// creates a castle object from data received from the server
 var castleFromData = function(castle, data) {
 	castle.sprite.uuid = data.uuid;
 	castle.sprite.health = data.health;
@@ -217,6 +225,7 @@ var castleFromData = function(castle, data) {
 	return castle;
 }
 
+// creates a unit from data received from the server
 var unitFromData = function(unit, data) {
 	unit.sprite.uuid = data.uuid;
 	unit.sprite.health = data.health;
@@ -247,6 +256,7 @@ var unitFromData = function(unit, data) {
 	return unit;
 }
 
+// updates the castle image based on upgrade level as well as flag color to indicate ownership
 var updateCastle = function(c_sprite) {
 	c_sprite.fsprite.frame = c_sprite.owner + 1;
 	if (c_sprite.upgrade == 0) {
