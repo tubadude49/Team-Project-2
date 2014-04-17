@@ -87,11 +87,11 @@ var clearUI = function() {
 	core.rootScene.removeChild(unitXPImg);
 	core.rootScene.removeChild(unitXP);
 	
-	core.rootScene.removeChild(healCastle);
-	core.rootScene.removeChild(upgradeCastle);
-	core.rootScene.removeChild(buyInfantry);
-	core.rootScene.removeChild(buyCavalry);
-	core.rootScene.removeChild(buyArmor);
+	core.rootScene.removeChild(HealGroup);
+	core.rootScene.removeChild(UpgradeGroup);
+	core.rootScene.removeChild(InfantryGroup);
+	core.rootScene.removeChild(CavalryGroup);
+	core.rootScene.removeChild(CannonGroup);
 	core.rootScene.removeChild(health);
 	core.rootScene.removeChild(upgrade);
 	core.rootScene.removeChild(allianceCastle);
@@ -139,7 +139,7 @@ var endClick = function(event) {
 	if(selected_objs.length <= 0) {		
 		clearUI();
 	}	
-	selectedUnitUI(selected_objs);
+	selectedUnitUI();
 	clickStart = {};
 	core.rootScene.removeChild(vert1);
 	core.rootScene.removeChild(vert2);
@@ -147,7 +147,7 @@ var endClick = function(event) {
 	core.rootScene.removeChild(hori2);
 }
 
-var selectedUnitUI = function(selected_objs) {
+var selectedUnitUI = function() {
 	core.rootScene.removeChild(castleIcon);
 	core.rootScene.removeChild(infantryIcon);
 	core.rootScene.removeChild(cavalryIcon);
@@ -341,61 +341,149 @@ var uiClick = function(event) {
 	clearUI();
 	
 	//  USED FOR CASTLE IF STATEMENT 		
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ HEAL GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	healCastle.text = "Heal";
 	healCastle.x = core.width-coreUISize+25;
 	healCastle.y = 20;
-	healCastle.addEventListener(enchant.Event.TOUCH_START, healClick);
 	healCastle.font = "bold 24px ken-vector-future-thin";
 	
+	healGold.image = core.assets['assets/gold.png'];
+	healGold.frame = 10;
+	healGold.x = healCastle.x;
+	healGold.y = healCastle.y + healCastle._boundHeight + 2;
+		
+	// calculate cost based on selected object array
+	var cost = 0;
+	for(i=0;i<selected_objs.length;i++) {
+		if(selected_objs[i].type == 'castle') {
+			cost += 50;
+		} else if(selected_objs[i].type == 'unit') {
+			cost += 10;		
+		}
+	}
+	healCost.text = cost;
+	healCost.font = "24px ken-vector-future-thin";
+	healCost.x = healGold.x + healGold.width + 5;
+	healCost.y = healGold.y;
+	HealGroup.addChild(healCastle);
+	HealGroup.addChild(healGold);
+	HealGroup.addChild(healCost);
+	HealGroup.addEventListener(enchant.Event.TOUCH_START, healClick);
+	console.log(HealGroup);
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UPGRADE GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	upgradeCastle.text = "Upgrade";
 	upgradeCastle.x = core.width-coreUISize+25;
-	upgradeCastle.y = healCastle.y + 50; //healCastle.height;
-	upgradeCastle.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
+	upgradeCastle.y = healCastle.y + 80; //healCastle.height;
 	upgradeCastle.font = "bold 24px ken-vector-future-thin";
 	
- 	buyInfantry.text = "Buy                               Infantry";
-	buyInfantry.width = 140;
- 	buyInfantry.x = core.width-coreUISize+25;
-	buyInfantry.y = upgradeCastle.y+50;
-	buyInfantry.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick);
-	buyInfantry.font = "bold 24px ken-vector-future-thin";	
+	upgradeGold.image = core.assets['assets/gold.png'];
+	upgradeGold.frame = 10;
+	upgradeGold.x = upgradeCastle.x;
+	upgradeGold.y = upgradeCastle.y + upgradeCastle._boundHeight + 2;
 	
- 	buyCavalry.text = "Buy                               Cavalry";
-	buyCavalry.width = 140;
- 	buyCavalry.x = core.width-coreUISize+25;
+	// calculate cost based on selected object array
+	cost = 0;
+	for(i=0;i<selected_objs.length;i++) {
+		if(selected_objs[i].type == 'castle') {
+			cost += 100;
+		} else if(selected_objs[i].type == 'unit') {
+			cost += 15;		
+		}
+	}	
+	
+	upgradeCost.text = cost;
+	upgradeCost.font = "24px ken-vector-future-thin";
+	upgradeCost.x = upgradeGold.x + upgradeGold.width + 5;
+	upgradeCost.y = upgradeGold.y;
+	
+	UpgradeGroup.addChild(upgradeCastle);
+	UpgradeGroup.addChild(upgradeGold);
+	UpgradeGroup.addChild(upgradeCost);
+	UpgradeGroup.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INFANTRY GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 	buyInfantry.text = "Infantry";
+	buyInfantry.x = core.width-coreUISize+25;
+	buyInfantry.y = upgradeCastle.y + 80;
+	my_font = 24;
+	buyInfantry.font = "bold " + my_font + "px ken-vector-future-thin";	
+	while(buyInfantry._boundWidth > 150) {
+		buyInfantry.font = "bold " + --my_font + "px ken-vector-future-thin";
+	}
+	
+	infantryGold.image = core.assets['assets/gold.png'];
+	infantryGold.frame = 10;
+	infantryGold.x = buyInfantry.x;
+	infantryGold.y = buyInfantry.y + buyInfantry._boundHeight + 2;
+	
+	infantryCost.text = '25';
+	infantryCost.font = "24px ken-vector-future-thin";
+	infantryCost.x = infantryGold.x + infantryGold.width + 5;
+	infantryCost.y = infantryGold.y;
+	
+	InfantryGroup.addChild(buyInfantry);
+	InfantryGroup.addChild(infantryGold);
+	InfantryGroup.addChild(infantryCost);
+	InfantryGroup.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick);
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CAVALRY GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 	buyCavalry.text = "Cavalry";
+	buyCavalry.x = core.width-coreUISize+25;
 	buyCavalry.y = buyInfantry.y + 80;
-	buyCavalry.addEventListener(enchant.Event.TOUCH_START, buyCavalryClick);
 	buyCavalry.font = "bold 24px ken-vector-future-thin";
+	my_font = 24;
+	buyCavalry.font = "bold " + my_font + "px ken-vector-future-thin";	
+	while(buyCavalry._boundWidth > 150) {
+		buyCavalry.font = "bold " + --my_font + "px ken-vector-future-thin";
+	}
 	
- 	buyArmor.text = "Buy                               Armor";
-	buyArmor.width = 140;
- 	buyArmor.x = core.width-coreUISize+25;
+	cavalryGold.image = core.assets['assets/gold.png'];
+	cavalryGold.frame = 10;
+	cavalryGold.x = buyCavalry.x;
+	cavalryGold.y = buyCavalry.y + buyCavalry._boundHeight + 2;
+	
+	cavalryCost.text = '25';
+	cavalryCost.font = "24px ken-vector-future-thin";
+	cavalryCost.x = cavalryGold.x + cavalryGold.width + 5;
+	cavalryCost.y = cavalryGold.y;
+	
+	CavalryGroup.addChild(buyCavalry);
+	CavalryGroup.addChild(cavalryGold);
+	CavalryGroup.addChild(cavalryCost);
+	CavalryGroup.addEventListener(enchant.Event.TOUCH_START, buyCavalryClick);
+	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CANNON GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 	buyArmor.text = "Cannon";
+	buyArmor.x = core.width-coreUISize+25;
 	buyArmor.y = buyCavalry.y + 80;
-	buyArmor.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
 	buyArmor.font = "bold 24px ken-vector-future-thin";
+	my_font = 24;
+	buyArmor.font = "bold " + my_font + "px ken-vector-future-thin";	
+	while(buyArmor._boundWidth > 150) {
+		buyArmor.font = "bold " + --my_font + "px ken-vector-future-thin";
+	}
+	
+	cannonGold.image = core.assets['assets/gold.png'];
+	cannonGold.frame = 10;
+	cannonGold.x = buyArmor.x;
+	cannonGold.y = buyArmor.y + buyArmor._boundHeight + 2;
+	
+	cannonCost.text = '25';
+	cannonCost.font = "24px ken-vector-future-thin";
+	cannonCost.x = cannonGold.x + cannonGold.width + 5;
+	cannonCost.y = cannonGold.y;
+	
+	CannonGroup.addChild(buyArmor);
+	CannonGroup.addChild(cannonGold);
+	CannonGroup.addChild(cannonCost);
+	CannonGroup.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
+	
 	
 	allianceCastle.x = core.width-coreUISize+25;
 	allianceCastle.y = 500;
 	allianceCastle.font = "bold 24px ken-vector-future-thin";
  	
-	//    UNIT IF STATEMENT 
-	
- 	healRegiment.text = "Heal";
- 	healRegiment.x = core.width-coreUISize+25;
-	healRegiment.y = 20;
-	healRegiment.addEventListener(enchant.Event.TOUCH_START, healClick);
-	healRegiment.font = "bold 24px ken-vector-future-thin";
-	
-	
- 	upgradeRegiment.text = "Upgrade";
- 	upgradeRegiment.x = core.width-coreUISize+25;
-	upgradeRegiment.y = healRegiment.y + 50;
-	upgradeRegiment.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
-	upgradeRegiment.font = "bold 24px ken-vector-future-thin";
- 	
- 	
- 	//    CASTLE STATS SETUP	
-	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CASTLE STATS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	healthImg.image = core.assets['assets/redcross.png'];
 	healthImg.x = 0;
 	healthImg.y = 9;
@@ -412,8 +500,7 @@ var uiClick = function(event) {
  	upgrade.x = upgradeImg.x + 40;
  	upgrade.y = healthImg.y;
  	
-	//     UNIT STATS SETUP
-		
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UNIT STATS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	unitAttackImg.image = core.assets['assets/attack2.png'];
 	unitAttackImg.x = upgradeImg.x + upgradeImg.width + 55 + 16;
 	unitAttackImg.y = healthImg.y;
@@ -454,22 +541,27 @@ var uiClick = function(event) {
 	unitXP.x = unitXPImg.x + 40;
 	unitXP.y = healthImg.y;
 	
+	// display interface objects based on type and ownership
 	if(event.type == "castle" && event.owner == instance.uuid) {
-		//   BUTTONS 
- 		core.rootScene.addChild(healCastle);
-		core.rootScene.addChild(upgradeCastle);
-		core.rootScene.addChild(buyInfantry);
-		core.rootScene.addChild(buyCavalry);
-		core.rootScene.addChild(buyArmor);
+		// UI for an owned castle
 		
-		//   LABELS
+		//   Purchase options 
+ 		core.rootScene.addChild(HealGroup);
+		core.rootScene.addChild(UpgradeGroup);
+		core.rootScene.addChild(InfantryGroup);
+		core.rootScene.addChild(CavalryGroup);
+		core.rootScene.addChild(CannonGroup);
+		
+		//   Statistics
 		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
 		core.rootScene.addChild(upgradeImg);
 		core.rootScene.addChild(upgrade);
  	}
 	else if (event.type == "castle" && event.owner != instance.uuid){
-		//BUTTONS
+		// UI for an unowned castle
+		
+		// Alliance options
 		if(event.owner != -1 && instance.alliance == event.owner) {
 			allianceCastle.text = "Break   Alliance";
 			allianceCastle.width = 140;
@@ -485,18 +577,21 @@ var uiClick = function(event) {
 			allianceCastle.on(enchant.Event.TOUCH_START, offerAllianceClick);
 			core.rootScene.addChild(allianceCastle);			
 		}
-		//   LABELS
+		//	Statistics
 		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
 		core.rootScene.addChild(upgradeImg);
 		core.rootScene.addChild(upgrade);	
-	}
-	else if (event.type == "unit" && event.owner == instance.uuid) {		
-		//   BUTTONS
-		core.rootScene.addChild(healRegiment);
-		core.rootScene.addChild(upgradeRegiment);
 		
-		// LABELS
+	} else if (event.type == "unit") {		
+		
+		if(event.owner == instance.uuid) {
+			//	Purchase options for owned unit
+			core.rootScene.addChild(HealGroup);
+			core.rootScene.addChild(UpgradeGroup);
+		}
+		
+		// Statistics
 		core.rootScene.addChild(healthImg);
 		core.rootScene.addChild(health);
 		core.rootScene.addChild(upgradeImg);
@@ -512,20 +607,5 @@ var uiClick = function(event) {
 		core.rootScene.addChild(unitXPImg);
 		core.rootScene.addChild(unitXP);
 	}
-	else if (event.type == "unit" && event.owner != instance.uuid) {
-		core.rootScene.addChild(healthImg);
-		core.rootScene.addChild(health);
-		core.rootScene.addChild(upgradeImg);
-		core.rootScene.addChild(upgrade);
-		core.rootScene.addChild(unitAttackImg);
-		core.rootScene.addChild(unitAttack);
-		core.rootScene.addChild(unitDefenseImg);
-		core.rootScene.addChild(unitDefense);
-		core.rootScene.addChild(unitSpeedImg);
-		core.rootScene.addChild(unitSpeed);
-		core.rootScene.addChild(veterancyImg);
-		core.rootScene.addChild(veterancy);
-		core.rootScene.addChild(unitXPImg);
-		core.rootScene.addChild(unitXP);
-	}
+	
  }

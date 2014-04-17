@@ -17,12 +17,27 @@ var buttonSelected = 0;
 // FOR CASTLES AND UNITS 
  
 var healCastle = new Label();
+var healGold = new Sprite(32, 32);
+var healCost = new Label();
+var HealGroup = new Group();
+var upgradeCastle = new Label();
+var upgradeGold = new Sprite(32, 32);
+var upgradeCost = new Label();
+var UpgradeGroup = new Group();
 var buyInfantry = new Label();
+var infantryGold = new Sprite(32, 32);
+var infantryCost = new Label();
+var InfantryGroup = new Group();
 var buyCavalry = new Label();
+var cavalryGold = new Sprite(32, 32);
+var cavalryCost = new Label();
+var CavalryGroup = new Group();
 var buyArmor = new Label();
+var cannonGold = new Sprite(32, 32);
+var cannonCost = new Label();
+var CannonGroup = new Group();
 var healRegiment = new Label();
 var upgradeRegiment = new Label();
-var upgradeCastle = new Label();
 var allianceCastle = new Label();
 
 // for selected unit UI
