@@ -20,7 +20,6 @@ import org.jwebsocket.config.JWebSocketConfig;
 import org.jwebsocket.instance.JWebSocketInstance;
 import org.jwebsocket.packetProcessors.JSONProcessor;
 
-import com.threeC.beans.OfferManager;
 import com.threeC.beans.Player;
 import com.threeC.beans.Castle;
 import com.threeC.beans.UUIDDistributor;
@@ -38,9 +37,6 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	public LinkedList<Player> players = new LinkedList<Player>();
 	LinkedList<Castle> castles = new LinkedList<Castle>();
 	LinkedList<Unit> units = new LinkedList<Unit>();
-	//OfferManager offerManager = new OfferManager();
-	//LinkedList<Battle> battles = new LinkedList<Battle>();
-	//LinkedList<Siege> sieges = new LinkedList<Siege>();
 	
 	UUIDDistributor uuidDistributor = new UUIDDistributor();
 	
@@ -62,7 +58,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		if(p1 < 0 && p2 < 0) { return; }
 		Player player1 = (Player)getByUUID(p1);	
 		if(player1 != null && player1.alliance == p2) {
-			//sendToAll("{\"type\":\"win\",\"player1\":" + player1.uuid + ",\"player2\":" + p2 + "}");
+			sendToAll("{\"type\":\"win\",\"player1\":" + player1.uuid + ",\"player2\":" + p2 + "}");
 			status = 2;
 		} else {
 			return;
@@ -147,11 +143,6 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 				return castles.get(i);
 			}
 		}
-		/*for(int i=0;i<battles.size();i++) {
-			if(battles.get(i).uuid == uuid) {
-				return battles.get(i);
-			}
-		}*/
 		for(int i=0;i<players.size();i++) {
 			if(players.get(i).uuid == uuid) {
 				return players.get(i);
@@ -434,21 +425,25 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 							if(target.offer != null && target.offer == player) {
 								player.alliance = target.uuid;
 								target.alliance = player.uuid;
-							} else {
+								sendToUUID(json.getLong("target"), "{\"type\":\"message\"," +
+										"\"message\":\"" + player.name 
+										+ " has accepted your alliance request\"}");
+							} else if(target.alliance != player.uuid) {
 								player.offer = target;
+								sendToUUID(json.getLong("target"), "{\"type\":\"message\"," +
+									"\"message\":\"" + player.name 
+									+ " has requested an alliance, to accept, request an alliance with him/her\"}");
 							}
-							//offerManager.offer(player, target);
 							sendToUUID(player.uuid, player.toJSON());
 							sendToUUID(json.getLong("target"), target.toJSON());
-							sendToUUID(json.getLong("target"), "{\"type\":\"message\"," +
-										"\"message\":\"" + player.name 
-										+ " has requested an alliance, to accept, request an alliance with him/her\"}");
 							//System.out.printf("src alliance: %d, trg alliance: %d%n",player.alliance,target.alliance);
 						}
 					} else if(json.getString("action").equals("break")
 							&& json.has("target") ) {
 						Player target = (Player)getByUUID(json.getLong("target"));
 						if(target != null) {
+							player.offer = null;
+							target.offer = null;
 							player.alliance = -1l;
 							target.alliance = -1l;
 							sendToUUID(player.uuid, player.toJSON());
@@ -550,7 +545,7 @@ public class ServerMain {
 				server.sendToken(wsc, JSONProcessor.JSONStringToToken(player.toJSON()));
 			}
 		}
-		//jwsl.checkWin();
+		jwsl.checkWin();
 		//System.out.println(jwsl.status);
 	}
 }

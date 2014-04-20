@@ -74,7 +74,7 @@ var initGameboard = function() {
 	core.rootScene.removeChild(joinButton);
 	core.rootScene.removeChild(leaveButton);
 
-	var background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
+	background = new Sprite(core.width-coreUISize, core.height - bottomUISize);
 	background.image = core.assets['assets/grass1.png'];
 	background.moveTo(0, 50);
 	//background.addEventListener(enchant.Event.TOUCH_START, backgroundClick);
@@ -82,7 +82,7 @@ var initGameboard = function() {
 	background.on(enchant.Event.TOUCH_END, endClick);
 	core.rootScene.addChild(background);
 	
-	var backgroundUI = new Sprite(coreUISize, core.height);
+	backgroundUI = new Sprite(coreUISize, core.height);
 	backgroundUI.image = core.assets['assets/cobble.png'];
 	backgroundUI.x = core.width - coreUISize;
 	core.rootScene.addChild(backgroundUI);

@@ -14,6 +14,9 @@ var goldImage;
 var goldAmount ;
 var buttonSelected = 0;
 
+var background;
+var backgroundUI;
+
 // FOR CASTLES AND UNITS 
  
 var healCastle = new Label();
@@ -38,7 +41,8 @@ var cannonCost = new Label();
 var CannonGroup = new Group();
 var healRegiment = new Label();
 var upgradeRegiment = new Label();
-var allianceCastle = new Label();
+var allianceCastleBreak = new Label();
+var allianceCastleOffer = new Label();
 
 // for selected unit UI
 var castleIcon = new Sprite(83, 41);
@@ -213,18 +217,18 @@ var drawSiege = function(data) {
 
 // "error messages" display when a user tries to do something they cannot do
 // Ex. Trying to upgrade a unit with maximum upgrade level
-var drawMessage = function(data)
+var drawMessage = function(data, color)
 {
 	message.text = data;
-	message.color = '#f00';//Red
-	message.font = "bold 60px ken-vector-future-thin";
+	message.color = color;//Red
+	message.font = "bold 48px ken-vector-future-thin";
 	message.width = 1000;
 	message.x = (core.width - message.width - 200)/2;
 	message.y = core.height/2;
 	
 	core.rootScene.addChild(message);
 	message.tl.setTimeBased();
-	message.tl.delay(2500).then(function() {
+	message.tl.delay(2500).then(function() {		
 		core.rootScene.removeChild(message);
 	});
 	
@@ -282,6 +286,39 @@ var updateCastle = function(c_sprite) {
 		c_sprite.image = core.assets['assets/castle_silver.png'];
 	} else {
 		c_sprite.image = core.assets['assets/castle_gold.png'];
-	}	
+	}
+}
 
+var clearGame = function() {
+	clearUI();
+	core.rootScene.removeChild(background);
+	core.rootScene.removeChild(backgroundUI);
+	core.rootScene.removeChild(goldImage);
+	core.rootScene.removeChild(goldAmount);
+	
+	for(i=0;i<units.length;i++) {
+		core.rootScene.removeChild(units[i].sprite);
+		core.rootScene.removeChild(units[i].hsprite);
+	}
+	for(i=0;i<castles.length;i++) {
+		core.rootScene.removeChild(castles[i].sprite);
+		core.rootScene.removeChild(castles[i].sprite.fsprite);
+	}
+	
+	core.rootScene.removeChild(castleIcon);
+	core.rootScene.removeChild(selectedCastles);
+	core.rootScene.removeChild(infantryIcon);
+	core.rootScene.removeChild(selectedInfantry);
+	core.rootScene.removeChild(cavalryIcon);
+	core.rootScene.removeChild(selectedCavalry);
+	core.rootScene.removeChild(armorIcon);
+	core.rootScene.removeChild(selectedArmor);	
+	
+	core.rootScene.removeChild(nameTextbox);
+	core.rootScene.removeChild(nameLabel);
+	core.rootScene.removeChild(joinButton);
+	core.rootScene.removeChild(leaveButton);
+	
+	core.rootScene.addChild(startButton);
+	core.rootScene.addChild(tutorButton);
 }

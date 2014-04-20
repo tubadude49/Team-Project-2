@@ -84,7 +84,14 @@ var establishWS = function () {
 				initGameboard();
 			} else if(data.type == 'message') {
 				console.log(data.message);
-				drawMessage(data.message);
+				drawMessage(data.message, '#f00');
+			} else if(data.type == 'win') {
+				if(data.player1 == instance.uuid || data.player2 == instance.uuid) {
+					drawMessage('YOU WIN!', '#000000'); //tmp color
+				} else {
+					drawMessage('YOU LOSE!', '#ffff00'); // tmp color
+				}
+				setTimeout(clearGame, 3000);
 			}
 		}
 	};
@@ -95,5 +102,7 @@ var establishWS = function () {
 	};
 	ws.onclose = function(event) {
 		console.log("connection closed");
+		drawMessage('connection lost to server', '#f00');
+		setTimeout(clearGame, 3000);
 	};
 }

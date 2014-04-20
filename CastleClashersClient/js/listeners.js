@@ -54,8 +54,6 @@ var handleMouseMove = function(event) {
 }
 
 var offerAllianceClick = function(event) {
-	/*console.log(event);
-	console.log(this);*/
 	var request = {};
 	request.action = 'offer';
 	request.target = this.uuid;
@@ -94,7 +92,8 @@ var clearUI = function() {
 	core.rootScene.removeChild(CannonGroup);
 	core.rootScene.removeChild(health);
 	core.rootScene.removeChild(upgrade);
-	core.rootScene.removeChild(allianceCastle);
+	core.rootScene.removeChild(allianceCastleOffer);
+	core.rootScene.removeChild(allianceCastleBreak);
 	
 }
 
@@ -369,7 +368,6 @@ var uiClick = function(event) {
 	HealGroup.addChild(healGold);
 	HealGroup.addChild(healCost);
 	HealGroup.addEventListener(enchant.Event.TOUCH_START, healClick);
-	console.log(HealGroup);
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UPGRADE GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	upgradeCastle.text = "Upgrade";
 	upgradeCastle.x = core.width-coreUISize+25;
@@ -479,9 +477,12 @@ var uiClick = function(event) {
 	CannonGroup.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
 	
 	
-	allianceCastle.x = core.width-coreUISize+25;
-	allianceCastle.y = 500;
-	allianceCastle.font = "bold 24px ken-vector-future-thin";
+	allianceCastleOffer.x = core.width-coreUISize+25;
+	allianceCastleOffer.y = 500;
+	allianceCastleOffer.font = "bold 24px ken-vector-future-thin";
+	allianceCastleBreak.x = core.width-coreUISize+25;
+	allianceCastleBreak.y = 500;
+	allianceCastleBreak.font = "bold 24px ken-vector-future-thin";
  	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CASTLE STATS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	healthImg.image = core.assets['assets/redcross.png'];
@@ -563,19 +564,19 @@ var uiClick = function(event) {
 		
 		// Alliance options
 		if(event.owner != -1 && instance.alliance == event.owner) {
-			allianceCastle.text = "Break   Alliance";
-			allianceCastle.width = 140;
-			allianceCastle.uuid = event.owner;
-			allianceCastle.removeEventListener(offerAllianceClick);
-			allianceCastle.on(enchant.Event.TOUCH_START, breakAllianceClick);
-			core.rootScene.addChild(allianceCastle);
+			allianceCastleBreak.text = "Break   Alliance";
+			allianceCastleBreak.width = 140;
+			allianceCastleBreak.uuid = event.owner;
+			allianceCastleBreak.on(enchant.Event.TOUCH_START, breakAllianceClick);
+			core.rootScene.removeChild(allianceCastleOffer);
+			core.rootScene.addChild(allianceCastleBreak);
 		} else if(event.owner != -1){
-			allianceCastle.text = "Request Alliance";
-			allianceCastle.width = 140;
-			allianceCastle.uuid = event.owner;
-			allianceCastle.removeEventListener(breakAllianceClick);
-			allianceCastle.on(enchant.Event.TOUCH_START, offerAllianceClick);
-			core.rootScene.addChild(allianceCastle);			
+			allianceCastleOffer.text = "Request Alliance";
+			allianceCastleOffer.width = 140;
+			allianceCastleOffer.uuid = event.owner;
+			allianceCastleOffer.on(enchant.Event.TOUCH_START, offerAllianceClick);
+			core.rootScene.removeChild(allianceCastleBreak);
+			core.rootScene.addChild(allianceCastleOffer);			
 		}
 		//	Statistics
 		core.rootScene.addChild(healthImg);
