@@ -38,7 +38,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	public LinkedList<Player> players = new LinkedList<Player>();
 	LinkedList<Castle> castles = new LinkedList<Castle>();
 	LinkedList<Unit> units = new LinkedList<Unit>();
-	OfferManager offerManager = new OfferManager();
+	//OfferManager offerManager = new OfferManager();
 	//LinkedList<Battle> battles = new LinkedList<Battle>();
 	//LinkedList<Siege> sieges = new LinkedList<Siege>();
 	
@@ -431,7 +431,13 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 							&& json.has("target") ) {
 						Player target = (Player)getByUUID(json.getLong("target"));						
 						if(target != null) {
-							offerManager.offer(player, target);
+							if(target.offer != null && target.offer == player) {
+								player.alliance = target.uuid;
+								target.alliance = player.uuid;
+							} else {
+								player.offer = target;
+							}
+							//offerManager.offer(player, target);
 							sendToUUID(player.uuid, player.toJSON());
 							sendToUUID(json.getLong("target"), target.toJSON());
 							sendToUUID(json.getLong("target"), "{\"type\":\"message\"," +

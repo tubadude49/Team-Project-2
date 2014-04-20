@@ -13,6 +13,7 @@ public class Player implements JSONStringifiable {
 	public float income = 0;
 	
 	public long alliance = -1l;
+	public Player offer = null;
 	
 	public String sessionId;
 		
