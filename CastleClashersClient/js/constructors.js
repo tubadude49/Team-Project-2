@@ -222,13 +222,25 @@ var drawMessage = function(data, color)
 	message.text = data;
 	message.color = color;//Red
 	message.font = "bold 48px ken-vector-future-thin";
-	message.width = 1000;
-	message.x = (core.width - message.width - 200)/2;
-	message.y = core.height/2;
+	message.width = (48 * message.text.length);
+	if(message.width > core.width - coreUISize)
+	{
+		message.font = "bold 36px ken-vector-future-thin";
+		message.width = (36 * message.text.length);
+		if(message.width > core.width - coreUISize)
+		{
+			message.font = "bold 28px ken-vector-future-thin";
+			message.width = (24 * message.text.length);
+		}
+	}
 	
+	message.x = 0;
+	message.y = core.height/2;
+
+	console.log(message);
 	core.rootScene.addChild(message);
 	message.tl.setTimeBased();
-	message.tl.delay(2500).then(function() {		
+	message.tl.delay(2500).then(function() {	
 		core.rootScene.removeChild(message);
 	});
 	
