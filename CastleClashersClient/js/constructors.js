@@ -263,7 +263,15 @@ var castleFromData = function(castle, data) {
 	castle.sprite.health = data.health;
 	castle.sprite.upgrade = data.upgrade;
 	castle.sprite.owner = data.owner;
-	castle.sprite.fsprite.frame = castle.sprite.owner + 1;
+	castle.sprite.fsprite.frame = castle.sprite.owner;
+	if(castle.sprite.owner < 0)
+	{
+		castle.sprite.fsprite.visible = false;
+	}
+	else
+	{
+		castle.sprite.fsprite.visible = true;
+	}
 	return castle;
 }
 
@@ -300,7 +308,15 @@ var unitFromData = function(unit, data) {
 
 // updates the castle image based on upgrade level as well as flag color to indicate ownership
 var updateCastle = function(c_sprite) {
-	c_sprite.fsprite.frame = c_sprite.owner + 1;
+	c_sprite.fsprite.frame = c_sprite.owner;
+	if(c_sprite.owner < 0)
+	{
+		c_sprite.fsprite.visible = false;
+	}
+	else
+	{
+		c_sprite.fsprite.visible = true;
+	}
 	if (c_sprite.upgrade == 0) {
 		c_sprite.image = core.assets['assets/castle.png'];
 	} else if (c_sprite.upgrade == 1) {
