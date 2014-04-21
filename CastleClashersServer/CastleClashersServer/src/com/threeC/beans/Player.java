@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 public class Player implements JSONStringifiable {
 	public boolean active = true;
+	public boolean joined = false;
 	
 	public long uuid;
 	

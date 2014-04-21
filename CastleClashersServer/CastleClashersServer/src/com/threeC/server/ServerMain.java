@@ -293,13 +293,18 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	@Override
 	public void processOpened(WebSocketServerEvent event) {
 		if(status == 0) {
-			System.out.println("Connection Opened " + event.getSessionId());
-			Player newPlayer = new Player("", event.getSessionId(), uuidDistributor.next());
+			System.out.println("Connection Opened (active) " + event.getSessionId());
+			Player newPlayer = getPlayerBySessionId(event.getSessionId());
+			if(newPlayer == null) {
+				newPlayer = new Player("", event.getSessionId(), uuidDistributor.next());				
+			} else {
+				newPlayer.active = true;
+			}
 			players.add(newPlayer);
 			System.out.println(newPlayer.toJSON());
 			event.sendPacket(JSONProcessor.tokenToPacket(JSONProcessor.JSONStringToToken(newPlayer.toJSON())));
 		} else {
-			System.out.println("Connection Opened " + event.getSessionId());
+			System.out.println("Connection Opened (inactive) " + event.getSessionId());
 			Player player = getPlayerBySessionId(event.getSessionId());
 			if(player == null) {
 				player = new Player("", event.getSessionId(), uuidDistributor.next());
@@ -329,6 +334,11 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		System.out.println("Connection Closed");
 		Player player = getPlayerBySessionId(event.getSessionId());
 		player.active = false;
+		if(player.joined) { 
+			synchronized(this) { 
+				joinedPlayers--; 
+			}
+		}
 		/*for(int i=0;i<players.size();i++) {
 			if(players.get(i).sessionId().equals(event.getSessionId())) {
 				players.remove(i);
@@ -465,11 +475,12 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 						player.name = json.getString("name");
 						if(joinedPlayers < numPlayers) {
 							player.active = true;
+							player.joined = true;
 							joinedPlayers++;
 							status = joinedPlayers < numPlayers ? 0 : 1;
+							System.out.println("status: " + status);
 							if(status == 1) {
 								sendToAll("{\"type\":\"start\"}");
-								System.out.println("status: " + status);
 							}
 						}
 					}
@@ -478,6 +489,10 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
+		} else {
+			try {
+				System.out.println("inactive player sent message" + JSONProcessor.tokenToJSON(token).toString());
+			} catch (JSONException e) {	e.printStackTrace(); }
 		}
 		
 	}

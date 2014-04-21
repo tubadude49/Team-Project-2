@@ -8,14 +8,11 @@ var clickStart;
 var establishCore = function() {
 	core = new Core(1280+coreUISize,1280);
 
-	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/button_select.png', 'assets/button_select_selected.png', 
-				'assets/button_attack.png', 'assets/button_attack_selected.png', 'assets/attackUI.png', 'assets/upgradeUI.png', 
-				'assets/buyInfantry.png', 'assets/buyCavalry.png', 'assets/buyArmor.png','assets/reinforceCastle.png', 
-				'assets/reinforceRegiment.png','assets/upgradeRegiment.png', 'assets/gold.png', 'assets/cannon.png', 
+	core.preload('assets/cavalry.png','assets/infantry.png', 'assets/gold.png', 'assets/cannon.png', 
 				'assets/castle.png', 'assets/castle_bronze.png', 'assets/castle_silver.png', 'assets/castle_gold.png',
-				'assets/redcross.png', 'assets/defense.png', 'assets/attack2.png', 'assets/upgrade.png', 'assets/veterancy.png',
-				'assets/xp.png', 'assets/speed.png', 'assets/cobble.png', 'assets/grass1.png', 'assets/upgradeCastle.png',
-				'assets/war.png', 'assets/alliance.png','assets/flags.png','assets/bar.png','assets/fireball.png','assets/swords.png',
+				'assets/redcross.png', 'assets/defense.png', 'assets/attack2.png', 'assets/upgrade.png', 
+				'assets/veterancy.png',	'assets/xp.png', 'assets/speed.png', 'assets/cobble.png', 'assets/grass1.png', 
+				'assets/flags.png','assets/bar.png','assets/fireball.png','assets/swords.png',
 				'assets/yellowpix.png','assets/greenArrow.png','assets/tut.png', 'assets/castleclashersbk.png');
 	
 	core.onload = function() {
