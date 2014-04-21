@@ -21,6 +21,7 @@ var tutorClick = function() {
 	
 	core.rootScene.addChild(tutImage);
 	core.rootScene.addChild(arrow);
+	core.assets['assets/click.wav'].play();
 	
 	
 }

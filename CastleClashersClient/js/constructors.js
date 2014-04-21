@@ -206,6 +206,7 @@ var updateGold = function(instance) {
 // displays the battle icon to the client
 // called from ws.js when a battle is received
 var drawBattle = function(data) {
+	core.assets['assets/battle.wav'].play();
 	var batt = new Battle();
 	batt.sprite.x = data.x;
 	batt.sprite.y = data.y;	
@@ -217,6 +218,7 @@ var drawBattle = function(data) {
 
 // displays the siege icon to the client; gives an indication the users that a siege is happening
 var drawSiege = function(data) {
+	core.assets['assets/castleattack.wav'].play();
 	var siege_engine = new Siege();
 	siege_engine.sprite.x = data.x;
 	siege_engine.sprite.y = data.y;	
