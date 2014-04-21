@@ -83,16 +83,16 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 	
 	public void distributeCastles(int gameboardSizeX, int gameboardSizeY) {
 		int i = 0;
-		int r = Math.min(gameboardSizeX, gameboardSizeY)/2;
+		int r = Math.min(gameboardSizeX, gameboardSizeY-50)/2;
 		int x = gameboardSizeX/2;
-		int y = gameboardSizeY/2;
+		int y = (gameboardSizeY-50)/2;
 		int n = numPlayers;
 		double a = Math.PI / (2*n);
 		
 		for(Player player : players) {
 			if(player.active) {
 				if(i < n) {
-					castles.add(new Castle((int)(x - 86/2 + r * Math.cos(2 * Math.PI * i / n + a)), (int)(50 + y - 41 + r * Math.sin(2 * Math.PI * i / n + a)), uuidDistributor.next(), player.uuid));
+					castles.add(new Castle((int)(x - 86/2 + r * Math.cos(2 * Math.PI * i / n + a)), (int)(50 + y - 41/2 + r * Math.sin(2 * Math.PI * i / n + a)), uuidDistributor.next(), player.uuid));
 					i++;
 				}
 				else {
@@ -105,7 +105,7 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 		r /= 2;
 		a += Math.PI;
 		for(;i<n;i++) {
-			castles.add(new Castle((int)(x - 86/2 + r * Math.cos(2 * Math.PI * i / n + a)), (int)(50 + y - 41 + r * Math.sin(2 * Math.PI * i / n + a)), uuidDistributor.next(), -1));
+			castles.add(new Castle((int)(x - 86/2 - r * Math.cos(2 * Math.PI * i / n + a)), (int)(50 + y - 41/2 + r * Math.sin(2 * Math.PI * i / n + a)), uuidDistributor.next(), -1));
 		}
 		
 		castles.add(new Castle(-86/2 + (int)x,50 - 41 + (int)y,uuidDistributor.next(),-1));

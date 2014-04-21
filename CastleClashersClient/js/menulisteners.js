@@ -7,13 +7,16 @@ var nameLabel = new Label();
 var nameTextbox = new Input();
 var joinButton = new Label();
 
-var testButton = new Label();
+var menubackground;
+
+var castleClashersLabel = new Label();
 
 var startButtonClick = function() {
 	establishWS();
 
 	core.rootScene.removeChild(startButton);
 	core.rootScene.removeChild(tutorButton);
+	core.rootScene.removeChild(castleClashersLabel);
 	
 	if(!nameTextbox.scaled) {
 		nameTextbox.scale(1/core._scale);
@@ -62,12 +65,15 @@ var leaveClick = function(event) {
 
 	core.rootScene.addChild(startButton);
 	core.rootScene.addChild(tutorButton);
+	core.rootScene.addChild(castleClashersLabel);
 	
 	core.rootScene.removeChild(leaveButton);	
 }
 
 var initGameboard = function() {
+	core.rootScene.removeChild(menubackground);
 	core.rootScene.removeChild(startButton);
+	core.rootScene.removeChild(castleClashersLabel);
 	core.rootScene.removeChild(tutorButton);
 	core.rootScene.removeChild(nameTextbox);
 	core.rootScene.removeChild(nameLabel);

@@ -16,7 +16,7 @@ var establishCore = function() {
 				'assets/redcross.png', 'assets/defense.png', 'assets/attack2.png', 'assets/upgrade.png', 'assets/veterancy.png',
 				'assets/xp.png', 'assets/speed.png', 'assets/cobble.png', 'assets/grass1.png', 'assets/upgradeCastle.png',
 				'assets/war.png', 'assets/alliance.png','assets/flags.png','assets/bar.png','assets/fireball.png','assets/swords.png',
-				'assets/yellowpix.png','assets/greenArrow.png','assets/tut.png');
+				'assets/yellowpix.png','assets/greenArrow.png','assets/tut.png', 'assets/castleclashersbk.png');
 	
 	core.onload = function() {
 		vert1.image = core.assets['assets/yellowpix.png'];
@@ -24,9 +24,21 @@ var establishCore = function() {
 		hori1.image = core.assets['assets/yellowpix.png'];
 		hori2.image = core.assets['assets/yellowpix.png'];
 		
+		menubackground = new Sprite(1280+coreUISize,1280);
+		menubackground.image = core.assets['assets/castleclashersbk.png'];
+		menubackground.x = 0;
+		menubackground.y = 0;
+		core.rootScene.addChild(menubackground);
+		
+		castleClashersLabel.text = '   Castle                                                                                                Clashers';
+		castleClashersLabel.x = core.width / 2 - 275;
+		castleClashersLabel.y = 150;
+		castleClashersLabel.width = 550;
+		core.rootScene.addChild(castleClashersLabel);
+		
 		startButton.text = "Start";
 		startButton.x = core.width / 2 - 100;
-		startButton.y = 50;
+		startButton.y = 550;
 		core.rootScene.addChild(startButton);
 		startButton.on(enchant.Event.TOUCH_START, startButtonClick);
 		
@@ -38,6 +50,7 @@ var establishCore = function() {
 
 		startButton.font = "bold 60px ken-vector-future-thin";
 		tutorButton.font = "bold 60px ken-vector-future-thin";
+		castleClashersLabel.font = "bold 108px ken-vector-future-thin";
 		
 		/**/
 		

@@ -328,6 +328,8 @@ var clearGame = function() {
 	core.rootScene.removeChild(joinButton);
 	core.rootScene.removeChild(leaveButton);
 	
+	core.rootScene.addChild(menubackground);
 	core.rootScene.addChild(startButton);
 	core.rootScene.addChild(tutorButton);
+	core.rootScene.addChild(castleClashersLabel);
 }
