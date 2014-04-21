@@ -5,6 +5,7 @@ var arrow = new Sprite(160, 50);
 var tutorClick = function() {
 	core.rootScene.removeChild(startButton);
 	core.rootScene.removeChild(tutorButton);
+	
 		
 	tutImage.image = core.assets['assets/tut.png'];
 	tutImage.frame = 0;	
@@ -21,15 +22,17 @@ var tutorClick = function() {
 	core.rootScene.addChild(tutImage);
 	core.rootScene.addChild(arrow);
 	
+	
 }
 
 var tutFrame = 0;
 var tutFrame2 = 0;
 
 var arrowClick = function(event) {
-	
 	console.log("tutFrame:"+tutFrame);
 	console.log("tutFrame2:"+tutFrame2);
+	core.assets['assets/click.wav'].play();
+	
 	if(tutFrame <= 10)
 	{
 		console.log("if1");
@@ -44,11 +47,12 @@ var arrowClick = function(event) {
 		core.rootScene.addChild(tutImage2);
 		core.rootScene.addChild(arrow);
 	}
-	else if(tutFrame == "DONE" && tutFrame2 < 2)
+	else if(tutFrame == "DONE" && tutFrame2 < 1)
 	{
 		console.log("if3");
-		tutImage2.frame = parseInt(tutFrame2);
 		tutFrame2 = tutFrame2 + 1;
+		tutImage2.frame = parseInt(tutFrame2);
+		
 	}
 	else 
 	{
