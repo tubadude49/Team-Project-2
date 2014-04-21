@@ -221,19 +221,16 @@ var drawMessage = function(data, color)
 {
 	message.text = data;
 	message.color = color;//Red
-	message.font = "bold 48px ken-vector-future-thin";
-	message.width = (48 * message.text.length);
-	if(message.width > core.width - coreUISize)
+	var fontsize = 64;
+	message.width = (fontsize * message.text.length);
+	while(message.width > core.width - coreUISize && fontsize > 24)
 	{
-		message.font = "bold 36px ken-vector-future-thin";
-		message.width = (36 * message.text.length);
-		if(message.width > core.width - coreUISize)
-		{
-			message.font = "bold 28px ken-vector-future-thin";
-			message.width = (24 * message.text.length);
-		}
+		fontsize = fontsize - 4;
+		message.width = (fontsize * message.text.length);
 	}
-	
+
+	message.font = "bold " + fontsize + "px ken-vector-future-thin";
+	message.width = (fontsize * message.text.length);
 	message.x = 0;
 	message.y = core.height/2;
 
