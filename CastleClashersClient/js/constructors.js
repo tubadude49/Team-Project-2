@@ -221,7 +221,7 @@ var drawMessage = function(data, color)
 {
 	message.text = data;
 	message.color = color;//Red
-	var fontsize = 64;
+	var fontsize = 48;
 	message.width = (fontsize * message.text.length);
 	while(message.width > core.width - coreUISize && fontsize > 24)
 	{
@@ -231,7 +231,10 @@ var drawMessage = function(data, color)
 
 	message.font = "bold " + fontsize + "px ken-vector-future-thin";
 	message.width = (fontsize * message.text.length);
-	message.x = 0;
+	if(fontsize > 28)
+		message.x = (core.width - coreUISize - message.width) * 2;
+	else
+		message.x = 0;
 	message.y = core.height/2;
 
 	console.log(message);
