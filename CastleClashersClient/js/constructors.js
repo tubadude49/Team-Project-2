@@ -20,22 +20,32 @@ var backgroundUI;
 // FOR CASTLES AND UNITS 
  
 var healCastle = new Label();
+var healBackground = new Sprite(140, 52);
+healBackground.tl.setTimeBased();
 var healGold = new Sprite(32, 32);
 var healCost = new Label();
 var HealGroup = new Group();
 var upgradeCastle = new Label();
+var upgradeBackground = new Sprite(140, 52);
+upgradeBackground.tl.setTimeBased();
 var upgradeGold = new Sprite(32, 32);
 var upgradeCost = new Label();
 var UpgradeGroup = new Group();
 var buyInfantry = new Label();
+var infantryBackground = new Sprite(140, 52);
+infantryBackground.tl.setTimeBased();
 var infantryGold = new Sprite(32, 32);
 var infantryCost = new Label();
 var InfantryGroup = new Group();
 var buyCavalry = new Label();
+var cavalryBackground = new Sprite(140, 52);
+cavalryBackground.tl.setTimeBased();
 var cavalryGold = new Sprite(32, 32);
 var cavalryCost = new Label();
 var CavalryGroup = new Group();
 var buyArmor = new Label();
+var cannonBackground = new Sprite(140, 52);
+cannonBackground.tl.setTimeBased();
 var cannonGold = new Sprite(32, 32);
 var cannonCost = new Label();
 var CannonGroup = new Group();
@@ -43,6 +53,7 @@ var healRegiment = new Label();
 var upgradeRegiment = new Label();
 var allianceCastleBreak = new Label();
 var allianceCastleOffer = new Label();
+
 
 // for selected unit UI
 var castleIcon = new Sprite(83, 41);

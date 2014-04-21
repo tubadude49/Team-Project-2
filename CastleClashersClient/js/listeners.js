@@ -364,10 +364,24 @@ var uiClick = function(event) {
 	healCost.font = "24px ken-vector-future-thin";
 	healCost.x = healGold.x + healGold.width + 5;
 	healCost.y = healGold.y;
+	
+	healBackground.x = healCastle.x;
+	healBackground.y = healCastle.y;
+	
+	HealGroup.addChild(healBackground);
 	HealGroup.addChild(healCastle);
 	HealGroup.addChild(healGold);
 	HealGroup.addChild(healCost);
 	HealGroup.addEventListener(enchant.Event.TOUCH_START, healClick);
+	HealGroup.addEventListener(enchant.Event.TOUCH_START, function() {
+		if(instance.gold > cost) {
+			healBackground.backgroundColor = "#CCCC00";
+			healBackground.tl.delay(250).then(function() {
+				healBackground.backgroundColor = null;
+			});			
+		}
+	});
+	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ UPGRADE GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	upgradeCastle.text = "Upgrade";
 	upgradeCastle.x = core.width-coreUISize+25;
@@ -394,10 +408,22 @@ var uiClick = function(event) {
 	upgradeCost.x = upgradeGold.x + upgradeGold.width + 5;
 	upgradeCost.y = upgradeGold.y;
 	
+	upgradeBackground.x = upgradeCastle.x;
+	upgradeBackground.y = upgradeCastle.y;
+	
+	UpgradeGroup.addChild(upgradeBackground);
 	UpgradeGroup.addChild(upgradeCastle);
 	UpgradeGroup.addChild(upgradeGold);
 	UpgradeGroup.addChild(upgradeCost);
 	UpgradeGroup.addEventListener(enchant.Event.TOUCH_START, upgradeClick);
+	UpgradeGroup.addEventListener(enchant.Event.TOUCH_START, function() {
+		if(instance.gold > cost) {
+			upgradeBackground.backgroundColor = "#CCCC00";
+			upgradeBackground.tl.delay(250).then(function() {
+				upgradeBackground.backgroundColor = null;
+			});			
+		}
+	});
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ INFANTRY GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	buyInfantry.text = "Infantry";
@@ -419,10 +445,22 @@ var uiClick = function(event) {
 	infantryCost.x = infantryGold.x + infantryGold.width + 5;
 	infantryCost.y = infantryGold.y;
 	
+	infantryBackground.x = buyInfantry.x;
+	infantryBackground.y = buyInfantry.y;
+	
+	InfantryGroup.addChild(infantryBackground);
 	InfantryGroup.addChild(buyInfantry);
 	InfantryGroup.addChild(infantryGold);
 	InfantryGroup.addChild(infantryCost);
 	InfantryGroup.addEventListener(enchant.Event.TOUCH_START, buyInfantryClick);
+	InfantryGroup.addEventListener(enchant.Event.TOUCH_START, function() {
+		if(instance.gold > 25) {
+			infantryBackground.backgroundColor = "#CCCC00";
+			infantryBackground.tl.delay(250).then(function() {
+				infantryBackground.backgroundColor = null;
+			});			
+		}
+	});
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CAVALRY GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	buyCavalry.text = "Cavalry";
@@ -445,10 +483,22 @@ var uiClick = function(event) {
 	cavalryCost.x = cavalryGold.x + cavalryGold.width + 5;
 	cavalryCost.y = cavalryGold.y;
 	
+	cavalryBackground.x = buyCavalry.x;
+	cavalryBackground.y = buyCavalry.y;
+	
+	CavalryGroup.addChild(cavalryBackground);
 	CavalryGroup.addChild(buyCavalry);
 	CavalryGroup.addChild(cavalryGold);
 	CavalryGroup.addChild(cavalryCost);
 	CavalryGroup.addEventListener(enchant.Event.TOUCH_START, buyCavalryClick);
+	CavalryGroup.addEventListener(enchant.Event.TOUCH_START, function() {
+		if(instance.gold > 25) {
+			cavalryBackground.backgroundColor = "#CCCC00";
+			cavalryBackground.tl.delay(250).then(function() {
+				cavalryBackground.backgroundColor = null;
+			});			
+		}
+	});
 	
 	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CANNON GROUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	buyArmor.text = "Cannon";
@@ -471,12 +521,24 @@ var uiClick = function(event) {
 	cannonCost.x = cannonGold.x + cannonGold.width + 5;
 	cannonCost.y = cannonGold.y;
 	
+	cannonBackground.x = buyArmor.x;
+	cannonBackground.y = buyArmor.y;
+	
+	CannonGroup.addChild(cannonBackground);
 	CannonGroup.addChild(buyArmor);
 	CannonGroup.addChild(cannonGold);
 	CannonGroup.addChild(cannonCost);
 	CannonGroup.addEventListener(enchant.Event.TOUCH_START, buyArmorClick);
+	CannonGroup.addEventListener(enchant.Event.TOUCH_START, function() {
+		if(instance.gold > 25) {
+			cannonBackground.backgroundColor = "#CCCC00";
+			cannonBackground.tl.delay(250).then(function() {
+				cannonBackground.backgroundColor = null;
+			});			
+		}
+	});
 	
-	
+	// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ALLIANCES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
 	allianceCastleOffer.x = core.width-coreUISize+25;
 	allianceCastleOffer.y = 500;
 	allianceCastleOffer.font = "bold 24px ken-vector-future-thin";
@@ -564,7 +626,7 @@ var uiClick = function(event) {
 		
 		// Alliance options
 		if(event.owner != -1 && instance.alliance == event.owner) {
-			allianceCastleBreak.text = "Break   Alliance";
+			allianceCastleBreak.text = "Break Alliance";
 			allianceCastleBreak.width = 140;
 			allianceCastleBreak.uuid = event.owner;
 			allianceCastleBreak.on(enchant.Event.TOUCH_START, breakAllianceClick);
