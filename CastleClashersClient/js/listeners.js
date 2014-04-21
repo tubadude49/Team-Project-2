@@ -165,17 +165,17 @@ var selectedUnitUI = function() {
 		//console.log(selected_objs[i]);
 		if(selected_objs[i].type == 'castle') {
 			castleCount++;
-			core.assets['assets/fanfare.wav'].play();
+			//fanfareSound.play();
 		} else if(selected_objs[i].type == 'unit') {
 			if(selected_objs[i].subtype == 'infantry') {
 				infantryCount++;
-				core.assets['assets/marching.wav'].play();
+				marchingSound.play();
 			} else if(selected_objs[i].subtype == 'cavalry') {
 				cavalryCount++;
-				core.assets['assets/horse.wav'].play();
+				horseSound.play();
 			} else if(selected_objs[i].subtype == 'cannon') {
 				cannonCount++;
-				core.assets['assets/cart.wav'].play();
+				cannonSound.play();
 			}		
 		}
 	}
@@ -269,7 +269,7 @@ var selectedUnitUI = function() {
 }*/
 
 var upgradeClick = function(event) {
-	core.assets['assets/upgrade.wav'].play();
+	upgradeSound.play();
 	for(i=0;i<selected_objs.length;i++) {
 		var request = {};
 		request.action = 'purchase';
@@ -283,7 +283,7 @@ var upgradeClick = function(event) {
 }
 
 var buyInfantryClick = function(event) {
-	core.assets['assets/gold.wav'].play();
+	goldSound.play();
 	for(i=0;i<selected_objs.length;i++) {
 		if(selected_objs[i].type && selected_objs[i].type == 'castle') {
 			var request = {};
@@ -299,7 +299,7 @@ var buyInfantryClick = function(event) {
 }
 
 var buyCavalryClick = function(event) {
-	core.assets['assets/gold.wav'].play();
+	goldSound.play();
 	for(i=0;i<selected_objs.length;i++) {
 		if(selected_objs[i].type && selected_objs[i].type == 'castle') {
 			var request = {};
@@ -315,7 +315,7 @@ var buyCavalryClick = function(event) {
 }
 
 var buyArmorClick = function(event) {
-	core.assets['assets/gold.wav'].play();
+	goldSound.play();
 	for(i=0;i<selected_objs.length;i++) {
 		if(selected_objs[i].type && selected_objs[i].type == 'castle') {
 			var request = {};
@@ -331,7 +331,7 @@ var buyArmorClick = function(event) {
 }
 
 var healClick = function(event) {
-	core.assets['assets/upgrade.wav'].play();
+	upgradeSound.play();
 	for(i=0;i<selected_objs.length;i++) {
 		var request = {};
 		request.action = 'purchase';

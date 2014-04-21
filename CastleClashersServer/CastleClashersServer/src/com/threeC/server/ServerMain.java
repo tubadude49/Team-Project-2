@@ -184,23 +184,24 @@ class JWebSocketListener implements WebSocketServerTokenListener {
 					int dy = unitDest.y - unit.y;
 						if(dy < -unit.speed) { dy = -unit.speed; }
 						else if(dy > unit.speed) { dy = unit.speed; }
-					/*int totalMove = Math.abs(dx) + Math.abs(dy);						
-						dx *= totalMove / unit.speed;
-						dy *= totalMove / unit.speed;*/
-						
+					if(Math.abs(dx) == unit.speed && Math.abs(dy) == unit.speed) {
+						dx = (dx < 0 ? -1 : 1) * (unit.speed / 2);
+						dy = (dy < 0 ? -1 : 1) * (unit.speed / 2);						
+					}
 					unit.x += dx;
 					unit.y += dy;
 				} else if(dest != null && dest instanceof Castle) {
 					Castle castle = (Castle)dest;
-					int dx = castle.x - unit.x; 
+					int dx = castle.x - unit.x;						
 						if(dx < -unit.speed) { dx = -unit.speed; }
 						else if(dx > unit.speed) { dx = unit.speed; }
 					int dy = castle.y - unit.y;
 						if(dy < -unit.speed) { dy = -unit.speed; }
 						else if(dy > unit.speed) { dy = unit.speed; }
-					/*int totalMove = Math.abs(dx) + Math.abs(dy);
-						dx = (int)((float)dx * (float)(unit.speed / totalMove));
-						dy = (int)((float)dy * (float)(unit.speed / totalMove));*/
+					if(Math.abs(dx) == unit.speed && Math.abs(dy) == unit.speed) {
+						dx = (dx < 0 ? -1 : 1) * (unit.speed / 2);
+						dy = (dy < 0 ? -1 : 1) * (unit.speed / 2);						
+					}
 						
 					unit.x += dx;
 					unit.y += dy;

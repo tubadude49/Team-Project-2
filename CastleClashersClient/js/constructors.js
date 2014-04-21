@@ -54,6 +54,15 @@ var upgradeRegiment = new Label();
 var allianceCastleBreak = new Label();
 var allianceCastleOffer = new Label();
 
+// Sounds
+var upgradeSound = new Audio('assets/upgrade.wav');
+var battleSound = new Audio('assets/battle.wav');
+var castleAttackSound = new Audio('assets/castleattack.wav');
+var goldSound = new Audio('assets/gold.wav');
+var fanfareSound = new Audio('assets/fanfare.wav');
+var marchingSound = new Audio('assets/marching.wav');
+var horseSound = new Audio('assets/horse.wav');
+var cannonSound = new Audio('assets/cart.wav');
 
 // for selected unit UI
 var castleIcon = new Sprite(83, 41);
@@ -206,7 +215,9 @@ var updateGold = function(instance) {
 // displays the battle icon to the client
 // called from ws.js when a battle is received
 var drawBattle = function(data) {
-	core.assets['assets/battle.wav'].play();
+	battleSound.play();
+	/*battleSound.loop = true;
+	setTimeout(function() { battleSound.loop = false; }, 1750);*/
 	var batt = new Battle();
 	batt.sprite.x = data.x;
 	batt.sprite.y = data.y;	
@@ -218,7 +229,7 @@ var drawBattle = function(data) {
 
 // displays the siege icon to the client; gives an indication the users that a siege is happening
 var drawSiege = function(data) {
-	core.assets['assets/castleattack.wav'].play();
+	//castleAttackSound.play();
 	var siege_engine = new Siege();
 	siege_engine.sprite.x = data.x;
 	siege_engine.sprite.y = data.y;	
@@ -331,6 +342,7 @@ var updateCastle = function(c_sprite) {
 }
 
 var clearGame = function() {
+	console.log('clear game');
 	clearUI();
 	core.rootScene.removeChild(background);
 	core.rootScene.removeChild(backgroundUI);

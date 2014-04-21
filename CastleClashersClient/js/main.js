@@ -52,7 +52,7 @@ var establishCore = function() {
 		tutorButton.font = "bold 60px ken-vector-future-thin";
 		castleClashersLabel.font = "bold 108px ken-vector-future-thin";
 		
-		core.assets['assets/fanfare.wav'].play();
+		fanfareSound.play();
 		/**/
 		
 	}
