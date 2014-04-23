@@ -1,3 +1,4 @@
+//Right clicking for telling units to attack targets
 var handleRightClick = function(event) {
 	for(i=0;i<selected_objs.length;i++) {
 		selected_objs[i].backgroundColor = null;
@@ -23,11 +24,13 @@ var handleRightClick = function(event) {
 	event.preventDefault();
 	return false;
 }
-
+//Used for creating yellow box for multi selecting
 var vert1 = new Sprite(1,1);
 var vert2 = new Sprite(1,1);
 var hori1 = new Sprite(1,1);
 var hori2 = new Sprite(1,1);
+
+
 var handleMouseMove = function(event) {
 	if(clickStart && clickStart.x && clickStart.y) {
 		var maxStartY, minStartY, maxStartX, minStartX;	
@@ -53,7 +56,9 @@ var handleMouseMove = function(event) {
 	}
 }
 
+//Creating alliances with players on the map
 var offerAllianceClick = function(event) {
+	helloSound.play();
 	var request = {};
 	request.action = 'offer';
 	request.target = this.uuid;
@@ -61,12 +66,15 @@ var offerAllianceClick = function(event) {
 }
 
 var breakAllianceClick = function(event) {
+	nopeSound.play();
 	var request = {};
 	request.action = 'break';
 	request.target = this.uuid;
 	ws.send(JSON.stringify(request));
 }
 
+//Clearing buttons and items to make way for 
+//other labels
 var clearUI = function() {		
 	core.rootScene.removeChild(healRegiment);
 	core.rootScene.removeChild(upgradeRegiment);
@@ -97,12 +105,15 @@ var clearUI = function() {
 	
 }
 
+//starting the game
 var startClick = function(event) {
 	clickStart = {};
 	clickStart.x = event.x;
 	clickStart.y = event.y;
 }
 
+//For multi selecting, when mouse is released, this calculates what is within 
+//selected region and what to highlight
 var endClick = function(event) {
 	selected_objs = [];
 	var maxY, minY, maxX, minX;	
@@ -146,6 +157,7 @@ var endClick = function(event) {
 	core.rootScene.removeChild(hori2);
 }
 
+//clicking on individual units in game
 var selectedUnitUI = function() {
 	core.rootScene.removeChild(castleIcon);
 	core.rootScene.removeChild(infantryIcon);
@@ -268,6 +280,11 @@ var selectedUnitUI = function() {
 	}
 }*/
 
+//All purchasable buttons send info to server using JSON
+//which then determines whether client has
+//resources for purchase
+
+//upgrade button
 var upgradeClick = function(event) {
 	upgradeSound.play();
 	for(i=0;i<selected_objs.length;i++) {
@@ -282,6 +299,8 @@ var upgradeClick = function(event) {
 	}
 }
 
+//Next few vars for buying different units
+//from castle
 var buyInfantryClick = function(event) {
 	goldSound.play();
 	for(i=0;i<selected_objs.length;i++) {
@@ -330,6 +349,7 @@ var buyArmorClick = function(event) {
 	}
 }
 
+//healing label used for units and castles
 var healClick = function(event) {
 	upgradeSound.play();
 	for(i=0;i<selected_objs.length;i++) {
@@ -344,6 +364,8 @@ var healClick = function(event) {
 	}
 }
 
+//sets up all the different labels for the units
+//like health, attack, speed, etc.
 var uiClick = function(event) {
 	
 	clearUI();

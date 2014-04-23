@@ -2,6 +2,8 @@ var tutImage = new Sprite(1480, 1280);
 var tutImage2 = new Sprite(1480, 1280);
 var arrow = new Sprite(160, 50);
 
+//Sets up tutorial when 'tutorial' is clicked from main
+//simply loads images of tutorial
 var tutorClick = function() {
 	core.rootScene.removeChild(startButton);
 	core.rootScene.removeChild(tutorButton);
@@ -29,6 +31,8 @@ var tutorClick = function() {
 var tutFrame = 0;
 var tutFrame2 = 0;
 
+//every click moves to different frame of image which 
+//contains tutorial of playing Castle Clashers
 var arrowClick = function(event) {
 	console.log("tutFrame:"+tutFrame);
 	console.log("tutFrame2:"+tutFrame2);

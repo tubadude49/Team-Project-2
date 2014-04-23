@@ -11,6 +11,7 @@ var menubackground;
 
 var castleClashersLabel = new Label();
 
+//sends to lobby to wait for other player connections
 var startButtonClick = function() {
 	establishWS();
 
@@ -39,6 +40,8 @@ var startButtonClick = function() {
 	nameLabel.font = "bold 32px ken-vector-future-thin";
 }
 
+//sends connection request, which when successful has user wait till
+//other players have joined
 var joinClick = function() {
 	instance.name = nameTextbox._input.value;
 	
@@ -60,6 +63,7 @@ var joinClick = function() {
 	ws.send(JSON.stringify(request));
 }
 
+//goes back to main menu
 var leaveClick = function(event) {
 	//console.log(core.rootScene.hit(event.x, event.y));
 
@@ -70,6 +74,7 @@ var leaveClick = function(event) {
 	core.rootScene.removeChild(leaveButton);	
 }
 
+//sets up board
 var initGameboard = function() {
 	core.rootScene.removeChild(menubackground);
 	core.rootScene.removeChild(startButton);

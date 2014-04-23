@@ -3,13 +3,14 @@ enchant();
 var units = [];
 var castles = [];
 
+//Basic map variables
 var core;
 var instance;
 var coreUISize = 200;
 var bottomUISize = 50;
 var selected_objs = [];
-var selectButton;
-var attackButton;
+var selectButton; //deprecated
+var attackButton; //deprecated
 var goldImage;
 var goldAmount ;
 var buttonSelected = 0;
@@ -63,6 +64,8 @@ var fanfareSound = new Audio('assets/fanfare.wav');
 var marchingSound = new Audio('assets/marching.wav');
 var horseSound = new Audio('assets/horse.wav');
 var cannonSound = new Audio('assets/cart.wav');
+var helloSound = new Audio('assets/hello.wav');
+var nopeSound = new Audio('assets/nope.wav');
 
 // for selected unit UI
 var castleIcon = new Sprite(83, 41);
@@ -97,6 +100,7 @@ var unitXP = Label('');
 
 var message = Label('');
 
+//Castle attributes
 var Castle = function(x, y) {
 	this.sprite = new Sprite(86, 41);
 	this.sprite.moveTo(x, y);
@@ -123,6 +127,7 @@ var Castle = function(x, y) {
 	this.sprite.on(enchant.Event.TOUCH_END, endClick);
 }
 
+//Different unit attributes
 var Unit = function(subtype, x, y) {
 	if(subtype == "cannon")
 		this.sprite = new Sprite(72,24);
@@ -229,7 +234,7 @@ var drawBattle = function(data) {
 
 // displays the siege icon to the client; gives an indication the users that a siege is happening
 var drawSiege = function(data) {
-	//castleAttackSound.play();
+	castleAttackSound.play();
 	var siege_engine = new Siege();
 	siege_engine.sprite.x = data.x;
 	siege_engine.sprite.y = data.y;	
@@ -341,6 +346,7 @@ var updateCastle = function(c_sprite) {
 	}
 }
 
+//When game is finished
 var clearGame = function() {
 	console.log('clear game');
 	clearUI();

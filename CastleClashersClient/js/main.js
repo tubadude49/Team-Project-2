@@ -5,6 +5,7 @@ window.onload = function(){
 var clickArray = [];
 var clickStart;
 
+//Creates main game map as well as loading all necessary images and sounds.
 var establishCore = function() {
 	core = new Core(1280+coreUISize,1280);
 
@@ -14,8 +15,9 @@ var establishCore = function() {
 				'assets/veterancy.png',	'assets/xp.png', 'assets/speed.png', 'assets/cobble.png', 'assets/grass1.png', 
 				'assets/flags.png','assets/bar.png','assets/fireball.png','assets/swords.png',
 				'assets/yellowpix.png','assets/greenArrow.png','assets/tut.png','assets/tut2.png', 'assets/castleclashersbk.png',
-				'assets/battle.wav', 'assets/cart.wav','assets/castleattack.wav','assets/click.wav',
-				'assets/fanfare.wav', 'assets/gold.wav', 'assets/horse.wav', 'assets/marching.wav', 'assets/upgrade.wav');
+				'assets/battle.wav', 'assets/cart.wav','assets/castleattack.wav','assets/click.wav', 'assets/hello.wav',
+				'assets/fanfare.wav', 'assets/gold.wav', 'assets/horse.wav', 'assets/marching.wav', 'assets/upgrade.wav',
+				'assets/nope.wav');
 	
 	core.onload = function() {
 		
@@ -36,6 +38,7 @@ var establishCore = function() {
 		castleClashersLabel.width = 550;
 		core.rootScene.addChild(castleClashersLabel);
 		
+		//Menu buttons
 		startButton.text = "Start";
 		startButton.x = core.width / 2 - 100;
 		startButton.y = 550;
